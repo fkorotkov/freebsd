@@ -87,6 +87,7 @@ SUBDIR=	\
 	dcons \
 	dcons_crom \
 	de \
+	${_diffuse} \
 	${_dpms} \
 	${_dpt} \
 	${_drm} \
@@ -413,6 +414,7 @@ _toecore=	toecore
 .endif
 
 .if ${MK_INET_SUPPORT} != "no" || defined(ALL_MODULES)
+_diffuse=	diffuse
 _if_gre=	if_gre
 .endif
 
