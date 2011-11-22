@@ -228,6 +228,15 @@ copies:
 	cd ${.CURDIR}/../sys/teken; \
 	${INSTALL} -C -o ${BINOWN} -g ${BINGRP} -m 444 teken.h \
 	    ${DESTDIR}${INCLUDEDIR}/teken
+	cd ${.CURDIR}/../sys/netpfil/ipfw; \
+	${INSTALL} -C -o ${BINOWN} -g ${BINGRP} -m 444 diffuse_feature*.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw; \
+	${INSTALL} -C -o ${BINOWN} -g ${BINGRP} -m 444 diffuse_classifier*.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw; \
+	${INSTALL} -C -o ${BINOWN} -g ${BINGRP} -m 444 diffuse_common.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw; \
+	${INSTALL} -C -o ${BINOWN} -g ${BINGRP} -m 444 diffuse_user_compat.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw
 
 symlinks:
 	@${ECHO} "Setting up symlinks to kernel source tree..."
@@ -347,3 +356,12 @@ symlinks:
 		ln -fs ../../../sys/rpc/$$h \
 		    ${DESTDIR}${INCLUDEDIR}/rpc; \
 	done
+	cd ${.CURDIR}/../sys/netpfil/ipfw; \
+	for h in diffuse_classifier*.h diffuse_feature*.h; do \
+		ln -fs ../../../../sys/netpfil/ipfw/$$h \
+			${DESTDIR}${INCLUDEDIR}/netinet/ipfw; \
+	done; \
+	ln -fs ../../../../sys/netpfil/ipfw/diffuse_common.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw; \
+	ln -fs ../../../../sys/netpfil/ipfw/diffuse_user_compat.h \
+	    ${DESTDIR}${INCLUDEDIR}/netinet/ipfw
