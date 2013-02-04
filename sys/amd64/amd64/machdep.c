@@ -115,6 +115,7 @@ __FBSDID("$FreeBSD$");
 #include <machine/clock.h>
 #include <machine/cpu.h>
 #include <machine/cputypes.h>
+#include <machine/efi.h>
 #include <machine/intr_machdep.h>
 #include <x86/mca.h>
 #include <machine/md_var.h>
@@ -145,6 +146,37 @@ __FBSDID("$FreeBSD$");
 
 #include <isa/isareg.h>
 #include <isa/rtc.h>
+
+enum EFI_MEMORY_TYPE {
+    EfiReservedMemoryType,
+    EfiLoaderCode,
+    EfiLoaderData,
+    EfiBootServicesCode,
+    EfiBootServicesData,
+    EfiRuntimeServicesCode,
+    EfiRuntimeServicesData,
+    EfiConventionalMemory,
+    EfiUnusableMemory,
+    EfiACPIReclaimMemory,
+    EfiACPIMemoryNVS,
+    EfiMemoryMappedIO,
+    EfiMemoryMappedIOPortSpace,
+    EfiPalCode,
+    EfiMaxMemoryType
+};
+
+/* Memory range attributes - cache */
+#define EFI_MEMORY_UC           0x0000000000000001
+#define EFI_MEMORY_WC           0x0000000000000002
+#define EFI_MEMORY_WT           0x0000000000000004
+#define EFI_MEMORY_WB           0x0000000000000008
+#define EFI_MEMORY_UCE          0x0000000000000010  
+/* Memory range attributes - protection */
+#define EFI_MEMORY_WP           0x0000000000001000
+#define EFI_MEMORY_RP           0x0000000000002000
+#define EFI_MEMORY_XP           0x0000000000004000
+/* Memory range attributes - other */
+#define EFI_MEMORY_RUNTIME      0x8000000000000000
 
 /* Sanity check for __curthread() */
 CTASSERT(offsetof(struct pcpu, pc_curthread) == 0);
@@ -1423,6 +1455,93 @@ add_smap_entries(struct bios_smap *smapbase, vm_paddr_t *physmap,
 	}
 }
 
+static void
+add_efi_map_entries(struct efi_map_header *efimap, vm_paddr_t *physmap,
+    int *physmap_idx)
+{
+	struct efi_descriptor *map, *p;
+	size_t efisz;
+	int ndesc, i;
+
+	static char *types[] = {
+		"Reserved",
+		"LoaderCode",
+		"LoaderData",
+		"BootServicesCode",
+		"BootServicesData",
+		"RuntimeServicesCode",
+		"RuntimeServicesData",
+		"ConventionalMemory",
+		"UnusableMemory",
+		"ACPIReclaimMemory",
+		"ACPIMemoryNVS",
+		"MemoryMappedIO",
+		"MemoryMappedIOPortSpace",
+		"PalCode"
+	};
+
+	/*
+	 * Memory map data provided by UEFI via the GetMemoryMap
+	 * Boot Services API.
+	 */
+	efisz = (sizeof(struct efi_map_header) + 0xf) & ~0xf;
+	map = (struct efi_descriptor *)((uint8_t *)efimap + efisz); 
+
+	ndesc = efimap->memory_size / efimap->descriptor_size;
+
+	if (boothowto & RB_VERBOSE)
+		printf("%23s %12s %12s %8s %4s\n",
+		    "Type", "Physical", "Virtual", "#Pages", "Attr");
+
+	for (i = 0, p = map; i < ndesc; i++,
+	    p = efi_next_descriptor(p, efimap->descriptor_size)) {
+		if (boothowto & RB_VERBOSE) {
+			printf("%23s %012lx %012lx %08lx ",
+			   types[p->type],
+			   p->physical_start,
+			   p->virtual_start,
+			   p->pages);
+			if (p->attribute & EFI_MEMORY_UC)
+			    printf("UC ");
+			if (p->attribute & EFI_MEMORY_WC)
+			    printf("WC ");
+			if (p->attribute & EFI_MEMORY_WT)
+			    printf("WT ");
+			if (p->attribute & EFI_MEMORY_WB)
+			    printf("WB ");
+			if (p->attribute & EFI_MEMORY_UCE)
+			    printf("UCE ");
+			if (p->attribute & EFI_MEMORY_WP)
+			    printf("WP ");
+			if (p->attribute & EFI_MEMORY_RP)
+			    printf("RP ");
+			if (p->attribute & EFI_MEMORY_XP)
+			    printf("XP ");
+			if (p->attribute & EFI_MEMORY_RUNTIME)
+			    printf("RUNTIME");
+			printf("\n");
+		}
+
+		switch (p->type) {
+		case EfiLoaderCode:
+		case EfiLoaderData:
+		case EfiBootServicesCode:
+		case EfiBootServicesData:
+		case EfiConventionalMemory:
+			/*
+			 * We're allowed to use any entry with these types.
+			 */
+			break;
+		default:
+			continue;
+		}
+
+		if (!add_physmap_entry(p->physical_start,
+		    (p->pages * PAGE_SIZE), physmap, physmap_idx))
+			break;
+	}
+}
+
 /*
  * Populate the (physmap) array with base/bound pairs describing the
  * available physical memory in the system, then test this memory and
@@ -1441,18 +1560,25 @@ getmemsize(caddr_t kmdp, u_int64_t first)
 	u_long physmem_start, physmem_tunable, memtest;
 	pt_entry_t *pte;
 	struct bios_smap *smapbase;
+	struct efi_map_header *efimap;
 	quad_t dcons_addr, dcons_size;
 
 	bzero(physmap, sizeof(physmap));
 	basemem = 0;
 	physmap_idx = 0;
 
+	efimap = (struct efi_map_header *)preload_search_info(kmdp,
+	    MODINFO_METADATA | MODINFOMD_EFI_MAP);
 	smapbase = (struct bios_smap *)preload_search_info(kmdp,
 	    MODINFO_METADATA | MODINFOMD_SMAP);
-	if (smapbase == NULL)
-		panic("No BIOS smap info from loader!");
+	if (efimap == NULL && smapbase == NULL)
+		panic("No BIOS smap or EFI map info from loader!");
 
-	add_smap_entries(smapbase, physmap, &physmap_idx);
+	if (efimap != NULL) {
+		add_efi_map_entries(efimap, physmap, &physmap_idx);
+	} else {
+		add_smap_entries(smapbase, physmap, &physmap_idx);
+	}
 
 	/*
 	 * Find the 'base memory' segment for SMP
