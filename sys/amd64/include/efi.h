@@ -18,4 +18,17 @@ struct efi_descriptor {
 #define efi_next_descriptor(ptr, size) \
 	((struct efi_descriptor *)(((uint8_t *) ptr) + size))
 
+struct efi_fb {
+	int		fb_present;
+	uint64_t	fb_addr;
+	uint64_t	fb_size;
+	int		fb_height;
+	int		fb_width;
+	int		fb_stride;
+	uint32_t	fb_mask_red;
+	uint32_t	fb_mask_green;
+	uint32_t	fb_mask_blue;
+	uint32_t	fb_mask_reserved;
+};
+
 #endif  /* _MACHINE_EFI_H_ */
