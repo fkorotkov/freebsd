@@ -230,6 +230,11 @@ STRIP?=		-s
 COMPRESS_CMD?=	gzip -cn
 COMPRESS_EXT?=	.gz
 
+.endif
+.if ${__T} == "amd64"
+__DEFAULT_YES_OPTIONS+=LLDB
+.else
+__DEFAULT_NO_OPTIONS+=LLDB
 # Pointer to the top directory into which tests are installed.  Should not be
 # overriden by Makefiles, but the user may choose to set this in src.conf(5).
 TESTSBASE?= /usr/tests
