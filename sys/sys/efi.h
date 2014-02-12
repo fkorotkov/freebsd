@@ -26,8 +26,8 @@
  * $FreeBSD$
  */
 
-#ifndef _MACHINE_EFI_H_
-#define _MACHINE_EFI_H_
+#ifndef _SYS_EFI_H_
+#define _SYS_EFI_H_
 
 #include <sys/uuid.h>
 
@@ -174,4 +174,4 @@ int efi_var_set(efi_char *, struct uuid *, uint32_t, size_t, void *);
 
 #endif /* _KERNEL */
 
-#endif /* _MACHINE_EFI_H_ */
+#endif /* _SYS_EFI_H_ */
