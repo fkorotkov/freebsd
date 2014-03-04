@@ -128,28 +128,22 @@ struct pkthdr {
 	uint32_t	 flowid;	/* packet's 4-tuple system */
 	uint64_t	 csum_flags;	/* checksum and offload features */
 	uint16_t	 fibnum;	/* this packet should use this fib */
-	uint8_t		 cosqos;	/* class/quality of service */
+	uint8_t		 _reserved_1;
 	uint8_t		 rsstype;	/* hash type */
-	uint8_t		 l2hlen;	/* layer 2 header length */
-	uint8_t		 l3hlen;	/* layer 3 header length */
-	uint8_t		 l4hlen;	/* layer 4 header length */
-	uint8_t		 l5hlen;	/* layer 5 header length */
+	uint8_t		 _reserved_2;
+	uint8_t		 _reserved_3;
+	uint8_t		 _reserved_4;
+	uint8_t		 _reserved_5;
 	union {
-		uint8_t  eigth[8];
 		uint16_t sixteen[4];
 		uint32_t thirtytwo[2];
-		uint64_t sixtyfour[1];
-		uintptr_t unintptr[1];
+		uint64_t pad;
 		void	*ptr;
 	} PH_per;
 
 	/* Layer specific non-persistent local storage for reassembly, etc. */
 	union {
-		uint8_t  eigth[8];
-		uint16_t sixteen[4];
-		uint32_t thirtytwo[2];
-		uint64_t sixtyfour[1];
-		uintptr_t unintptr[1];
+		uint64_t pad;
 		void 	*ptr;
 	} PH_loc;
 };
@@ -157,7 +151,6 @@ struct pkthdr {
 #define	PH_vt		PH_per
 #define	vt_nrecs	sixteen[0]
 #define	tso_segsz	PH_per.sixteen[1]
-#define	csum_phsum	PH_per.sixteen[2]
 #define	csum_data	PH_per.thirtytwo[1]
 
 /*
@@ -291,33 +284,6 @@ struct mbuf {
 #define	M_HASHTYPE_GET(m)	((m)->m_pkthdr.rsstype)
 #define	M_HASHTYPE_SET(m, v)	((m)->m_pkthdr.rsstype = (v))
 #define	M_HASHTYPE_TEST(m, v)	(M_HASHTYPE_GET(m) == (v))
-
-/*
- * COS/QOS class and quality of service tags.
- * It uses DSCP code points as base.
- */
-#define	QOS_DSCP_CS0		0x00
-#define	QOS_DSCP_DEF		QOS_DSCP_CS0
-#define	QOS_DSCP_CS1		0x20
-#define	QOS_DSCP_AF11		0x28
-#define	QOS_DSCP_AF12		0x30
-#define	QOS_DSCP_AF13		0x38
-#define	QOS_DSCP_CS2		0x40
-#define	QOS_DSCP_AF21		0x48
-#define	QOS_DSCP_AF22		0x50
-#define	QOS_DSCP_AF23		0x58
-#define	QOS_DSCP_CS3		0x60
-#define	QOS_DSCP_AF31		0x68
-#define	QOS_DSCP_AF32		0x70
-#define	QOS_DSCP_AF33		0x78
-#define	QOS_DSCP_CS4		0x80
-#define	QOS_DSCP_AF41		0x88
-#define	QOS_DSCP_AF42		0x90
-#define	QOS_DSCP_AF43		0x98
-#define	QOS_DSCP_CS5		0xa0
-#define	QOS_DSCP_EF		0xb8
-#define	QOS_DSCP_CS6		0xc0
-#define	QOS_DSCP_CS7		0xe0
 
 /*
  * External mbuf storage buffer types.
