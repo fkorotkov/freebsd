@@ -20,7 +20,11 @@ LIBFIREWIRE=	${.OBJDIR}/../libfirewire/libfirewire.a
 # Set by zfsloader Makefile
 .if defined(LOADER_ZFS_SUPPORT)
 CFLAGS+=	-DLOADER_ZFS_SUPPORT
+.if ${MACHINE_CPUARCH} == "amd64"
+LIBZFSBOOT=	${.OBJDIR}/../../zfs32/libzfsboot.a
+.else
 LIBZFSBOOT=	${.OBJDIR}/../../zfs/libzfsboot.a
+.endif
 .endif
 
 # Enable PXE TFTP or NFS support, not both.
