@@ -6,6 +6,7 @@ INTERNALLIB=
 SRCS=	delay.c efi_console.c efinet.c efipart.c errno.c handles.c \
 	libefi.c time.c
 
+CFLAGS+= -fPIC
 CFLAGS+= -I${.CURDIR}/../include
 CFLAGS+= -I${.CURDIR}/../include/${MACHINE_CPUARCH}
 CFLAGS+= -I${.CURDIR}/../../../../lib/libstand
