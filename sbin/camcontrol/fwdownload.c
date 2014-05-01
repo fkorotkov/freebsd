@@ -380,7 +380,7 @@ fw_download_img(struct cam_device *cam_dev, const struct fw_vendor *vp,
 				warnx("Error writing image to device");
 				if (printerrors)
 					cam_error_print(cam_dev, ccb, CAM_ESF_ALL,
-						   CAM_EPF_ALL, stderr);
+					   CAM_EPF_ALL, stderr);
 				goto bailout;
 			}
 		}
