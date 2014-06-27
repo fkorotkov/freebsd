@@ -446,6 +446,20 @@ This option instructs the syscons driver to periodically scan
 for a keyboard device if it is not currently attached to one.
 Otherwise, the driver only probes for a keyboard once during bootup.
 .El
+.Sh LOADER TUNABLES
+These settings can be entered at the
+.Xr loader 8
+prompt or in
+.Xr loader.conf 5 .
+.Bl -tag -width indent
+.It Va kern.vty
+Set to sc to choose the
+.Nm
+driver for the system console, if the
+.Xr vt 4
+driver is also compiled in and is the default.
+.El
+
 .Sh FILES
 .Bl -tag -width /usr/share/syscons/xxxxyyyyzzz -compact
 .It Pa /dev/console
