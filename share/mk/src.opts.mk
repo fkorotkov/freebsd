@@ -180,7 +180,6 @@ __DEFAULT_NO_OPTIONS = \
     DTRACE_TESTS \
     EISA \
     HESIOD \
-    LLDB \
     NAND \
     OFED \
     OPENLDAP \
@@ -237,6 +236,12 @@ __DEFAULT_NO_OPTIONS+=ELFCOPY_AS_OBJCOPY
 # LLVM lacks support for FreeBSD 64-bit atomic operations for ARMv4/ARMv5
 .if ${__T} == "arm" || ${__T} == "armeb"
 BROKEN_OPTIONS+=LLDB
+.endif
+# LLDB is fully functional on only some platforms.
+.if ${__T} == "aarch64" || ${__T} == "amd64"
+__DEFAULT_YES_OPTIONS+=LLDB
+.else
+__DEFAULT_NO_OPTIONS+=LLDB
 .endif
 
 .include <bsd.mkopt.mk>
