@@ -101,11 +101,11 @@ modules-all modules-depend: modules-obj
 .if !defined(DEBUG)
 FULLKERNEL=	${KERNEL_KO}
 .else
-FULLKERNEL=	${KERNEL_KO}.debug
-${KERNEL_KO}: ${FULLKERNEL} ${KERNEL_KO}.symbols
-	${OBJCOPY} --strip-debug --add-gnu-debuglink=${KERNEL_KO}.symbols\
+FULLKERNEL=	${KERNEL_KO}.full
+${KERNEL_KO}: ${FULLKERNEL} ${KERNEL_KO}.debug
+	${OBJCOPY} --strip-debug --add-gnu-debuglink=${KERNEL_KO}.debug \
 	    ${FULLKERNEL} ${.TARGET}
-${KERNEL_KO}.symbols: ${FULLKERNEL}
+${KERNEL_KO}.debug: ${FULLKERNEL}
 	${OBJCOPY} --only-keep-debug ${FULLKERNEL} ${.TARGET}
 install.debug reinstall.debug: gdbinit
 	cd ${.CURDIR}; ${MAKE} ${.TARGET:R}
@@ -154,7 +154,7 @@ ${mfile:T:S/.m$/.h/}: ${mfile}
 
 kernel-clean:
 	rm -f *.o *.so *.So *.ko *.s eddep errs \
-	    ${FULLKERNEL} ${KERNEL_KO} ${KERNEL_KO}.symbols \
+	    ${FULLKERNEL} ${KERNEL_KO} ${KERNEL_KO}.debug \
 	    linterrs tags vers.c \
 	    vnode_if.c vnode_if.h vnode_if_newproto.h vnode_if_typedef.h \
 	    ${MFILES:T:S/.m$/.c/} ${MFILES:T:S/.m$/.h/} \
@@ -252,19 +252,25 @@ kernel-install:
 	if [ ! "`dirname "$$thiskernel"`" -ef ${DESTDIR}${KODIR} ] ; then \
 		chflags -R noschg ${DESTDIR}${KODIR} ; \
 		rm -rf ${DESTDIR}${KODIR} ; \
+		rm -rf ${DESTDIR}${DEBUGDIR}${KODIR} ; \
 	else \
 		if [ -d ${DESTDIR}${KODIR}.old ] ; then \
 			chflags -R noschg ${DESTDIR}${KODIR}.old ; \
 			rm -rf ${DESTDIR}${KODIR}.old ; \
 		fi ; \
 		mv ${DESTDIR}${KODIR} ${DESTDIR}${KODIR}.old ; \
+		if [ -d ${DESTDIR}${DEBUGDIR}${KODIR} ]; then \
+			rm -rf ${DESTDIR}${DEBUGDIR}${KODIR}.old ; \
+			mv ${DESTDIR}${DEBUGDIR}${KODIR} ${DESTDIR}${DEBUGDIR}${KODIR}.old ; \
+		fi ; \
 		sysctl kern.bootfile=${DESTDIR}${KODIR}.old/"`basename "$$thiskernel"`" ; \
 	fi
 .endif
 	mkdir -p ${DESTDIR}${KODIR}
 	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO} ${DESTDIR}${KODIR}
 .if defined(DEBUG) && !defined(INSTALL_NODEBUG) && ${MK_KERNEL_SYMBOLS} != "no"
-	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO}.symbols ${DESTDIR}${KODIR}
+	mkdir -p ${DESTDIR}${DEBUGDIR}${KODIR}
+	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO}.debug ${DESTDIR}${DEBUGDIR}${KODIR}
 .endif
 .if defined(KERNEL_EXTRA_INSTALL)
 	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_EXTRA_INSTALL} ${DESTDIR}${KODIR}
@@ -276,7 +282,7 @@ kernel-reinstall:
 	@-chflags -R noschg ${DESTDIR}${KODIR}
 	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO} ${DESTDIR}${KODIR}
 .if defined(DEBUG) && !defined(INSTALL_NODEBUG) && ${MK_KERNEL_SYMBOLS} != "no"
-	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO}.symbols ${DESTDIR}${KODIR}
+	${INSTALL} -p -m 555 -o ${KMODOWN} -g ${KMODGRP} ${KERNEL_KO}.debug ${DESTDIR}${KODIR}
 .endif
 
 config.o env.o hints.o vers.o vnode_if.o:
