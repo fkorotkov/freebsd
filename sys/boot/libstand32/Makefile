@@ -188,7 +188,6 @@ SRCS+=	nandfs.c
 .if ${MACHINE_CPUARCH} == "amd64"
 CLEANFILES+= machine
 beforedepend ${OBJS}: machine
-cleandepend: cleanmachine
 machine:
 	ln -fs ${.CURDIR}/../../i386/include machine
 .endif
