@@ -190,5 +190,5 @@ static driver_t terasic_mtl_nexus_driver = {
 	sizeof(struct terasic_mtl_softc),
 };
 
-DRIVER_MODULE(mtl, nexus, terasic_mtl_nexus_driver, terasic_mtl_devclass, 0,
-    0);
+DRIVER_MODULE(terasic_mtl, nexus, terasic_mtl_nexus_driver,
+    terasic_mtl_devclass, 0, 0);
