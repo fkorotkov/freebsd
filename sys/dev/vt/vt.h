@@ -88,6 +88,12 @@ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RW, &vt_##_name, _default,\
 		_descr);						\
 TUNABLE_INT("kern.vt." #_name, &vt_##_name);
 
+/* Allow to disable some special keys by users. */
+#define	VT_DEBUG_KEY_ENABLED	(1 << 0)
+#define	VT_REBOOT_KEY_ENABLED	(1 << 1)
+#define	VT_HALT_KEY_ENABLED	(1 << 2)
+#define	VT_POWEROFF_KEY_ENABLED	(1 << 3)
+
 struct vt_driver;
 
 void vt_allocate(struct vt_driver *, void *);
