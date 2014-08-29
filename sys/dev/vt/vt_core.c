@@ -1792,6 +1792,7 @@ skip_thunk:
 	case KDSETRAD:		/* set keyboard repeat & delay rates (old) */
 		if (*(int *)data & ~0x7f)
 			return (EINVAL);
+		/* FALLTHROUGH */
 	case GIO_KEYMAP:
 	case PIO_KEYMAP:
 	case GIO_DEADKEYMAP:
