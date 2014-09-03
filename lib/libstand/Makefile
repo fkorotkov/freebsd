@@ -6,11 +6,12 @@
 #   quite large.
 #
 
-.include <bsd.own.mk>
 MK_SSP=		no
+MK_PROFILE=	no
+
+.include <bsd.own.mk>
 
 LIB=		stand
-NO_PROFILE=
 NO_PIC=
 INCS=		stand.h
 MAN=		libstand.3
