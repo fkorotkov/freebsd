@@ -44,6 +44,7 @@ __FBSDID("$FreeBSD$");
 #include <dev/drm2/drmP.h>
 #include <dev/drm2/ttm/ttm_bo_driver.h>
 #include <dev/drm2/ttm/ttm_page_alloc.h>
+#include <vm/vm_pageout.h>
 
 #ifdef TTM_HAS_AGP
 #include <asm/agp.h>
@@ -476,6 +477,14 @@ static void ttm_handle_caching_state_failure(struct pglist *pages,
 	}
 }
 
+static vm_paddr_t
+ttm_alloc_high_bound(int ttm_alloc_flags)
+{
+
+	return ((ttm_alloc_flags & TTM_PAGE_FLAG_DMA32) ? 0xffffffff :
+	    VM_MAX_ADDRESS);
+}
+
 /**
  * Allocate new pages with correct caching.
  *
@@ -491,6 +500,7 @@ static int ttm_alloc_new_pages(struct pglist *pages, int ttm_alloc_flags,
 	unsigned i, cpages, aflags;
 	unsigned max_cpages = min(count,
 			(unsigned)(PAGE_SIZE/sizeof(vm_page_t)));
+	int tries;
 
 	aflags = VM_ALLOC_NORMAL | VM_ALLOC_WIRED | VM_ALLOC_NOOBJ |
 	    ((ttm_alloc_flags & TTM_PAGE_FLAG_ZERO_ALLOC) != 0 ?
@@ -501,11 +511,18 @@ static int ttm_alloc_new_pages(struct pglist *pages, int ttm_alloc_flags,
 	    M_WAITOK | M_ZERO);
 
 	for (i = 0, cpages = 0; i < count; ++i) {
+		tries = 0;
+retry:
 		p = vm_page_alloc_contig(NULL, 0, aflags, 1, 0,
-		    (ttm_alloc_flags & TTM_PAGE_FLAG_DMA32) ? 0xffffffff :
-		    VM_MAX_ADDRESS, PAGE_SIZE, 0,
-		    ttm_caching_state_to_vm(cstate));
+		    ttm_alloc_high_bound(ttm_alloc_flags),
+		    PAGE_SIZE, 0, ttm_caching_state_to_vm(cstate));
 		if (!p) {
+			if (tries < 3) {
+				vm_pageout_grow_cache(tries, 0,
+				    ttm_alloc_high_bound(ttm_alloc_flags));
+				tries++;
+				goto retry;
+			}
 			printf("[TTM] Unable to get page %u\n", i);
 
 			/* store already allocated pages in the pool after
@@ -707,6 +724,7 @@ static int ttm_get_pages(vm_page_t *pages, unsigned npages, int flags,
 	int gfp_flags, aflags;
 	unsigned count;
 	int r;
+	int tries;
 
 	aflags = VM_ALLOC_NORMAL | VM_ALLOC_NOOBJ | VM_ALLOC_WIRED |
 	    ((flags & TTM_PAGE_FLAG_ZERO_ALLOC) != 0 ? VM_ALLOC_ZERO : 0);
@@ -714,11 +732,18 @@ static int ttm_get_pages(vm_page_t *pages, unsigned npages, int flags,
 	/* No pool for cached pages */
 	if (pool == NULL) {
 		for (r = 0; r < npages; ++r) {
+			tries = 0;
+retry:
 			p = vm_page_alloc_contig(NULL, 0, aflags, 1, 0,
-			    (flags & TTM_PAGE_FLAG_DMA32) ? 0xffffffff :
-			    VM_MAX_ADDRESS, PAGE_SIZE,
+			    ttm_alloc_high_bound(flags), PAGE_SIZE,
 			    0, ttm_caching_state_to_vm(cstate));
 			if (!p) {
+				if (tries < 3) {
+					vm_pageout_grow_cache(tries, 0,
+					    ttm_alloc_high_bound(flags));
+					tries++;
+					goto retry;
+				}
 				printf("[TTM] Unable to allocate page\n");
 				return -ENOMEM;
 			}
