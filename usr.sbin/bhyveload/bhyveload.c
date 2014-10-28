@@ -709,6 +709,14 @@ main(int argc, char** argv)
 	need_reinit = 0;
 	error = vm_create(vmname);
 	if (error) {
+		/*
+		 * XXXEM ENOENT comes from sysctl() failing to find some
+		 * hw.vmm.* node. Should have a better way to report this
+		 * error.
+		 */
+		if (errno == ENOENT) {
+			errx(1, "vmm.ko not loaded");
+		}
 		if (errno != EEXIST) {
 			perror("vm_create");
 			exit(1);
