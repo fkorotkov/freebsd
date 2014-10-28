@@ -326,7 +326,7 @@ MTREES=		mtree/BSD.root.dist		/		\
 		mtree/BSD.var.dist		/var		\
 		mtree/BSD.usr.dist		/usr		\
 		mtree/BSD.include.dist		/usr/include
-.if ${MK_DEBUG_FILES} != "no"
+.if ${MK_DEBUG_FILES} != "no" || ${MK_KERNEL_SYMBOLS} != "no"
 MTREES+=	mtree/BSD.debug.dist		/usr/lib
 .endif
 .if ${MK_GROFF} != "no"

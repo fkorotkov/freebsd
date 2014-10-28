@@ -98,6 +98,7 @@ __DEFAULT_YES_OPTIONS = \
     IPFW \
     JAIL \
     KDUMP \
+    KERNEL_SYMBOLS \
     KVM \
     LDNS \
     LDNS_UTILS \
