@@ -10,7 +10,8 @@ SUBDIR+=	fdt
 .endif
 .endif
 
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "arm" || \
+    ${MACHINE_CPUARCH} == "i386"
 SUBDIR+=	loader boot1
 .endif
 
