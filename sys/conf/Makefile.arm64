@@ -36,6 +36,9 @@ INCLUDES+= -I$S/contrib/libfdt
 # We generally don't want fpu instructions in the kernel.
 CFLAGS += -mgeneral-regs-only
 
+# Reserve x18 for pcpu data
+CFLAGS += -ffixed-x18
+
 %BEFORE_DEPEND
 
 %OBJS
