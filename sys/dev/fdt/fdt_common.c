@@ -65,6 +65,8 @@ vm_offset_t fdt_immr_va;
 vm_offset_t fdt_immr_size;
 
 struct fdt_ic_list fdt_ic_list_head = SLIST_HEAD_INITIALIZER(fdt_ic_list_head);
+struct fdt_clock_list fdt_clock_list_head =
+    SLIST_HEAD_INITIALIZER(fdt_clock_list_head);
 
 static int
 fdt_get_range_by_busaddr(phandle_t node, u_long addr, u_long *base,
