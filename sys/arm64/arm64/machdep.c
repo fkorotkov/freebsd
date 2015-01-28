@@ -871,8 +871,9 @@ initarm(struct arm64_bootparams *abp)
 	msgbufinit(msgbufp, msgbufsize);
 	mutex_init();
 	init_param2(physmem);
-
+#ifdef KDB
 	dbg_monitor_init();
+#endif
 	kdb_init();
 
 	early_boot = 0;
