@@ -239,4 +239,4 @@ SIZEFLAG="-s ${SIZE}"
 fi
 
 cd ${BSDROOT}; makefs ${DUPFLAG} -N ${DBDIR} ${SIZEFLAG} ${BFLAG} \
-     -t ffs ${LABELFLAG} -f 256 -b 512m -Z ${IMGFILE} ${manifest}
+     -t ffs ${LABELFLAG} -f 256 -b 512m -f 512k -Z ${IMGFILE} ${manifest}
