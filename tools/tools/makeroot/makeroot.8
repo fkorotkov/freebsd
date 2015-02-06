@@ -28,7 +28,7 @@
 .\" SUCH DAMAGE.
 .\"
 .\" $FreeBSD$
-.Dd May 20, 2013
+.Dd February 6, 2015
 .Dt MAKEROOT 8
 .Os
 .Sh NAME
@@ -97,6 +97,11 @@ argument is supplied then the files will be installed in the root user's
 directory.
 .It Fl l Ar label
 Set the file system volume label.
+This argument is passed to
+.Xr makefs
+using the
+.Fl o Ar label=
+option.
 .It Fl p Ar master.passwd Op Fl g Ar group
 Install an alternate
 .Ar master.passwd
