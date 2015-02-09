@@ -198,7 +198,9 @@ ast(struct trapframe *framep)
 
 	CTR3(KTR_SYSC, "ast: thread %p (pid %d, %s)", td, p->p_pid,
             p->p_comm);
+#if 0 /* ARMTODO maybe QEMU issue? */
 	KASSERT(TRAPF_USERMODE(framep), ("ast in kernel mode"));
+#endif
 	WITNESS_WARN(WARN_PANIC, NULL, "Returning to user mode");
 	mtx_assert(&Giant, MA_NOTOWNED);
 	THREAD_LOCK_ASSERT(td, MA_NOTOWNED);
