@@ -209,14 +209,18 @@ int
 fill_dbregs(struct thread *td, struct dbreg *regs)
 {
 
-	panic("fill_dbregs");
+	bzero(regs, sizeof(*regs)); /* ARM64TODO */
+	return (0);
 }
 
 int
 set_dbregs(struct thread *td, struct dbreg *regs)
 {
 
-	panic("set_dbregs");
+#ifdef KDB
+	kdb_enter("arm64", "set_dbregs");
+#endif
+	return (0); /* ARM64TODO */
 }
 
 int
