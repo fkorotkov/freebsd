@@ -84,7 +84,7 @@ _start:
 
 virtdone:
 	/* Set up the stack */
-	adr	x25, initstack_end
+	adr	x25, initstack_top
 	mov	sp, x25
 
 	/* Zero the BSS */
@@ -114,6 +114,9 @@ virtdone:
 
 	/* Branch to C code */
 	bl	initarm
+	/* Save new stack pointer returned from initarm */
+	mov	sp, x0
+
 	bl	mi_startup
 
 	/* We should not get here */
@@ -538,7 +541,7 @@ init_pt_va:
 	.align	4
 initstack:
 	.space	(PAGE_SIZE * KSTACK_PAGES)
-initstack_end:
+initstack_top:
 
 
 ENTRY(sigcode)

@@ -543,14 +543,13 @@ sendsig(sig_t catcher, ksiginfo_t *ksi, sigset_t *mask)
 }
 
 static void
-init_proc0(vm_offset_t kstack)
+init_proc0(void)
 {
 	struct pcpu *pcpup = &__pcpu[0];
 
 	proc_linkup0(&proc0, &thread0);
-	thread0.td_kstack = kstack;
 	thread0.td_pcb = (struct pcb *)
-	   (thread0.td_kstack + KSTACK_PAGES * PAGE_SIZE) - 1;
+	   (thread0.td_kstack + thread0.td_kstack_pages * PAGE_SIZE) - 1;
 	thread0.td_pcb->pcb_fpflags = 0;
 	thread0.td_pcb->pcb_vfpcpu = UINT_MAX;
 	thread0.td_frame = &proc0_tf;
@@ -771,7 +770,7 @@ try_load_dtb(caddr_t kmdp)
 }
 #endif
 
-void
+void *
 initarm(struct arm64_bootparams *abp)
 {
 	struct efi_map_header *efihdr;
@@ -840,7 +839,7 @@ initarm(struct arm64_bootparams *abp)
 
 	cninit();
 
-	init_proc0(abp->kern_stack);
+	init_proc0();
 	msgbufinit(msgbufp, msgbufsize);
 	mutex_init();
 	init_param2(physmem);
@@ -848,5 +847,7 @@ initarm(struct arm64_bootparams *abp)
 
 	early_boot = 0;
 	printf("End initarm\n");
+
+	return ((void *)thread0.td_pcb);
 }
 

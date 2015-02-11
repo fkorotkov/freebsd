@@ -944,6 +944,7 @@ pmap_bootstrap(vm_offset_t l1pt, vm_paddr_t kernstart, vm_size_t kernlen)
 	pt_entry_t *l2;
 	vm_offset_t va, freemempos;
 	vm_offset_t dpcpu, msgbufpv;
+	vm_offset_t kstack0;
 	vm_paddr_t pa;
 
 	kern_delta = KERNBASE - kernstart;
@@ -1054,6 +1055,11 @@ pmap_bootstrap(vm_offset_t l1pt, vm_paddr_t kernstart, vm_size_t kernlen)
 	/* Allocate memory for the msgbuf, e.g. for /sbin/dmesg */
 	alloc_pages(msgbufpv, round_page(msgbufsize) / PAGE_SIZE);
 	msgbufp = (void *)msgbufpv;
+
+	/* Allocate memory for kernel stack */
+	alloc_pages(kstack0, KSTACK_PAGES);
+	thread0.td_kstack = kstack0;
+	thread0.td_kstack_pages = KSTACK_PAGES;
 
 	virtual_avail = roundup2(freemempos, L1_SIZE);
 	virtual_end = VM_MAX_KERNEL_ADDRESS - L2_SIZE;
