@@ -87,6 +87,9 @@ options 	INVARIANT_SUPPORT	# Extra sanity checks of internal structures, require
 options 	MALLOC_DEBUG_MAXZONES=8	# Separate malloc(9) zones
 options 	EARLY_PRINTF
 
+# Bus support.
+device		pci
+
 # Serial (COM) ports
 device		uart		# Generic UART driver
 device		pl011
