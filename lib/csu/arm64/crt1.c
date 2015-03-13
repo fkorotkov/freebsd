@@ -1,11 +1,6 @@
 /* LINTLIBRARY */
 /*-
- * Copyright 2001 David E. O'Brien.
- * All rights reserved.
  * Copyright 1996-1998 John D. Polstra.
- * All rights reserved.
- * Copyright (c) 1997 Jason R. Thorpe.
- * Copyright (c) 1995 Christopher G. Demetriou
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -16,16 +11,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *          This product includes software developed for the
- *          FreeBSD Project.  See http://www.freebsd.org/ for
- *          information about FreeBSD.
- *          This product includes software developed for the
- *          NetBSD Project.  See http://www.netbsd.org/ for
- *          information about NetBSD.
- * 4. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -54,12 +39,6 @@ __FBSDID("$FreeBSD$");
 #include "crtbrand.c"
 #include "ignore_init.c"
 
-struct Struct_Obj_Entry;
-struct ps_strings;
-
-extern void _start(int, char **, char **, const struct Struct_Obj_Entry *,
-    void (*)(void), struct ps_strings *);
-
 #ifdef GCRT
 extern void _mcleanup(void);
 extern void monstartup(void *, void *);
@@ -67,70 +46,39 @@ extern int eprol;
 extern int etext;
 #endif
 
-struct ps_strings *__ps_strings;
-
-void __start(int, char **, char **, struct ps_strings *,
-    const struct Struct_Obj_Entry *, void (*)(void));
+void __start(int, char **, char **, void (*)(void));
 
 /* The entry function. */
 __asm("	.text			\n"
 "	.align	0		\n"
 "	.globl	_start		\n"
 "	_start:			\n"
-/* TODO: Don't just pass NULL to __start */
-"	mov	x3, x0		\n" /* ps_strings */
-"	mov	x4, x1		\n" /* obj */
-"	mov	x5, x2		\n" /* cleanup */
+"	mov	x3, x2		\n" /* cleanup */
 "	ldr	x0, [sp]	\n" /* Load argc */
 "	add	x1, sp, #8	\n" /* load argv */
 "	add	x2, x1, x0, lsl #3 \n" /* env is after argv */
 "	add	x2, x2, #8	\n" /* argv is null terminated */
-/* Align the stack to a 16-bit address */
-"	mov	x10, sp		\n"
-"	mov	x11, #15	\n"
-"	bic	x10, x10, x11	\n"
-"	mov	sp, x10		\n"
 "	b	 __start  ");
 
-/* ARGSUSED */
+
+/* The entry function. */
 void
-__start(int argc, char **argv, char **env, struct ps_strings *ps_strings,
-    const struct Struct_Obj_Entry *obj __unused, void (*cleanup)(void))
+__start(int argc, char *argv[], char *env[], void (*cleanup)(void))
 {
 
 	handle_argv(argc, argv, env);
-
-	if (ps_strings != (struct ps_strings *)0)
-		__ps_strings = ps_strings;
 
 	if (&_DYNAMIC != NULL)
 		atexit(cleanup);
 	else
 		_init_tls();
+
 #ifdef GCRT
 	atexit(_mcleanup);
 	monstartup(&eprol, &etext);
+__asm__("eprol:");
 #endif
+
 	handle_static_init(argc, argv, env);
 	exit(main(argc, argv, env));
 }
-
-static const struct {
-	int32_t	namesz;
-	int32_t	descsz;
-	int32_t	type;
-	char	name[sizeof(NOTE_FREEBSD_VENDOR)];
-	char	desc[sizeof(MACHINE_ARCH)];
-} archtag __attribute__ ((section (NOTE_SECTION), aligned(4))) __used = {
-	.namesz = sizeof(NOTE_FREEBSD_VENDOR),
-	.descsz = sizeof(MACHINE_ARCH),
-	.type = ARCH_NOTETYPE,
-	.name = NOTE_FREEBSD_VENDOR,
-	.desc = MACHINE_ARCH
-};
-
-#ifdef GCRT
-__asm__(".text");
-__asm__("eprol:");
-__asm__(".previous");
-#endif
