@@ -83,7 +83,8 @@ void
 vfp_save_state(struct thread *td)
 {
 	__int128_t *vfp_state;
-	uint32_t cpacr, fpcr, fpsr;
+	uint64_t fpcr, fpsr;
+	uint32_t cpacr;
 
 	/*
 	 * Only store the registers if the VFP is enabled,
@@ -125,7 +126,7 @@ void
 vfp_restore_state(void)
 {
 	__int128_t *vfp_state;
-	uint32_t fpcr, fpsr;
+	uint64_t fpcr, fpsr;
 	struct pcb *curpcb;
 	u_int cpu;
 
