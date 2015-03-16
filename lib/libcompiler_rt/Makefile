@@ -201,7 +201,11 @@ SRCS+=	${file}.c
 SRCS+=	fixtfdi.c \
 	fixunstfdi.c \
 	floatditf.c \
-	floatunditf.c
+	floatunditf.c \
+	gcc_qadd.c \
+	gcc_qmul.c \
+	gcc_qsub.c \
+	multc3.c
 .endif
 
 .if ${MACHINE_CPUARCH} == "arm"
