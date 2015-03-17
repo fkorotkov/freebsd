@@ -31,7 +31,7 @@
 __FBSDID("$FreeBSD$");
 
 ENTRY(.rtld_start)
-	mov	x19, x2		/* Put ps_strings in a callee-saved register */
+	mov	x19, x0		/* Put ps_strings in a callee-saved register */
 	mov	x20, sp		/* And the stack pointer */
 
 	sub	x8, x20, #16	/* Make room for obj_main & exit proc */
