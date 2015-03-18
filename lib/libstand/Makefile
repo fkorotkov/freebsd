@@ -39,7 +39,7 @@ CFLAGS+=	-msoft-float -D_STANDALONE -DNETIF_DEBUG
 .if ${MACHINE_CPUARCH} == "arm"
 CFLAGS+=	-msoft-float -D_STANDALONE
 .endif
-.if ${MACHINE_CPUARCH} == "arm64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-D_STANDALONE -mgeneral-regs-only
 .endif
 .if ${MACHINE_CPUARCH} == "mips"
@@ -80,8 +80,8 @@ SRCS+=	aeabi_idivmod.S aeabi_ldivmod.S aeabi_uidivmod.S aeabi_uldivmod.S
 SRCS+=	aeabi_memcmp.S aeabi_memcpy.S aeabi_memmove.S aeabi_memset.S
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm64"
-.PATH: ${.CURDIR}/../libc/arm64/gen
+.if ${MACHINE_CPUARCH} == "aarch64"
+.PATH: ${.CURDIR}/../libc/aarch64/gen
 .endif
 
 .if ${MACHINE_CPUARCH} == "powerpc"
