@@ -42,7 +42,7 @@ CFLAGS+=	-I${.CURDIR}/../../common
 FILES=	loader.efi
 FILESMODE_loader.efi=	${BINMODE}
 
-LDSCRIPT=	${.CURDIR}/ldscript.arm64
+LDSCRIPT=	${.CURDIR}/ldscript.aarch64
 LDFLAGS=	-Wl,-T${LDSCRIPT} -Wl,-Bsymbolic -shared
 
 ${PROG}:	${LDSCRIPT}
