@@ -27,7 +27,7 @@ CFLAGS+=	-mno-red-zone
 .if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 CFLAGS+=	-mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-sse3 -msoft-float
 .endif
-.if ${MACHINE_CPUARCH} == "arm64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-mgeneral-regs-only
 .endif
 .if ${MACHINE_CPUARCH} == "powerpc" || ${MACHINE_CPUARCH} == "arm" || ${MACHINE_CPUARCH} == "mips"

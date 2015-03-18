@@ -9,7 +9,7 @@ SRCS=	delay.c efi_console.c efinet.c efipart.c efisimplefs.c errno.c \
 .if ${MACHINE_ARCH} == "amd64"
 CFLAGS+= -fPIC -mno-red-zone
 .endif
-.if ${MACHINE_CPUARCH} == "arm64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-mgeneral-regs-only
 .endif
 CFLAGS+= -I${.CURDIR}/../include
