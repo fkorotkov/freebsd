@@ -23,7 +23,7 @@ CFLAGS+=	-I${.CURDIR}/../../efi/include/aarch64
 BOOT_FORTH=	yes
 CFLAGS+=	-DBOOT_FORTH
 CFLAGS+=	-I${.CURDIR}/../../ficl
-CFLAGS+=	-I${.CURDIR}/../../ficl/arm64
+CFLAGS+=	-I${.CURDIR}/../../ficl/aarch64
 LIBFICL=	${.OBJDIR}/../../ficl/libficl.a
 .endif
 .if ${MK_FDT} != "no"
