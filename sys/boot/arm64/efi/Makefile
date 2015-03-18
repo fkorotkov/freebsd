@@ -17,7 +17,7 @@ SRCS+=	copy.c devicename.c exec.c bootinfo.c cache.c
 CFLAGS+=	-fno-builtin -mgeneral-regs-only
 CFLAGS+=	-I${.CURDIR}
 CFLAGS+=	-I${.CURDIR}/../../efi/include
-CFLAGS+=	-I${.CURDIR}/../../efi/include/arm64
+CFLAGS+=	-I${.CURDIR}/../../efi/include/aarch64
 
 .if ${MK_FORTH} != "no"
 BOOT_FORTH=	yes
