@@ -1477,7 +1477,8 @@ _elftctools=	lib/libelftc \
 _elftctools+=	usr.bin/addr2line
 .endif
 .elif ${TARGET_ARCH} != ${MACHINE_ARCH} && ${MK_ELFTOOLCHAIN_TOOLS} != "no"
-# A cross-strip is not passed in WMAKEENV, so build elfcopy/strip.
+# If cross-building with an external binutils we still need to build strip for
+# the target (for at least crunchide).
 _elftctools=	lib/libelftc \
 		usr.bin/elfcopy
 .endif
@@ -1687,6 +1688,10 @@ _prebuild_libs=	${_kerberos5_lib_libasn1} \
 _prebuild_libs+= gnu/lib/libstdc++ gnu/lib/libsupc++
 gnu/lib/libstdc++__L: lib/msun__L
 gnu/lib/libsupc++__L: gnu/lib/libstdc++__L
+.endif
+
+.if ${MK_LIBCPLUSPLUS} != "no"
+_prebuild_libs+= lib/libc++
 .endif
 
 lib/libgeom__L: lib/libexpat__L
