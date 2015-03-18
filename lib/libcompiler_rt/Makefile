@@ -195,7 +195,7 @@ SRCS+=	${file}.c
 . endif
 .endfor
 
-.if ${MACHINE_CPUARCH} == "arm64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 # These files live in the ppc directory so we can't include them using
 # SRCF above. We also need to adjust the path to add them.
 .PATH: ${CRTSRC}/ppc
