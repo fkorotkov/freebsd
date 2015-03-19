@@ -66,19 +66,19 @@
  */
 
 #ifndef _MACHINE_BUS_H_
-#define _MACHINE_BUS_H_
+#define	_MACHINE_BUS_H_
 
 #include <machine/_bus.h>
 
-#define BUS_SPACE_ALIGNED_POINTER(p, t) ALIGNED_POINTER(p, t)
+#define	BUS_SPACE_ALIGNED_POINTER(p, t) ALIGNED_POINTER(p, t)
 
-#define BUS_SPACE_MAXADDR_24BIT	0xFFFFFFUL
-#define BUS_SPACE_MAXADDR_32BIT 0xFFFFFFFFUL
-#define BUS_SPACE_MAXSIZE_24BIT	0xFFFFFFUL
-#define BUS_SPACE_MAXSIZE_32BIT	0xFFFFFFFFUL
+#define	BUS_SPACE_MAXADDR_24BIT	0xFFFFFFUL
+#define	BUS_SPACE_MAXADDR_32BIT 0xFFFFFFFFUL
+#define	BUS_SPACE_MAXSIZE_24BIT	0xFFFFFFUL
+#define	BUS_SPACE_MAXSIZE_32BIT	0xFFFFFFFFUL
 
-#define BUS_SPACE_MAXADDR 	0xFFFFFFFFFFFFFFFFUL
-#define BUS_SPACE_MAXSIZE 	0xFFFFFFFFFFFFFFFFUL
+#define	BUS_SPACE_MAXADDR 	0xFFFFFFFFFFFFFFFFUL
+#define	BUS_SPACE_MAXSIZE 	0xFFFFFFFFFFFFFFFFUL
 
 #define	BUS_SPACE_MAP_CACHEABLE		0x01
 #define	BUS_SPACE_MAP_LINEAR		0x02
@@ -319,9 +319,9 @@ struct bus_space {
 #define	bus_space_read_4(t, h, o)	__bs_rs(4,(t),(h),(o))
 #define	bus_space_read_8(t, h, o)	__bs_rs(8,(t),(h),(o))
 
-#define bus_space_read_stream_1(t, h, o)        __bs_rs_s(1,(t), (h), (o))
-#define bus_space_read_stream_2(t, h, o)        __bs_rs_s(2,(t), (h), (o))
-#define bus_space_read_stream_4(t, h, o)        __bs_rs_s(4,(t), (h), (o))
+#define	bus_space_read_stream_1(t, h, o)        __bs_rs_s(1,(t), (h), (o))
+#define	bus_space_read_stream_2(t, h, o)        __bs_rs_s(2,(t), (h), (o))
+#define	bus_space_read_stream_4(t, h, o)        __bs_rs_s(4,(t), (h), (o))
 #define	bus_space_read_stream_8(t, h, o)	__bs_rs_s(8,8,(t),(h),(o))
 
 /*
@@ -465,15 +465,5 @@ struct bus_space {
 	__bs_copy(8, t, h1, o1, h2, o2, c)
 
 #include <machine/bus_dma.h>
-
-#if 0
-/*
- * Get the physical address of a bus space memory-mapped resource.
- * Doing this as a macro is a temporary solution until a more robust fix is
- * designed.  It also serves to mark the locations needing that fix.
- */
-#define BUS_SPACE_PHYSADDR(res, offs) \
-	((u_int)(rman_get_start(res)+(offs)))
-#endif
 
 #endif /* _MACHINE_BUS_H_ */

@@ -56,7 +56,7 @@
 
 #ifdef _KERNEL
 
-#define vtophys(va)	pmap_kextract((vm_offset_t)(va))
+#define	vtophys(va)	pmap_kextract((vm_offset_t)(va))
 
 #endif
 
@@ -115,8 +115,8 @@ typedef struct pmap *pmap_t;
 
 #ifdef _KERNEL
 extern struct pmap	kernel_pmap_store;
-#define kernel_pmap	(&kernel_pmap_store)
-#define pmap_kernel() kernel_pmap
+#define	kernel_pmap	(&kernel_pmap_store)
+#define	pmap_kernel()	kernel_pmap
 
 #define	PMAP_ASSERT_LOCKED(pmap) \
 				mtx_assert(&(pmap)->pm_mtx, MA_OWNED)

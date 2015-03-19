@@ -29,13 +29,13 @@
 #ifndef	_MACHINE_ATOMIC_H_
 #define	_MACHINE_ATOMIC_H_
 
-#define isb()  __asm __volatile("isb" : : : "memory")
-#define dsb()  __asm __volatile("dsb sy" : : : "memory")
-#define dmb()  __asm __volatile("dmb sy" : : : "memory")
+#define	isb()  __asm __volatile("isb" : : : "memory")
+#define	dsb()  __asm __volatile("dsb sy" : : : "memory")
+#define	dmb()  __asm __volatile("dmb sy" : : : "memory")
 
-#define mb()   dmb()
-#define wmb()  dmb()
-#define rmb()  dmb()
+#define	mb()   dmb()
+#define	wmb()  dmb()
+#define	rmb()  dmb()
 
 static __inline void
 atomic_add_32(volatile uint32_t *p, uint32_t val)

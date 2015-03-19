@@ -5,17 +5,17 @@
  */
 
 #ifndef _MACHINE_IEEEFP_H_
-#define _MACHINE_IEEEFP_H_
+#define	_MACHINE_IEEEFP_H_
 
 /* Deprecated FPU control interface */
 
 /* FP exception codes */
-#define FP_EXCEPT_INV	0
-#define FP_EXCEPT_DZ	1
-#define FP_EXCEPT_OFL	2
-#define FP_EXCEPT_UFL	3
-#define FP_EXCEPT_IMP	4
-#define FP_EXCEPT_DNML	7
+#define	FP_EXCEPT_INV	0
+#define	FP_EXCEPT_DZ	1
+#define	FP_EXCEPT_OFL	2
+#define	FP_EXCEPT_UFL	3
+#define	FP_EXCEPT_IMP	4
+#define	FP_EXCEPT_DNML	7
 
 typedef int fp_except_t;
 

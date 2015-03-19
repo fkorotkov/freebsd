@@ -34,8 +34,8 @@
 #include <machine/frame.h>
 #include <machine/trap.h>
 
-#define T_BREAKPOINT	(EXCP_BRK)
-#define T_WATCHPOINT	(EXCP_WATCHPT_EL1)
+#define	T_BREAKPOINT	(EXCP_BRK)
+#define	T_WATCHPOINT	(EXCP_WATCHPT_EL1)
 
 typedef vm_offset_t	db_addr_t;
 typedef long		db_expr_t;
@@ -50,8 +50,8 @@ typedef long		db_expr_t;
 	kdb_frame->tf_elr += BKPT_SIZE; \
 } while (0)
 
-#define db_clear_single_step	kdb_cpu_clear_singlestep
-#define db_set_single_step	kdb_cpu_set_singlestep
+#define	db_clear_single_step	kdb_cpu_clear_singlestep
+#define	db_set_single_step	kdb_cpu_set_singlestep
 
 #define	IS_BREAKPOINT_TRAP(type, code)	(type == T_BREAKPOINT)
 #define	IS_WATCHPOINT_TRAP(type, code)	(type == T_WATCHPOINT)
@@ -62,12 +62,12 @@ typedef long		db_expr_t;
 #define	inst_call(ins)		(((ins) & 0xfc000000u) == 0x94000000u || /* BL */ \
 				 ((ins) & 0xfffffc1fu) == 0xd63f0000u) /* BLR */
 
-#define inst_load(ins) ({							\
+#define	inst_load(ins) ({							\
 	uint32_t tmp_instr = db_get_value(PC_REGS(), sizeof(uint32_t), FALSE);	\
 	is_load_instr(tmp_instr);						\
 })
 
-#define inst_store(ins) ({							\
+#define	inst_store(ins) ({							\
 	uint32_t tmp_instr = db_get_value(PC_REGS(), sizeof(uint32_t), FALSE);	\
 	is_store_instr(tmp_instr);						\
 })
@@ -113,7 +113,7 @@ typedef long		db_expr_t;
 				 (((ins) & 0x3bc00000u) == 0x28800000u) || /* pair (post-indexed) */ \
 				 (((ins) & 0x3bc00000u) == 0x29800000u)) /* pair (pre-indexed) */
 
-#define next_instr_address(pc, bd)	((bd) ? (pc) : ((pc) + 4))
+#define	next_instr_address(pc, bd)	((bd) ? (pc) : ((pc) + 4))
 
 #define	DB_SMALL_VALUE_MAX	(0x7fffffff)
 #define	DB_SMALL_VALUE_MIN	(-0x40001)

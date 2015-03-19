@@ -27,7 +27,7 @@
  */
 
 #ifndef _MACHINE_INTR_H_
-#define _MACHINE_INTR_H_
+#define	_MACHINE_INTR_H_
 
 int	arm_config_intr(u_int, enum intr_trigger, enum intr_polarity);
 void	arm_cpu_intr(struct trapframe *);

@@ -30,7 +30,7 @@
  */
 
 #ifndef _MACHINE_OFW_MACHDEP_H_
-#define _MACHINE_OFW_MACHDEP_H_
+#define	_MACHINE_OFW_MACHDEP_H_
 
 #include <vm/vm.h>
 

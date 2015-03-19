@@ -25,10 +25,10 @@
  * $FreeBSD$
  */
 
-#ifndef _ARM64_VDSO_H
-#define	_ARM64_VDSO_H
+#ifndef _MACHINE_VDSO_H_
+#define	_MACHINE_VDSO_H_
 
 #define	VDSO_TIMEHANDS_MD			\
 	uint32_t	th_res[8];
 
-#endif
+#endif /* !_MACHINE_VDSO_H_ */

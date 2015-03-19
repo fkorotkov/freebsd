@@ -27,7 +27,7 @@
  */
 
 #ifndef	_MACHINE_ELF_H_
-#define	_MACHINE_ELF_H_ 1
+#define	_MACHINE_ELF_H_
 
 /*
  * ELF definitions for the AArch64 architecture.

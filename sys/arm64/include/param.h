@@ -30,8 +30,8 @@
  * $FreeBSD$
  */
 
-#ifndef _ARM64_INCLUDE_PARAM_H_
-#define	_ARM64_INCLUDE_PARAM_H_
+#ifndef _MACHINE_PARAM_H_
+#define	_MACHINE_PARAM_H_
 
 /*
  * Machine dependent constants for arm64.
@@ -39,8 +39,8 @@
 
 #include <machine/_align.h>
 
-#define STACKALIGNBYTES	(16 - 1)
-#define STACKALIGN(p)	((uint64_t)(p) & ~STACKALIGNBYTES)
+#define	STACKALIGNBYTES	(16 - 1)
+#define	STACKALIGN(p)	((uint64_t)(p) & ~STACKALIGNBYTES)
 
 #ifndef MACHINE
 #define	MACHINE		"arm64"
@@ -89,11 +89,11 @@
 #define	MAXPAGESIZES	1		/* maximum number of supported page sizes */
 
 #ifndef KSTACK_PAGES
-#define KSTACK_PAGES	4	/* pages of kernel stack (with pcb) */
+#define	KSTACK_PAGES	4	/* pages of kernel stack (with pcb) */
 #endif
 
-#define KSTACK_GUARD_PAGES	1	/* pages of kstack guard; 0 disables */
-#define PCPU_PAGES		1
+#define	KSTACK_GUARD_PAGES	1	/* pages of kstack guard; 0 disables */
+#define	PCPU_PAGES		1
 
 /*
  * Ceiling on size of buffer cache (really only effects write queueing,
@@ -101,7 +101,7 @@
  * the kern.maxbcache /boot/loader.conf variable.
  */
 #ifndef VM_BCACHE_SIZE_MAX
-#define VM_BCACHE_SIZE_MAX      (400 * 1024 * 1024)
+#define	VM_BCACHE_SIZE_MAX      (400 * 1024 * 1024)
 #endif
 
 /*
@@ -122,4 +122,4 @@
 #define	NO_FUEWORD	1
 #endif
 
-#endif /* !_ARM64_INCLUDE_PARAM_H_ */
+#endif /* !_MACHINE_PARAM_H_ */

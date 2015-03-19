@@ -107,7 +107,7 @@ typedef	char *			__va_list;
 #endif /* __GNUCLIKE_BUILTIN_VARARGS */
 #if defined(__GNUCLIKE_BUILTIN_VAALIST) && !defined(__GNUC_VA_LIST) \
     && !defined(__NO_GNUC_VA_LIST)
-#define __GNUC_VA_LIST
+#define	__GNUC_VA_LIST
 typedef __va_list		__gnuc_va_list;	/* compatibility w/GNU headers*/
 #endif
 

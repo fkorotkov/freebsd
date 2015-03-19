@@ -29,8 +29,8 @@
  * $FreeBSD$
  */
 
-#ifndef _MACHINE__VFP_H_
-#define _MACHINE__VFP_H_
+#ifndef _MACHINE_VFP_H_
+#define	_MACHINE_VFP_H_
 
 #ifdef _KERNEL
 
@@ -43,4 +43,4 @@ void	vfp_save_state(struct thread *);
 
 #endif
 
-#endif
+#endif /* !_MACHINE_VFP_H_ */

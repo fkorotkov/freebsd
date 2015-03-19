@@ -34,7 +34,7 @@
  * Architecture specific syscalls (arm64)
  */
 #ifndef _MACHINE_SYSARCH_H_
-#define _MACHINE_SYSARCH_H_
+#define	_MACHINE_SYSARCH_H_
 
 #ifndef _KERNEL
 

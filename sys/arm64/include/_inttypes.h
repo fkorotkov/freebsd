@@ -30,8 +30,8 @@
  * $FreeBSD$
  */
 
-#ifndef _MACHINE_INTTYPES_H_
-#define _MACHINE_INTTYPES_H_
+#ifndef _MACHINE__INTTYPES_H_
+#define	_MACHINE__INTTYPES_H_
 
 /*
  * Macros for format specifiers.
@@ -210,4 +210,4 @@
 #define	SCNxMAX		"jx"	/* uintmax_t */
 #define	SCNxPTR		"lx"	/* uintptr_t */
 
-#endif /* !_MACHINE_INTTYPES_H_ */
+#endif /* !_MACHINE__INTTYPES_H_ */

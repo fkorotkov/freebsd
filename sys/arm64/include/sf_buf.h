@@ -27,7 +27,7 @@
  */
 
 #ifndef _MACHINE_SF_BUF_H_
-#define _MACHINE_SF_BUF_H_
+#define	_MACHINE_SF_BUF_H_
 
 /*
  * On this machine, the only purpose for which sf_buf is used is to implement

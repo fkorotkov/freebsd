@@ -183,11 +183,11 @@
 #define	TCR_TxSZ(x)	(((x) << TCR_T1SZ_SHIFT) | ((x) << TCR_T0SZ_SHIFT))
 
 /* Saved Program Status Register */
-#define DBG_SPSR_SS	(0x1 << 21)
+#define	DBG_SPSR_SS	(0x1 << 21)
 
 /* Monitor Debug System Control Register */
-#define DBG_MDSCR_SS	(0x1 << 0)
-#define DBG_MDSCR_KDE	(0x1 << 13)
-#define DBG_MDSCR_MDE	(0x1 << 15)
+#define	DBG_MDSCR_SS	(0x1 << 0)
+#define	DBG_MDSCR_KDE	(0x1 << 13)
+#define	DBG_MDSCR_MDE	(0x1 << 15)
 
-#endif
+#endif /* !_MACHINE_ARMREG_H_ */

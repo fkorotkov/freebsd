@@ -61,7 +61,7 @@ get_curthread(void)
 	return (td);
 }
 
-#define curthread get_curthread()
+#define	curthread get_curthread()
 
 #define	PCPU_GET(member)	(get_pcpu()->pc_ ## member)
 #define	PCPU_ADD(member, value)	(get_pcpu()->pc_ ## member += (value))

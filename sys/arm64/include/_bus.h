@@ -28,8 +28,8 @@
  * $FreeBSD$
  */
 
-#ifndef ARM64_INCLUDE__BUS_H
-#define ARM64_INCLUDE__BUS_H
+#ifndef _MACHINE__BUS_H_
+#define	_MACHINE__BUS_H_
 
 /*
  * Addresses (in bus space).
@@ -43,4 +43,4 @@ typedef u_long bus_size_t;
 typedef u_long bus_space_handle_t;
 typedef struct bus_space *bus_space_tag_t;
 
-#endif /* ARM64_INCLUDE__BUS_H */
+#endif /* !_MACHINE__BUS_H_ */

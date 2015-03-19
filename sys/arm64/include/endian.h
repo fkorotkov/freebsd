@@ -30,8 +30,8 @@
  * $FreeBSD$
  */
 
-#ifndef _ENDIAN_H_
-#define	_ENDIAN_H_
+#ifndef _MACHINE_ENDIAN_H_
+#define	_MACHINE_ENDIAN_H_
 
 #include <sys/_types.h>
 
@@ -39,25 +39,25 @@
  * Definitions for byte order, according to byte significance from low
  * address to high.
  */
-#define _LITTLE_ENDIAN  1234    /* LSB first: i386, vax */
-#define _BIG_ENDIAN     4321    /* MSB first: 68000, ibm, net */
-#define _PDP_ENDIAN     3412    /* LSB first in word, MSW first in long */
+#define	_LITTLE_ENDIAN  1234    /* LSB first: i386, vax */
+#define	_BIG_ENDIAN     4321    /* MSB first: 68000, ibm, net */
+#define	_PDP_ENDIAN     3412    /* LSB first in word, MSW first in long */
 
 #define	_BYTE_ORDER	_LITTLE_ENDIAN
 
 #if __BSD_VISIBLE
-#define LITTLE_ENDIAN   _LITTLE_ENDIAN
-#define BIG_ENDIAN      _BIG_ENDIAN
-#define PDP_ENDIAN      _PDP_ENDIAN
-#define BYTE_ORDER      _BYTE_ORDER
+#define	LITTLE_ENDIAN   _LITTLE_ENDIAN
+#define	BIG_ENDIAN      _BIG_ENDIAN
+#define	PDP_ENDIAN      _PDP_ENDIAN
+#define	BYTE_ORDER      _BYTE_ORDER
 #endif
 
-#define _QUAD_HIGHWORD  1
-#define _QUAD_LOWWORD 0
-#define __ntohl(x)        (__bswap32(x))
-#define __ntohs(x)        (__bswap16(x))
-#define __htonl(x)        (__bswap32(x))
-#define __htons(x)        (__bswap16(x))
+#define	_QUAD_HIGHWORD  1
+#define	_QUAD_LOWWORD 0
+#define	__ntohl(x)        (__bswap32(x))
+#define	__ntohs(x)        (__bswap16(x))
+#define	__htonl(x)        (__bswap32(x))
+#define	__htons(x)        (__bswap16(x))
 
 static __inline __uint64_t
 __bswap64(__uint64_t x)
@@ -94,29 +94,29 @@ __bswap16_var(__uint16_t v)
 
 #ifdef __OPTIMIZE__
 
-#define __bswap32_constant(x)	\
+#define	__bswap32_constant(x)	\
     ((((x) & 0xff000000U) >> 24) |	\
      (((x) & 0x00ff0000U) >>  8) |	\
      (((x) & 0x0000ff00U) <<  8) |	\
      (((x) & 0x000000ffU) << 24))
 
-#define __bswap16_constant(x)	\
+#define	__bswap16_constant(x)	\
     ((((x) & 0xff00) >> 8) |		\
      (((x) & 0x00ff) << 8))
 
-#define __bswap16(x)	\
+#define	__bswap16(x)	\
     ((__uint16_t)(__builtin_constant_p(x) ?	\
      __bswap16_constant(x) :			\
      __bswap16_var(x)))
 
-#define __bswap32(x)	\
+#define	__bswap32(x)	\
     ((__uint32_t)(__builtin_constant_p(x) ? 	\
      __bswap32_constant(x) :			\
      __bswap32_var(x)))
 
 #else
-#define __bswap16(x)	__bswap16_var(x)
-#define __bswap32(x)	__bswap32_var(x)
+#define	__bswap16(x)	__bswap16_var(x)
+#define	__bswap32(x)	__bswap32_var(x)
 
 #endif /* __OPTIMIZE__ */
-#endif /* !_ENDIAN_H_ */
+#endif /* !_MACHINE_ENDIAN_H_ */

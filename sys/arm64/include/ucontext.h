@@ -33,17 +33,17 @@
 #define	_MACHINE_UCONTEXT_H_
 
 struct gpregs {
-	unsigned long long gp_sp;
+	unsigned long long gp_x[30];
 	unsigned long long gp_lr;
+	unsigned long long gp_sp;
 	unsigned long long gp_elr;
 	unsigned long long gp_spsr;
-	unsigned long long gp_x[30];
 };
 
 struct fpregs {
 	__uint128_t	fp_q[32];
-	uint32_t	fp_cr;
 	uint32_t	fp_sr;
+	uint32_t	fp_cr;
 	u_int		fp_flags;
 };
 

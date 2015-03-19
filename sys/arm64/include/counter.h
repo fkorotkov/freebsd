@@ -26,8 +26,8 @@
  * $FreeBSD$
  */
 
-#ifndef __MACHINE_COUNTER_H__
-#define __MACHINE_COUNTER_H__
+#ifndef _MACHINE_COUNTER_H_
+#define	_MACHINE_COUNTER_H_
 
 #include <sys/pcpu.h>
 #ifdef INVARIANTS
@@ -90,4 +90,4 @@ counter_u64_add(counter_u64_t c, int64_t inc)
 	counter_exit();
 }
 
-#endif	/* ! __MACHINE_COUNTER_H__ */
+#endif	/* ! _MACHINE_COUNTER_H_ */

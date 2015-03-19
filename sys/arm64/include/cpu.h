@@ -38,8 +38,8 @@
  * $FreeBSD$
  */
 
-#ifndef MACHINE_CPU_H
-#define	MACHINE_CPU_H
+#ifndef _MACHINE_CPU_H_
+#define	_MACHINE_CPU_H_
 
 #include <machine/atomic.h>
 #include <machine/frame.h>
@@ -101,4 +101,4 @@ ADDRESS_TRANSLATE_FUNC(s1e1w)
 
 #endif
 
-#endif /* !MACHINE_CPU_H */
+#endif /* !_MACHINE_CPU_H_ */

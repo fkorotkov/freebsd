@@ -30,9 +30,9 @@
 
 #undef __FBSDID
 #if !defined(lint) && !defined(STRIP_FBSDID)
-#define __FBSDID(s)     .ident s
+#define	__FBSDID(s)     .ident s
 #else
-#define __FBSDID(s)     /* nothing */
+#define	__FBSDID(s)     /* nothing */
 #endif
 
 #define	_C_LABEL(x)	x
@@ -41,7 +41,7 @@
 	.text; .globl sym; .align 2; sym:
 #define	EENTRY(sym)						\
 	.globl	sym; sym:
-#define END(sym) .size sym, . - sym
+#define	END(sym) .size sym, . - sym
 #define	EEND(sym)
 
 #define	WEAK_REFERENCE(sym, alias)				\
