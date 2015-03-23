@@ -17,13 +17,13 @@ SRCS+=	copy.c devicename.c exec.c bootinfo.c cache.c
 CFLAGS+=	-fno-builtin -mgeneral-regs-only
 CFLAGS+=	-I${.CURDIR}
 CFLAGS+=	-I${.CURDIR}/../../efi/include
-CFLAGS+=	-I${.CURDIR}/../../efi/include/arm64
+CFLAGS+=	-I${.CURDIR}/../../efi/include/aarch64
 
 .if ${MK_FORTH} != "no"
 BOOT_FORTH=	yes
 CFLAGS+=	-DBOOT_FORTH
 CFLAGS+=	-I${.CURDIR}/../../ficl
-CFLAGS+=	-I${.CURDIR}/../../ficl/arm64
+CFLAGS+=	-I${.CURDIR}/../../ficl/aarch64
 LIBFICL=	${.OBJDIR}/../../ficl/libficl.a
 .endif
 .if ${MK_FDT} != "no"
@@ -42,7 +42,7 @@ CFLAGS+=	-I${.CURDIR}/../../common
 FILES=	loader.efi
 FILESMODE_loader.efi=	${BINMODE}
 
-LDSCRIPT=	${.CURDIR}/ldscript.arm64
+LDSCRIPT=	${.CURDIR}/ldscript.aarch64
 LDFLAGS=	-Wl,-T${LDSCRIPT} -Wl,-Bsymbolic -shared
 
 ${PROG}:	${LDSCRIPT}
