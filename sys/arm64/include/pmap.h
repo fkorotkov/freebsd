@@ -30,16 +30,6 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * Derived from hp300 version by Mike Hibler, this version by William
- * Jolitz uses a recursive map [a pde points to the page directory] to
- * map the page tables using the pagetables themselves. This is done to
- * reduce the impact on kernel virtual memory for lots of sparse address
- * space, and to reduce the cost of memory to each process.
- *
- *      from: hp300: @(#)pmap.h 7.2 (Berkeley) 12/16/90
- *      from: @(#)pmap.h        7.4 (Berkeley) 5/12/91
- * 	from: FreeBSD: src/sys/i386/include/pmap.h,v 1.70 2000/11/30
- *
  * $FreeBSD$
  */
 
