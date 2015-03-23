@@ -38,7 +38,6 @@ __FBSDID("$FreeBSD$");
 #include <sys/sysproto.h>
 
 #include <machine/md_var.h>
-#include <machine/utrap.h>
 #include <machine/sysarch.h>
 
 
