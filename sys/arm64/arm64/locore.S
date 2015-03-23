@@ -47,7 +47,7 @@
 
 /*
  * We assume:
- *  MMU      off
+ *  MMU      on with an identity map, or off
  *  D-Cache: off
  *  I-Cache: on or off
  *  We are loaded at a 2MiB aligned address
@@ -60,6 +60,20 @@
 _start:
 	/* Drop to EL1 */
 	bl	drop_to_el1
+
+	/*
+	 * Disable the MMU. We may have entered the kernel with it on and
+	 * will need to update the tables later. If this has been set up
+	 * with anything other than a VA == PA map then this will fail,
+	 * but in this case the code to find where we are running from
+	 * would have also failed.
+	 */
+	dsb	sy
+	mrs	x2, sctlr_el1
+	bic	x2, x2, SCTLR_M
+	msr	sctlr_el1, x2
+	isb
+
 
 	/* Get the virt -> phys offset */
 	bl	get_virt_delta
