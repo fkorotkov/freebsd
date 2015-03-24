@@ -415,28 +415,21 @@ atomic_swap_64(volatile uint64_t *p, uint64_t val)
 	return (old);
 }
 
-#define	atomic_add_long(p, v)		atomic_add_64(		\
-    (volatile uint64_t*)p, v)
-#define	atomic_clear_long(p, v)		atomic_clear_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_cmpset_long(p, v, n)	atomic_cmpset_64(	\
-    (volatile uint64_t*)p, v, n)
-#define	atomic_fetchadd_long(p, v)	atomic_fetchadd_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_readandclear_long(p)	atomic_readandclear_64(	\
-    (volatile uint64_t*)p)
-#define	atomic_set_long(p, v)		atomic_set_64(		\
-    (volatile uint64_t*)p, v)
-#define	atomic_subtract_long(p, v)	atomic_subtract_64(	\
-    (volatile uint64_t*)p, v)
+#define	atomic_add_long			atomic_add_64
+#define	atomic_clear_long		atomic_clear_64
+#define	atomic_cmpset_long		atomic_cmpset_64
+#define	atomic_fetchadd_long		atomic_fetchadd_64
+#define	atomic_readandclear_long	atomic_readandclear_64
+#define	atomic_set_long			atomic_set_64
+#define	atomic_subtract_long		atomic_subtract_64
 
-#define	atomic_add_ptr		atomic_add_64
-#define	atomic_clear_ptr	atomic_clear_64
-#define	atomic_cmpset_ptr	atomic_cmpset_64
-#define	atomic_fetchadd_ptr	atomic_fetchadd_64
-#define	atomic_readandclear_ptr	atomic_readandclear_64
-#define	atomic_set_ptr		atomic_set_64
-#define	atomic_subtract_ptr	atomic_subtract_64
+#define	atomic_add_ptr			atomic_add_64
+#define	atomic_clear_ptr		atomic_clear_64
+#define	atomic_cmpset_ptr		atomic_cmpset_64
+#define	atomic_fetchadd_ptr		atomic_fetchadd_64
+#define	atomic_readandclear_ptr		atomic_readandclear_64
+#define	atomic_set_ptr			atomic_set_64
+#define	atomic_subtract_ptr		atomic_subtract_64
 
 static __inline void
 atomic_add_acq_64(volatile uint64_t *p, uint64_t val)
@@ -539,52 +532,43 @@ atomic_store_rel_64(volatile uint64_t *p, uint64_t val)
 	*p = val;
 }
 
-#define	atomic_add_acq_long(p, v)	atomic_add_acq_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_clear_acq_long(p, v)	atomic_add_acq_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_cmpset_acq_long(p, v, n)	atomic_cmpset_acq_64(	\
-    (volatile uint64_t*)p, v, n)
-#define	atomic_load_acq_long(p)		atomic_load_acq_64(	\
-    (volatile uint64_t*)p)
-#define	atomic_set_acq_long(p, v)	atomic_set_acq_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_subtract_acq_long(p, v) atomic_subtract_acq_64(	\
-    (volatile uint64_t*)p, v)
+#define	atomic_add_acq_long		atomic_add_acq_64
+#define	atomic_clear_acq_long		atomic_add_acq_64
+#define	atomic_cmpset_acq_long		atomic_cmpset_acq_64
+#define	atomic_load_acq_long		atomic_load_acq_64
+#define	atomic_set_acq_long		atomic_set_acq_64
+#define	atomic_subtract_acq_long	atomic_subtract_acq_64
 
-#define	atomic_add_acq_ptr	atomic_add_acq_64
-#define	atomic_clear_acq_ptr	atomic_add_acq_64
-#define	atomic_cmpset_acq_ptr	atomic_cmpset_acq_64
-#define	atomic_load_acq_ptr	atomic_load_acq_64
-#define	atomic_set_acq_ptr	atomic_set_acq_64
-#define	atomic_subtract_acq_ptr	atomic_subtract_acq_64
+#define	atomic_add_acq_ptr		atomic_add_acq_64
+#define	atomic_clear_acq_ptr		atomic_add_acq_64
+#define	atomic_cmpset_acq_ptr		atomic_cmpset_acq_64
+#define	atomic_load_acq_ptr		atomic_load_acq_64
+#define	atomic_set_acq_ptr		atomic_set_acq_64
+#define	atomic_subtract_acq_ptr		atomic_subtract_acq_64
 
-/* The atomic functions currently are both acq and rel, we should fix this. */
-#define	atomic_add_rel_64	atomic_add_acq_64
-#define	atomic_clear_rel_64	atomic_add_acq_64
-#define	atomic_cmpset_rel_64	atomic_cmpset_acq_64
-#define	atomic_set_rel_64	atomic_set_acq_64
-#define	atomic_subtract_rel_64	atomic_subtract_acq_64
+/*
+ * TODO: The atomic functions currently are both acq and rel, we should fix
+ * this.
+ */
+#define	atomic_add_rel_64		atomic_add_acq_64
+#define	atomic_clear_rel_64		atomic_add_acq_64
+#define	atomic_cmpset_rel_64		atomic_cmpset_acq_64
+#define	atomic_set_rel_64		atomic_set_acq_64
+#define	atomic_subtract_rel_64		atomic_subtract_acq_64
 
-#define	atomic_add_rel_long(p, v)	atomic_add_rel_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_clear_rel_long(p, v)	atomic_add_rel_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_cmpset_rel_long(p, v, n)	atomic_cmpset_rel_64(	\
-    (volatile uint64_t*)p, v, n)
-#define	atomic_set_rel_long(p)		atomic_set_rel_64(	\
-    (volatile uint64_t*)p)
-#define	atomic_subtract_rel_long(p, v) atomic_subtract_rel_64(	\
-    (volatile uint64_t*)p, v)
-#define	atomic_store_rel_long(p, v)	atomic_store_rel_64(	\
-    (volatile uint64_t*)p, v)
+#define	atomic_add_rel_long		atomic_add_rel_64
+#define	atomic_clear_rel_long		atomic_add_rel_64
+#define	atomic_cmpset_rel_long		atomic_cmpset_rel_64
+#define	atomic_set_rel_long		atomic_set_rel_64
+#define	atomic_subtract_rel_long	atomic_subtract_rel_64
+#define	atomic_store_rel_long		atomic_store_rel_64
 
-#define	atomic_add_rel_ptr	atomic_add_rel_64
-#define	atomic_clear_rel_ptr	atomic_add_rel_64
-#define	atomic_cmpset_rel_ptr	atomic_cmpset_rel_64
-#define	atomic_set_rel_ptr	atomic_set_rel_64
-#define	atomic_subtract_rel_ptr	atomic_subtract_rel_64
-#define	atomic_store_rel_ptr	atomic_store_rel_64
+#define	atomic_add_rel_ptr		atomic_add_rel_64
+#define	atomic_clear_rel_ptr		atomic_add_rel_64
+#define	atomic_cmpset_rel_ptr		atomic_cmpset_rel_64
+#define	atomic_set_rel_ptr		atomic_set_rel_64
+#define	atomic_subtract_rel_ptr		atomic_subtract_rel_64
+#define	atomic_store_rel_ptr		atomic_store_rel_64
 
 #endif /* _MACHINE_ATOMIC_H_ */
 
