@@ -78,12 +78,14 @@ SRCF=	absvdi2 \
 	fixxfti \
 	floatdidf \
 	floatdisf \
+	floatditf \
 	floatdixf \
 	floattidf \
 	floattisf \
 	floattixf \
 	floatundidf \
 	floatundisf \
+	floatunditf \
 	floatundixf \
 	floatunsidf \
 	floatunsisf \
