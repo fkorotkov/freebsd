@@ -195,20 +195,6 @@ SRCS+=	${file}.c
 . endif
 .endfor
 
-.if ${MACHINE_CPUARCH} == "aarch64"
-# These files live in the ppc directory so we can't include them using
-# SRCF above. We also need to adjust the path to add them.
-.PATH: ${CRTSRC}/ppc
-SRCS+=	fixtfdi.c \
-	fixunstfdi.c \
-	floatditf.c \
-	floatunditf.c \
-	gcc_qadd.c \
-	gcc_qmul.c \
-	gcc_qsub.c \
-	multc3.c
-.endif
-
 .if ${MACHINE_CPUARCH} == "arm"
 SRCS+=	aeabi_div0.c \
 	aeabi_idivmod.S \
