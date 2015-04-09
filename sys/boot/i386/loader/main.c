@@ -184,9 +184,6 @@ main(void)
     /* detect SMBIOS for future reference */
     smbios_detect(NULL);
 
-    /* detect PCI BIOS for future reference */
-    biospci_detect();
-
     printf("\n");
     printf("%s, Revision %s\n", bootprog_name, bootprog_rev);
     printf("(%s, %s)\n", bootprog_maker, bootprog_date);

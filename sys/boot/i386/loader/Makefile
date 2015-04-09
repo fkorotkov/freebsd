@@ -107,7 +107,6 @@ FILESMODE_${LOADER}= ${BINMODE} -b
 .if !defined(LOADER_ONLY)
 .PATH: ${.CURDIR}/../../forth
 .include	"${.CURDIR}/../../forth/Makefile.inc"
-FILES+=	pcibios.4th
 
 .if !exists(${DESTDIR}/boot/loader.rc)
 FILES+=	loader.rc
