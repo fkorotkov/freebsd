@@ -118,6 +118,7 @@ __DEFAULT_YES_OPTIONS = \
     LIB32 \
     LIBPTHREAD \
     LIBTHR \
+    LLDB \
     LOCALES \
     LOCATE \
     LPR \
@@ -180,7 +181,6 @@ __DEFAULT_NO_OPTIONS = \
     EISA \
     FMAKE \
     HESIOD \
-    LLDB \
     NAND \
     OFED \
     OPENLDAP \
