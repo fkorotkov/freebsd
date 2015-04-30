@@ -236,6 +236,11 @@ BROKEN_OPTIONS+=BINUTILS BINUTILS_BOOTSTRAP GCC GCC_BOOTSTRAP GDB
 .if ${__T} == "arm" || ${__T} == "armeb"
 BROKEN_OPTIONS+=LLDB
 .endif
+.if ${__T} == "amd64" || "${__T}" == "i386"
+__DEFAULT_NO_OPTIONS+=GCC_CSU
+.else
+__DEFAULT_YES_OPTIONS+=GCC_CSU
+.endif
 
 .include <bsd.mkopt.mk>
 

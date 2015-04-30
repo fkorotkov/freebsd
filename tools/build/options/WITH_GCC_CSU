@@ -1,0 +1,2 @@
+.\" $FreeBSD$
+Set to build the GCC-provided C startup objects instead of the FreeBSD ones.
