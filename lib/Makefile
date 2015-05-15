@@ -107,6 +107,7 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libugidfw \
 	libulog \
 	${_libunbound} \
+	libunwind \
 	${_libusbhid} \
 	${_libusb} \
 	libutil \
