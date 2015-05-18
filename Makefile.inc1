@@ -1307,6 +1307,12 @@ _crunch=	usr.sbin/crunch
 _awk=		usr.bin/awk
 .endif
 
+# We previously tried to maintain exact BOOTSTRAPPING ranges for various tools.
+# It is sometimes awkward to specify the correct range - for example, when a
+# fix is MFC'd to a stable branch. Since the time required to build these tools
+# is rather small, just build them unconditionally.
+
+# No longer needed as of 11.0
 _yacc=		lib/liby \
 		usr.bin/yacc
 
