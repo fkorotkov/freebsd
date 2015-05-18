@@ -616,6 +616,9 @@ update_section_group(struct elfcopy *ecp, struct section *s)
 	ws = id->d_buf;
 
 	/* We only support COMDAT section. */
+#ifndef GRP_COMDAT
+#define	GRP_COMDAT 0x1
+#endif
 	if ((*ws & GRP_COMDAT) == 0)
 		return;
 
