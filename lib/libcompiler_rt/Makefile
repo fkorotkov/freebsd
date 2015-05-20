@@ -48,7 +48,6 @@ SRCF=	absvdi2 \
 	divti3 \
 	divxc3 \
 	enable_execute_stack \
-	eprintf \
 	extendhfsf2 \
 	ffsdi2 \
 	ffsti2 \
