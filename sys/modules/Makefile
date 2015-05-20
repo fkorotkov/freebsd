@@ -286,7 +286,7 @@ SUBDIR=	\
 	${_pmc} \
 	${_pms} \
 	ppbus \
-	ppc \
+	${_ppc} \
 	ppi \
 	pps \
 	procfs \
@@ -486,6 +486,8 @@ _vpo=		vpo
 .endif
 
 .if ${MACHINE_CPUARCH} != "mips"
+# No inb and outb
+_ppc=		ppc
 # no BUS_SPACE_UNSPECIFIED
 # No barrier instruction support (specific to this driver)
 _sym=		sym
