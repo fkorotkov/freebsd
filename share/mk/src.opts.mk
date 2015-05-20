@@ -241,6 +241,11 @@ __DEFAULT_NO_OPTIONS+=GCC_CSU
 .else
 __DEFAULT_YES_OPTIONS+=GCC_CSU
 .endif
+.if ${__T} == "amd64" || "${__T}" == "i386"
+__DEFAULT_NO_OPTIONS+=GCC_CSU GCC_LIBGCC
+.else
+__DEFAULT_YES_OPTIONS+=GCC_CSU GCC_LIBGCC
+.endif
 
 .include <bsd.mkopt.mk>
 
