@@ -2,10 +2,14 @@
 
 .include <src.opts.mk>
 
-SUBDIR= libgcc libdialog libregex
+SUBDIR= libdialog libregex
 
 .if ${MK_GCC_CSU} != "no"
 SUBDIR+= csu
+.endif
+
+.if ${MK_GCC_LIBGCC} != "no"
+SUBDIR+= libgcc
 .endif
 
 .if ${MK_GCC} != "no"

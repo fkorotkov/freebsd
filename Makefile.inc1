@@ -1658,7 +1658,13 @@ libraries: .MAKE
 #
 # static libgcc.a prerequisite for shared libc
 #
-_prereq_libs= gnu/lib/libssp/libssp_nonshared gnu/lib/libgcc lib/libcompiler_rt
+_prereq_libs= gnu/lib/libssp/libssp_nonshared lib/libcompiler_rt
+.if ${MK_GCC_LIBGCC} != "no"
+_prereq_libs+=	gnu/lib/libgcc
+.else
+_prereq_libs+=	lib/libgcc
+.endif
+
 
 # These dependencies are not automatically generated:
 #
@@ -1669,7 +1675,11 @@ _startup_libs=	lib/csu
 .if ${MK_GCC_CSU} != "no"
 _startup_libs+=	gnu/lib/csu
 .endif
+.if ${MK_GCC_LIBGCC} != "no"
 _startup_libs+=	gnu/lib/libgcc
+.else
+_startup_libs+=	lib/libgcc
+.endif
 _startup_libs+=	lib/libcompiler_rt
 _startup_libs+=	lib/libc
 _startup_libs+=	lib/libc_nonshared
@@ -1679,8 +1689,14 @@ _startup_libs+=	lib/libcxxrt
 
 gnu/lib/libgcc__L: lib/libc__L
 gnu/lib/libgcc__L: lib/libc_nonshared__L
+lib/libgcc__L: lib/libc__L
+lib/libgcc__L: lib/libc_nonshared__L
 .if ${MK_LIBCPLUSPLUS} != "no"
+.if ${MK_GCC_LIBGCC} != "no"
 lib/libcxxrt__L: gnu/lib/libgcc__L
+.else
+lib/libcxxrt__L: lib/libgcc__L
+.endif
 .endif
 
 _prebuild_libs=	${_kerberos5_lib_libasn1} \

@@ -53,6 +53,7 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libexpat \
 	libfetch \
 	libfigpar \
+	${_libgcc} \
 	libgeom \
 	${_libgpio} \
 	${_libgssapi} \
@@ -191,6 +192,10 @@ _libelftc=	libelftc
 
 .if ${MK_FILE} != "no"
 _libmagic=	libmagic
+.endif
+
+.if ${MK_GCC_LIBGCC} == "no"
+_libgcc=	libgcc
 .endif
 
 .if ${MK_GPIO} != "no"
