@@ -72,6 +72,7 @@
 
   #define _LIBUNWIND_BUILD_ZERO_COST_APIS (defined(__i386__) || \
                                            defined(__x86_64__) || \
+                                           defined(__aarch64__) || \
                                            defined(__arm__))
   #define _LIBUNWIND_BUILD_SJLJ_APIS      0
   #define _LIBUNWIND_SUPPORT_FRAME_APIS   (defined(__i386__) || \
