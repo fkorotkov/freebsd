@@ -682,7 +682,7 @@ static void
 nkpt_init(vm_paddr_t addr)
 {
 	int pt_pages;
-	
+
 #ifdef NKPT
 	pt_pages = NKPT;
 #else
@@ -793,7 +793,7 @@ create_pagetables(vm_paddr_t *firstaddr)
 	 * then the residual physical memory is mapped with 2MB pages.  Later,
 	 * if pmap_mapdev{_attr}() uses the direct map for non-write-back
 	 * memory, pmap_change_attr() will demote any 2MB or 1GB page mappings
-	 * that are partially used. 
+	 * that are partially used.
 	 */
 	pd_p = (pd_entry_t *)DMPDphys;
 	for (i = NPDEPG * ndm1g, j = 0; i < NPDEPG * ndmpdp; i++, j++) {
@@ -1044,7 +1044,7 @@ pmap_init(void)
 	/*
 	 * Initialize the vm page array entries for the kernel pmap's
 	 * page table pages.
-	 */ 
+	 */
 	for (i = 0; i < nkpt; i++) {
 		mpte = PHYS_TO_VM_PAGE(KPTphys + (i << PAGE_SHIFT));
 		KASSERT(mpte >= vm_page_array &&
@@ -1340,7 +1340,7 @@ pmap_update_pde_invalidate(pmap_t pmap, vm_offset_t va, pd_entry_t newpde)
  * processor before its pm_active field is checked but due to
  * speculative loads one of the following functions stills reads the
  * pmap as inactive on the other processor.
- * 
+ *
  * The kernel page table is exempt because its pm_active field is
  * immutable.  The kernel page table is always active on every
  * processor.
@@ -1572,12 +1572,12 @@ pmap_update_pde(pmap_t pmap, vm_offset_t va, pd_entry_t *pde, pd_entry_t newpde)
 	cpuid = PCPU_GET(cpuid);
 	other_cpus = all_cpus;
 	CPU_CLR(cpuid, &other_cpus);
-	if (pmap == kernel_pmap || pmap_type_guest(pmap)) 
+	if (pmap == kernel_pmap || pmap_type_guest(pmap))
 		active = all_cpus;
 	else {
 		active = pmap->pm_active;
 	}
-	if (CPU_OVERLAP(&active, &other_cpus)) { 
+	if (CPU_OVERLAP(&active, &other_cpus)) {
 		act.store = cpuid;
 		act.invalidate = active;
 		act.va = va;
@@ -1778,7 +1778,7 @@ pmap_invalidate_cache_pages(vm_page_t *pages, int count)
  *		Extract the physical page address associated
  *		with the given map/virtual_address pair.
  */
-vm_paddr_t 
+vm_paddr_t
 pmap_extract(pmap_t pmap, vm_offset_t va)
 {
 	pdp_entry_t *pdpe;
@@ -1896,7 +1896,7 @@ pmap_kextract(vm_offset_t va)
  * Add a wired page to the kva.
  * Note: not SMP coherent.
  */
-PMAP_INLINE void 
+PMAP_INLINE void
 pmap_kenter(vm_offset_t va, vm_paddr_t pa)
 {
 	pt_entry_t *pte;
@@ -2032,7 +2032,7 @@ pmap_add_delayed_free_list(vm_page_t m, struct spglist *free,
 		m->flags &= ~PG_ZERO;
 	SLIST_INSERT_HEAD(free, m, plinks.s.ss);
 }
-	
+
 /*
  * Inserts the specified page table page into the specified pmap's collection
  * of idle page table pages.  Each of a pmap's page table pages is responsible
@@ -2138,7 +2138,7 @@ _pmap_unwire_ptp(pmap_t pmap, vm_offset_t va, vm_page_t m, struct spglist *free)
 	 */
 	atomic_subtract_rel_int(&vm_cnt.v_wire_count, 1);
 
-	/* 
+	/*
 	 * Put page on a list so that it is released after
 	 * *ALL* TLB shootdown is done
 	 */
@@ -2522,7 +2522,7 @@ kvm_size(SYSCTL_HANDLER_ARGS)
 
 	return sysctl_handle_long(oidp, &ksize, 0, req);
 }
-SYSCTL_PROC(_vm, OID_AUTO, kvm_size, CTLTYPE_LONG|CTLFLAG_RD, 
+SYSCTL_PROC(_vm, OID_AUTO, kvm_size, CTLTYPE_LONG|CTLFLAG_RD,
     0, 0, kvm_size, "LU", "Size of KVM");
 
 static int
@@ -2532,7 +2532,7 @@ kvm_free(SYSCTL_HANDLER_ARGS)
 
 	return sysctl_handle_long(oidp, &kfree, 0, req);
 }
-SYSCTL_PROC(_vm, OID_AUTO, kvm_free, CTLTYPE_LONG|CTLFLAG_RD, 
+SYSCTL_PROC(_vm, OID_AUTO, kvm_free, CTLTYPE_LONG|CTLFLAG_RD,
     0, 0, kvm_free, "LU", "Amount of KVM free");
 
 /*
@@ -2590,7 +2590,7 @@ pmap_growkernel(vm_offset_t addr)
 			kernel_vm_end = (kernel_vm_end + NBPDR) & ~PDRMASK;
 			if (kernel_vm_end - 1 >= kernel_map->max_offset) {
 				kernel_vm_end = kernel_map->max_offset;
-				break;                       
+				break;
 			}
 			continue;
 		}
@@ -2609,7 +2609,7 @@ pmap_growkernel(vm_offset_t addr)
 		kernel_vm_end = (kernel_vm_end + NBPDR) & ~PDRMASK;
 		if (kernel_vm_end - 1 >= kernel_map->max_offset) {
 			kernel_vm_end = kernel_map->max_offset;
-			break;                       
+			break;
 		}
 	}
 }
@@ -3362,7 +3362,7 @@ pmap_demote_pde_locked(pmap_t pmap, pd_entry_t *pde, vm_offset_t va,
 	 * PG_A set.  If the old PDE has PG_RW set, it also has PG_M
 	 * set.  Thus, there is no danger of a race with another
 	 * processor changing the setting of PG_A and/or PG_M between
-	 * the read above and the store below. 
+	 * the read above and the store below.
 	 */
 	if (workaround_erratum383)
 		pmap_update_pde(pmap, va, pde, newpde);
@@ -3495,7 +3495,7 @@ pmap_remove_pde(pmap_t pmap, pd_entry_t *pdq, vm_offset_t sva,
  * pmap_remove_pte: do the things to unmap a page in a process
  */
 static int
-pmap_remove_pte(pmap_t pmap, pt_entry_t *ptq, vm_offset_t va, 
+pmap_remove_pte(pmap_t pmap, pt_entry_t *ptq, vm_offset_t va,
     pd_entry_t ptepde, struct spglist *free, struct rwlock **lockp)
 {
 	struct md_page *pvh;
@@ -3698,7 +3698,7 @@ pmap_remove(pmap_t pmap, vm_offset_t sva, vm_offset_t eva)
 out:
 	if (anyvalid)
 		pmap_invalidate_all(pmap);
-	rw_runlock(&pvh_global_lock);	
+	rw_runlock(&pvh_global_lock);
 	PMAP_UNLOCK(pmap);
 	pmap_free_zero_pages(&free);
 }
@@ -3969,7 +3969,7 @@ retry:
  * single page table page (PTP) to a single 2MB page mapping.  For promotion
  * to occur, two conditions must be met: (1) the 4KB page mappings must map
  * aligned, contiguous physical memory and (2) the 4KB page mappings must have
- * identical characteristics. 
+ * identical characteristics.
  */
 static void
 pmap_promote_pde(pmap_t pmap, pd_entry_t *pde, vm_offset_t va,
@@ -3993,7 +3993,7 @@ pmap_promote_pde(pmap_t pmap, pd_entry_t *pde, vm_offset_t va,
 	/*
 	 * Examine the first PTE in the specified PTP.  Abort if this PTE is
 	 * either invalid, unused, or does not map the first 4KB physical page
-	 * within a 2MB page. 
+	 * within a 2MB page.
 	 */
 	firstpte = (pt_entry_t *)PHYS_TO_DMAP(*pde & PG_FRAME);
 setpde:
@@ -4053,7 +4053,7 @@ setpte:
 	/*
 	 * Save the page table page in its current state until the PDE
 	 * mapping the superpage is demoted by pmap_demote_pde() or
-	 * destroyed by pmap_remove_pde(). 
+	 * destroyed by pmap_remove_pde().
 	 */
 	mpte = PHYS_TO_VM_PAGE(*pde & PG_FRAME);
 	KASSERT(mpte >= vm_page_array &&
@@ -4334,7 +4334,7 @@ unchanged:
  * Tries to create a 2MB page mapping.  Returns TRUE if successful and FALSE
  * otherwise.  Fails if (1) a page table page cannot be allocated without
  * blocking, (2) a mapping already exists at the specified virtual address, or
- * (3) a pv entry cannot be allocated without reclaiming another pv entry. 
+ * (3) a pv entry cannot be allocated without reclaiming another pv entry.
  */
 static boolean_t
 pmap_enter_pde(pmap_t pmap, vm_offset_t va, vm_page_t m, vm_prot_t prot,
@@ -4656,7 +4656,7 @@ pmap_object_init_pt(pmap_t pmap, vm_offset_t addr, vm_object_t object,
 		 * Map using 2MB pages.  Since "ptepa" is 2M aligned and
 		 * "size" is a multiple of 2M, adding the PAT setting to "pa"
 		 * will not affect the termination of this loop.
-		 */ 
+		 */
 		PMAP_LOCK(pmap);
 		for (pa = ptepa | pmap_cache_bits(pmap, pat_mode, 1);
 		    pa < ptepa + size; pa += NBPDR) {
@@ -4872,7 +4872,7 @@ pmap_copy(pmap_t dst_pmap, pmap_t src_pmap, vm_offset_t dst_addr, vm_size_t len,
 		srcptepaddr = *pde;
 		if (srcptepaddr == 0)
 			continue;
-			
+
 		if (srcptepaddr & PG_PS) {
 			if ((addr & PDRMASK) != 0 || addr + NBPDR > end_addr)
 				continue;
@@ -4970,7 +4970,7 @@ pmap_zero_page(vm_page_t m)
 }
 
 /*
- *	pmap_zero_page_area zeros the specified hardware page by mapping 
+ *	pmap_zero_page_area zeros the specified hardware page by mapping
  *	the page into KVM and using bzero to clear its contents.
  *
  *	off and size may not cover an area beyond a single hardware page.
@@ -4987,7 +4987,7 @@ pmap_zero_page_area(vm_page_t m, int off, int size)
 }
 
 /*
- *	pmap_zero_page_idle zeros the specified hardware page by mapping 
+ *	pmap_zero_page_idle zeros the specified hardware page by mapping
  *	the page into KVM and using bzero to clear its contents.  This
  *	is intended to be called from the vm_pagezero process only and
  *	outside of Giant.
@@ -5188,7 +5188,7 @@ pmap_page_is_mapped(vm_page_t m)
  * Destroy all managed, non-wired mappings in the given user-space
  * pmap.  This pmap cannot be active on any processor besides the
  * caller.
- *                                                                                
+ *
  * This function cannot be applied to the kernel pmap.  Moreover, it
  * is not intended for general use.  It is only to be used during
  * process termination.  Consequently, it can be implemented in ways
