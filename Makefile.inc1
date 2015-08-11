@@ -113,6 +113,7 @@ SUBDIR+=	${_DIR}
 .endif
 
 .if defined(NOCLEAN)
+.warning NO_CLEAN is the preferred spelling of NOCLEAN
 NO_CLEAN=	${NOCLEAN}
 .endif
 .if defined(NO_CLEANDIR)
