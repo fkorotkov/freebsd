@@ -488,7 +488,6 @@ usb_make_device_desc(struct usb_temp_setup *temp,
 		utd->udq.bDeviceProtocol = tdd->bDeviceProtocol;
 		utd->udq.bNumConfigurations = 0;
 		USETW(utd->udq.bcdUSB, 0x0200);
-		utd->udq.bMaxPacketSize0 = 0;
 
 		switch (temp->usb_speed) {
 		case USB_SPEED_LOW:
@@ -515,6 +514,7 @@ usb_make_device_desc(struct usb_temp_setup *temp,
 			temp->err = USB_ERR_INVAL;
 			break;
 		}
+		utd->udq.bMaxPacketSize0 = utd->udd.bMaxPacketSize;
 	}
 }
 
