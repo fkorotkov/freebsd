@@ -480,6 +480,7 @@ usb_make_device_desc(struct usb_temp_setup *temp,
 		 * "bNumConfigurations" equal to zero. That saves us
 		 * generating an extra set of configuration
 		 * descriptors.
+		 * XXX this is not valid
 		 */
 		utd->udq.bLength = sizeof(utd->udq);
 		utd->udq.bDescriptorType = UDESC_DEVICE_QUALIFIER;
