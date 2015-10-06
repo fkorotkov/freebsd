@@ -10,4 +10,4 @@ SRCS+=	nullconsole.c \
 	comconsole.c
 
 CFLAGS+=	-fPIC
-LDFLAGS+=	-Wl,-znocombreloc
+LDFLAGS+=	-Wl,-z,nocombreloc

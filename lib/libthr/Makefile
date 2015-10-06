@@ -31,7 +31,7 @@ CFLAGS+=-fexceptions
 CFLAGS+=-D_PTHREAD_FORCED_UNWIND
 .endif
 
-LDFLAGS+=-Wl,-znodelete
+LDFLAGS+=-Wl,-z,nodelete
 
 VERSION_DEF=${.CURDIR}/../libc/Versions.def
 SYMBOL_MAPS=${.CURDIR}/pthread.map

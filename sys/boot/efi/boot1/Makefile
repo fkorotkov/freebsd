@@ -38,7 +38,7 @@ CFLAGS+=	-msoft-float -mgeneral-regs-only
 .endif
 .if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 CFLAGS+=	-fPIC
-LDFLAGS+=	-Wl,-znocombreloc
+LDFLAGS+=	-Wl,-z,nocombreloc
 .endif
 
 .if ${MACHINE_CPUARCH} == "arm" || ${MACHINE_CPUARCH} == "i386"
