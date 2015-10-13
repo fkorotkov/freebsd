@@ -62,7 +62,7 @@ if [ -n "$2" ]; then
 fi
 
 sed -e '
-s/\$//g
+s/ ?\$//g
 :join
 	/\\$/{a\
 
@@ -143,12 +143,12 @@ s/\$//g
 		gsub("[$]FreeBSD: ", "", $0)
 		gsub(" [$]", "", $0)
 
-		printf " * created from%s\n */\n\n", $0 > syssw
+		printf " * created from %s\n */\n\n", $0 > syssw
 
 		printf "\n/* The casts are bogus but will do for now. */\n" > sysent
 		printf "struct sysent %s[] = {\n",switchname > sysent
 
-		printf " * created from%s\n */\n\n", $0 > sysarg
+		printf " * created from %s\n */\n\n", $0 > sysarg
 		printf "#ifndef %s\n", sysproto_h > sysarg
 		printf "#define\t%s\n\n", sysproto_h > sysarg
 		printf "#include <sys/signal.h>\n" > sysarg
@@ -171,12 +171,12 @@ s/\$//g
 		printf "#define\tPADR_(t)\t0\n" > sysarg
 		printf "#endif\n\n" > sysarg
 
-		printf " * created from%s\n */\n\n", $0 > sysnames
+		printf " * created from %s\n */\n\n", $0 > sysnames
 		printf "const char *%s[] = {\n", namesname > sysnames
 
-		printf " * created from%s\n */\n\n", $0 > syshdr
+		printf " * created from %s\n */\n\n", $0 > syshdr
 
-		printf "# created from%s\nMIASM = ", $0 > sysmk
+		printf "# created from %s\nMIASM = ", $0 > sysmk
 
 		printf " * This file is part of the DTrace syscall provider.\n */\n\n" > systrace
 		printf "static void\nsystrace_args(int sysnum, void *params, uint64_t *uarg, int *n_args)\n{\n" > systrace
