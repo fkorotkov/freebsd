@@ -213,16 +213,16 @@ __TT=${MACHINE}
 # If the compiler is not C++11 capable, disable clang and use gcc instead.
 __DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC \
-    LLVM_LIBUNWIND
+    LLDB LLVM_LIBUNWIND
 .elif ${__T} == "aarch64" || ${__T} == "amd64" || ${__TT} == "arm" || \
     ${__T} == "i386"
 # On x86 and arm, clang is enabled, and will be installed as the default cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC \
-    LLVM_LIBUNWIND
+    LLDB LLVM_LIBUNWIND
 __DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
 .else
 # On everything else Clang is enabled, but gcc is installed as the default cc.
-__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL GCC GCC_BOOTSTRAP GNUCXX
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL GCC GCC_BOOTSTRAP GNUCXX LLDB
 __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC LLVM_LIBUNWIND
 .endif
 .if ${__T} == "aarch64"
@@ -234,12 +234,6 @@ __DEFAULT_NO_OPTIONS+=ELFCOPY_AS_OBJCOPY
 # LLVM lacks support for FreeBSD 64-bit atomic operations for ARMv4/ARMv5
 .if ${__T} == "arm" || ${__T} == "armeb"
 BROKEN_OPTIONS+=LLDB
-.endif
-# LLDB is functional on only some platforms.
-.if ${__T} == "aarch64" || ${__T} == "amd64"
-__DEFAULT_YES_OPTIONS+=LLDB
-.else
-__DEFAULT_NO_OPTIONS+=LLDB
 .endif
 
 .include <bsd.mkopt.mk>
