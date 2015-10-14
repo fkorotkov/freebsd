@@ -517,7 +517,7 @@ main(int argc, char *argv[])
 		case 'p':	/* PARTITION */
 			error = parse_part(optarg);
 			if (error)
-				errc(EX_DATAERR, error, "partition");
+				errc(EX_DATAERR, error, "partition specification");
 			break;
 		case 's':	/* SCHEME */
 			if (scheme_selected() != NULL)
