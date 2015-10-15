@@ -290,7 +290,8 @@ int mkfs_msdos(const char *fname, const char *dtype,
 	bpb.bpbHugeSectors = o.size;
     if (o.hidden_sectors_set)
 	bpb.bpbHiddenSecs = o.hidden_sectors;
-    if (!(o.floppy || (o.drive_heads && o.sectors_per_track && o.bytes_per_sector && o.size && o.hidden_sectors_set))) {
+    if (!(o.floppy || (o.drive_heads && o.sectors_per_track &&
+	o.bytes_per_sector && o.size && o.hidden_sectors_set))) {
 	off_t delta;
 	getdiskinfo(fd, fname, dtype, o.hidden_sectors_set, &bpb);
 	bpb.bpbHugeSectors -= (o.offset / bpb.bpbBytesPerSec);
