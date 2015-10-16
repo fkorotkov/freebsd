@@ -35,6 +35,11 @@ namespace libunwind {
 #include "Registers.hpp"
 
 #if _LIBUNWIND_ARM_EHABI
+#ifdef __FreeBSD__
+
+typedef void *_Unwind_Ptr;
+
+#endif
 #ifdef __linux__
 
 typedef long unsigned int *_Unwind_Ptr;
