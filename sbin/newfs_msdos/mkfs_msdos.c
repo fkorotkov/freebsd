@@ -32,11 +32,13 @@ static const char rcsid[] =
 
 #include <sys/param.h>
 #include <sys/fdcio.h>
-#include <sys/disk.h>
 #include <sys/disklabel.h>
-#include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#ifndef MAKEFS
+#include <sys/mount.h>
+#include <sys/disk.h>
+#endif
 
 #include <ctype.h>
 #include <err.h>
@@ -214,7 +216,9 @@ static const u_int8_t bootcode[] = {
 static volatile sig_atomic_t got_siginfo;
 static void infohandler(int);
 
+#ifndef MAKEFS
 static int check_mounted(const char *, mode_t);
+#endif
 static int getstdfmt(const char *, struct bpb *);
 static int getdiskinfo(int, const char *, const char *, int, struct bpb *);
 static void print_bpb(struct bpb *);
@@ -278,9 +282,11 @@ int mkfs_msdos(const char *fname, const char *dtype,
 	if (!S_ISCHR(sb.st_mode))
 	    warnx("warning, %s is not a character device", fname);
     }
+#ifndef MAKEFS
     if (!o.no_create)
 	if (check_mounted(fname, sb.st_mode) == -1)
 	    return -1;
+#endif
     if (o.offset && o.offset != lseek(fd, o.offset, SEEK_SET)) {
 	warnx("cannot seek to %jd", (intmax_t)o.offset);
 	return -1;
@@ -708,6 +714,7 @@ int mkfs_msdos(const char *fname, const char *dtype,
     return 0;
 }
 
+#ifndef MAKEFS
 /*
  * return -1 with error if file system is mounted.
  */
@@ -740,6 +747,7 @@ check_mounted(const char *fname, mode_t mode)
     }
     return 0;
 }
+#endif
 
 /*
  * Get a standard format.
