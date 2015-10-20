@@ -227,8 +227,8 @@ static void mklabel(u_int8_t *, const char *);
 static int oklabel(const char *);
 static void setstr(u_int8_t *, const char *, size_t);
 
-int mkfs_msdos(const char *fname, const char *dtype,
-    const struct msdos_options *op)
+int
+mkfs_msdos(const char *fname, const char *dtype, const struct msdos_options *op)
 {
     char buf[MAXPATHLEN];
     struct sigaction si_sa;
