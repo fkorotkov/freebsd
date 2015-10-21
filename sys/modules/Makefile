@@ -402,7 +402,9 @@ _autofs=	autofs
 .endif
 
 .if ${MK_CDDL} != "no" || defined(ALL_MODULES)
+.if ${MACHINE_CPUARCH} != "sparc64"
 _dtrace=	dtrace
+.endif
 _opensolaris=	opensolaris
 .endif
 
