@@ -399,8 +399,7 @@ _autofs=	autofs
 .endif
 
 .if ${MK_CDDL} != "no" || defined(ALL_MODULES)
-.if ${MACHINE_CPUARCH} != "arm" && ${MACHINE_CPUARCH} != "mips" && \
-	${MACHINE_CPUARCH} != "sparc64"
+.if ${MACHINE_CPUARCH} != "mips" && ${MACHINE_CPUARCH} != "sparc64"
 SUBDIR+=	dtrace
 .endif
 SUBDIR+=	opensolaris
