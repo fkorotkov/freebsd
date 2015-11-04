@@ -4200,9 +4200,11 @@ pmc_capture_user_callchain(int cpu, int ring, struct trapframe *tf)
 #endif
 	}
 
+#if 0 /* PR 204273 */
 	KASSERT(ncallchains > 0,
 	    ("[pmc,%d] cpu %d didn't find a sample to collect", __LINE__,
 		cpu));
+#endif
 
 	KASSERT(td->td_pinned == 1,
 	    ("[pmc,%d] invalid td_pinned value", __LINE__));
