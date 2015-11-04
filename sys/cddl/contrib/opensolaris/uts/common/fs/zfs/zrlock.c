@@ -61,7 +61,16 @@ zrl_init(zrlock_t *zrl)
 void
 zrl_destroy(zrlock_t *zrl)
 {
+	uint32_t n = (uint32_t)zrl->zr_refcount;
+
+#if 1
+	if (n != 0) {
+		printf("n = %u zrl->zr_refcount = %u\n", n,
+		    (uint32_t)zrl->zr_refcount);
+	}
+#else
 	ASSERT0(zrl->zr_refcount);
+#endif
 
 	mutex_destroy(&zrl->zr_mtx);
 	zrl->zr_refcount = ZRL_DESTROYED;
