@@ -10,7 +10,6 @@ SUBDIR+=	btxld
 .endif
 SUBDIR+=	cpucontrol
 SUBDIR+=	kgmon
-SUBDIR+=	kgzip
 SUBDIR+=	lptcontrol
 SUBDIR+=	mptable
 .if ${MK_NDIS} != "no"

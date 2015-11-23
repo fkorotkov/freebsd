@@ -38,6 +38,10 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 201601xx: kgzip and kgzldr removed
+OLD_FILES+=usr/lib/kgzldr.o
+OLD_FILES+=usr/sbin/kgzip
+OLD_FILES+=usr/share/man/man8/kgzip.8.gz
 # 20160116: Update mandoc to cvs snapshot 20160116
 OLD_FILES+=usr/share/mdocml/example.style.css
 OLD_FILES+=usr/share/mdocml/style.css
