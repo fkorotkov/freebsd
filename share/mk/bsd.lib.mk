@@ -233,7 +233,6 @@ ${SHLIB_NAME_FULL}: beforelinking
 ${SHLIB_LINK:R}.ld: ${.CURDIR}/${SHLIB_LDSCRIPT}
 	sed -e 's,@@SHLIB@@,${_LDSCRIPTROOT}${_SHLIBDIR}/${SHLIB_NAME},g' \
 	    -e 's,@@LIBDIR@@,${_LDSCRIPTROOT}${_LIBDIR},g' \
-	    -e 's,/[^ ]*/,,g' \
 	    ${.ALLSRC} > ${.TARGET}
 
 ${SHLIB_NAME_FULL}: ${SHLIB_LINK:R}.ld
