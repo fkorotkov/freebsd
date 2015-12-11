@@ -7,10 +7,14 @@ SUBDIR=	doc\
 	libbfd \
 	libopcodes \
 	libbinutils \
-	as \
+	${_as} \
 	ld \
 	${_objcopy} \
 	objdump \
+
+.if ${MK_AS} != "no"
+_as=		as
+.endif
 
 .if ${MK_ELFCOPY_AS_OBJCOPY} == "no"
 _objcopy=	objcopy
