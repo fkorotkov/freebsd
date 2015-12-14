@@ -214,11 +214,16 @@ __TT=${MACHINE}
 # build Clang without using an external compiler.
 
 .if ${COMPILER_FEATURES:Mc++11} && (${__T} == "aarch64" || \
-    ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386" || \
-    ${__T} == "powerpc64")
+    ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386")
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC
 __DEFAULT_NO_OPTIONS+=AS GCC GCC_BOOTSTRAP GNUCXX
+.elif ${COMPILER_FEATURES:Mc++11} && ${__T} == "powerpc64"
+# Clang is enabled, and will be installed as the default /usr/bin/cc.
+# We also need /usr/bin/gcc to build lib/csu/powerpc64.
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC \
+  GCC_BOOTSTRAP
+__DEFAULT_NO_OPTIONS+=AS GCC GNUCXX
 .elif ${COMPILER_FEATURES:Mc++11} && ${__T:Mpowerpc*}
 # On powerpc, if an external compiler that supports C++11 is used as ${CC},
 # then Clang is enabled, but GCC is installed as the default /usr/bin/cc.
