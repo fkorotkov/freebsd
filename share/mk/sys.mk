@@ -182,6 +182,7 @@ LEX		?=	lex
 LFLAGS		?=
 
 LD		?=	ld
+LD_BFD		?=	ld.bfd
 LDFLAGS		?=				# LDFLAGS is for CC, 
 _LDFLAGS	=	${LDFLAGS:S/-Wl,//g}	# strip -Wl, for LD
 
