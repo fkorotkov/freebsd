@@ -728,7 +728,7 @@ static void fkey(FICL_VM *pVM)
 }
 
 
-#ifdef __i386__
+#if 0
 /*
  * pcibios-device-count (devid -- count)
  *
@@ -930,7 +930,7 @@ void ficlCompilePlatform(FICL_SYSTEM *pSys)
     dictAppendWord(dp, "pnphandlers",ficlPnphandlers, FW_DEFAULT);
 #endif
 #endif
-#ifdef __i386__
+#if 0
     dictAppendWord(dp, "pcibios-device-count", ficlPciBiosCountDevices, FW_DEFAULT);
     dictAppendWord(dp, "pcibios-read-config", ficlPciBiosReadConfig, FW_DEFAULT);
     dictAppendWord(dp, "pcibios-write-config", ficlPciBiosWriteConfig, FW_DEFAULT);
