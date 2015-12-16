@@ -54,6 +54,7 @@ linux${SFX}_locore.o: linux${SFX}_assym.h assym.s
 	-fno-omit-frame-pointer -fPIC						\
 	-Wl,-T${.CURDIR}/../../${MACHINE_CPUARCH}/linux${SFX}/${VDSO}.lds.s	\
 	-Wl,-soname=${VDSO}.so.1,--eh-frame-hdr,-warn-common		\
+	-fuse-ld=bfd \
 	    ${.IMPSRC} -o ${.TARGET}
 
 linux${SFX}_support.o: linux${SFX}_assym.h assym.s

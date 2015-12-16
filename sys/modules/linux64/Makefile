@@ -30,6 +30,7 @@ linux_locore.o: linux_locore.s linux_assym.h
 	-pipe -I. -I${SYSDIR} -Werror -Wall -fno-common -fPIC -nostdinc	\
 	-Wl,-T${.CURDIR}/../../${MACHINE_CPUARCH}/linux/${VDSO}.lds.s	\
 	-Wl,-soname=${VDSO}.so.1,-warn-common -nostdlib			\
+	-fuse-ld=bfd \
 	    ${.IMPSRC} -o ${.TARGET}
 
 ${VDSO}.so: linux_locore.o
