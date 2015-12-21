@@ -439,15 +439,15 @@ command_mode(int argc, char *argv[])
 	return (CMD_OK);
 }
 
+COMMAND_SET(nvram, "nvram", "get NVRAM variables", command_nvram);
 
-COMMAND_SET(nvram, "nvram", "get or set NVRAM variables", command_nvram);
-
+#define EFI_VAR_MAXSZ 128
 static int
 command_nvram(int argc, char *argv[])
 {
-	CHAR16 var[128];
+	CHAR16 var[EFI_VAR_MAXSZ];
 	CHAR16 *data;
-	EFI_STATUS status;
+	EFI_STATUS nstatus, status;
 	EFI_GUID varguid = { 0,0,0,{0,0,0,0,0,0,0,0} };
 	UINTN varsz, datasz, i;
 	SIMPLE_TEXT_OUTPUT_INTERFACE *conout;
@@ -455,14 +455,11 @@ command_nvram(int argc, char *argv[])
 	conout = ST->ConOut;
 
 	/* Initiate the search */
-	status = RS->GetNextVariableName(&varsz, NULL, NULL);
+	var[0] = '\0';
+	varsz = EFI_VAR_MAXSZ;
+	nstatus = RS->GetNextVariableName(&varsz, var, &varguid);
 
-	for (; status != EFI_NOT_FOUND; ) {
-		status = RS->GetNextVariableName(&varsz, var,
-		    &varguid);
-		//if (EFI_ERROR(status))
-			//break;
-
+	while (nstatus == EFI_SUCCESS) {
 		conout->OutputString(conout, var);
 		printf("=");
 		datasz = 0;
@@ -485,7 +482,13 @@ command_nvram(int argc, char *argv[])
 		/* XXX */
 		pager_output("\n");
 		free(data);
+
+		varsz = EFI_VAR_MAXSZ;
+		nstatus = RS->GetNextVariableName(&varsz, var, &varguid);
 	}
+	if (nstatus != EFI_NOT_FOUND)
+		printf("Error retrieving EFI vars: GetNextVariableName() "
+		    "returned 0x%lx\n", (long)nstatus);
 
 	return (CMD_OK);
 }
