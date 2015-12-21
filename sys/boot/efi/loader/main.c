@@ -347,20 +347,6 @@ guid_to_string(EFI_GUID *guid)
 	return (buf);
 }
 
-#define EFI_VAR_MAXSZ	128
-static const char *
-ucs2_to_string(CHAR16 *str16)
-{
-	static char buf[EFI_VAR_MAXSZ];
-	int i;
-
-	for(i = 0; ((char)str16[i] != '\0') && (i < (EFI_VAR_MAXSZ - 1)); i++)
-		buf[i] = (char)str16[i];
-	buf[i] = '\0';
-
-	return (buf);
-}
-
 static int
 command_configuration(int argc, char *argv[])
 {
@@ -454,82 +440,52 @@ command_mode(int argc, char *argv[])
 }
 
 
-COMMAND_SET(nvram, "nvram", "get NVRAM variables", command_nvram);
+COMMAND_SET(nvram, "nvram", "get or set NVRAM variables", command_nvram);
 
 static int
 command_nvram(int argc, char *argv[])
 {
-	CHAR16 var[EFI_VAR_MAXSZ];
-	const char *varstr;
+	CHAR16 var[128];
 	CHAR16 *data;
-	EFI_STATUS nstatus, status;
+	EFI_STATUS status;
 	EFI_GUID varguid = { 0,0,0,{0,0,0,0,0,0,0,0} };
 	UINTN varsz, datasz, i;
-	int verbose = 0;
-	char *lookup;
+	SIMPLE_TEXT_OUTPUT_INTERFACE *conout;
 
-	lookup = NULL;
-	if (argc > 1) {
-		if ((argv[1][0] == '-') && (argv[1][1] == 'v')) {
-			verbose = 1;
-			if (argc > 2)
-				lookup = argv[2];
-		}
-		else
-			lookup = argv[1];
-	}
+	conout = ST->ConOut;
 
 	/* Initiate the search */
-	var[0] = '\0';
-	varsz = EFI_VAR_MAXSZ;
-	nstatus = RS->GetNextVariableName(&varsz, var, &varguid);
+	status = RS->GetNextVariableName(&varsz, NULL, NULL);
 
-	while (nstatus == EFI_SUCCESS) {
-		varstr = ucs2_to_string(var);
-		/* Check if this variable matches our lookup filter */
-		if ((lookup == NULL) ||
-		    ((lookup != NULL) && (strcmp(varstr, lookup) == 0))) {
-			/* Display variable name... */
-			printf("%s (%s)", varstr, guid_to_string(&varguid));
-	
-			/* ... and its contents if verbose mode is enabled */
-			if (verbose) {
-				printf("=");
-	
-				datasz = 0;
-				status = RS->GetVariable(var, &varguid, NULL,
-				    &datasz, NULL);
-				if (EFI_ERROR(status) &&
-				    (status != EFI_BUFFER_TOO_SMALL))
-					printf("<error retrieving variable>");
-				else {
-					data = malloc(datasz);
-					status = RS->GetVariable(var, &varguid,
-					    NULL, &datasz, data);
-					if (EFI_ERROR(status))
-						printf("<error retrieving "
-						    "variable>");
-					else
-						for (i = 0; i < datasz; i++)
-						    printf("%04x ", data[i]);
-					free(data);
-				}
-				/* Stop if 'q' is selected */
-				if(pager_output("\n") != 0) {
-					nstatus = EFI_NOT_FOUND;
-					break;
-				}
+	for (; status != EFI_NOT_FOUND; ) {
+		status = RS->GetNextVariableName(&varsz, var,
+		    &varguid);
+		//if (EFI_ERROR(status))
+			//break;
+
+		conout->OutputString(conout, var);
+		printf("=");
+		datasz = 0;
+		status = RS->GetVariable(var, &varguid, NULL, &datasz,
+		    NULL);
+		/* XXX: check status */
+		data = malloc(datasz);
+		status = RS->GetVariable(var, &varguid, NULL, &datasz,
+		    data);
+		if (EFI_ERROR(status))
+			printf("<error retrieving variable>");
+		else {
+			for (i = 0; i < datasz; i++) {
+				if (isalnum(data[i]) || isspace(data[i]))
+					printf("%c", data[i]);
+				else
+					printf("\\x%02x", data[i]);
 			}
-			else
-				printf("\n");
 		}
-
-		varsz = EFI_VAR_MAXSZ;
-		nstatus = RS->GetNextVariableName(&varsz, var, &varguid);
+		/* XXX */
+		pager_output("\n");
+		free(data);
 	}
-	if (nstatus != EFI_NOT_FOUND)
-		printf("Error retrieving EFI vars: GetNextVariableName() "
-		    "returned 0x%lx\n", (long)nstatus);
 
 	return (CMD_OK);
 }
