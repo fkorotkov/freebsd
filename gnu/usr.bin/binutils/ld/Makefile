@@ -6,6 +6,9 @@ ELF_SCR_EXT=	x xbn xc xd xdc xdw xn xr xs xsc xsw xu xw
 
 .PATH: ${SRCDIR}/ld
 
+# XXX hack to install LLD as ld
+SYMLINKS=       /tank/emaste/src/llvm/build-debug/bin/lld ${BINDIR}/ld
+
 PROG=	ld.bfd
 MAN=	ld.1
 SCRIPTDIR= /usr/libdata/ldscripts
@@ -49,8 +52,6 @@ CLEANFILES+=	ldemul-list.h stringify.sed
 
 FILES=		${LDSCRIPTS:S|^|ldscripts/|}
 FILESDIR=	${SCRIPTDIR}
-LINKS=		${BINDIR}/ld.bfd ${BINDIR}/ld
-
 HOST=		${TARGET_TUPLE}
 LIBSEARCHPATH=	\"=/lib\":\"=/usr/lib\"
 .for ext in ${ELF_SCR_EXT}
