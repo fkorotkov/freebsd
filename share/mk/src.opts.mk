@@ -101,7 +101,6 @@ __DEFAULT_YES_OPTIONS = \
     GNU_DIFF \
     GNU_GREP \
     GPIO \
-    GPL_DTC \
     GROFF \
     HAST \
     HTML \
@@ -181,6 +180,7 @@ __DEFAULT_NO_OPTIONS = \
     BSD_GREP \
     CLANG_EXTRAS \
     DTRACE_TESTS \
+    GPL_DTC \
     GNU_GREP_COMPAT \
     HESIOD \
     LIBSOFT \
