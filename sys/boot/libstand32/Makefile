@@ -61,6 +61,11 @@ SRCS+= uuid_equal.c uuid_is_nil.c
 .endif
 SRCS+=	_setjmp.S
 
+# boot filesystems
+.if ${MK_NAND} != "no"
+SRCS+=	nandfs.c
+.endif
+
 .include <bsd.stand.mk>
 .include <bsd.lib.mk>
 

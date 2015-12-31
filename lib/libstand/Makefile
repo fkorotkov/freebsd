@@ -59,5 +59,10 @@ SRCS+= uuid_create_nil.c uuid_equal.c uuid_from_string.c uuid_is_nil.c uuid_to_s
 .PATH: ${LIBSTAND_SRC}/${MACHINE_CPUARCH}
 SRCS+=	_setjmp.S
 
+# boot filesystems
+.if ${MK_NAND} != "no"
+SRCS+=	nandfs.c
+.endif
+
 .include <bsd.stand.mk>
 .include <bsd.lib.mk>
