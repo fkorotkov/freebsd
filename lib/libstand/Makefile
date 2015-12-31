@@ -11,7 +11,7 @@ MK_SSP=		no
 
 .include <src.opts.mk>
 
-LIBSTAND_SRC=	${.CURDIR}
+LIBSTAND_SRC?=	${.CURDIR}
 LIBC_SRC=	${LIBSTAND_SRC}/../libc
 
 LIB=		stand
