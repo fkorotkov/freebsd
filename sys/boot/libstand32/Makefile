@@ -12,6 +12,11 @@ MAN=
 MK_SSP=		no
 
 LIBSTAND_SRC=	${.CURDIR}/../../../lib/libstand
+.if ${MACHINE_CPUARCH} == "amd64"
+LIBSTAND_CPUARCH=i386
+.else
+LIBSTAND_CPUARCH=${MACHINE_CPUARCH}
+.endif
 LIBC_SRC=	${LIBSTAND_SRC}/../libc
 
 .PATH:		${LIBSTAND_SRC}
@@ -70,11 +75,7 @@ SRCS+=	syncicache.c
 SRCS+= uuid_equal.c uuid_is_nil.c
 
 # _setjmp/_longjmp
-.if ${MACHINE_CPUARCH} == "amd64"
-.PATH: ${LIBSTAND_SRC}/i386
-.else
-.PATH: ${LIBSTAND_SRC}/${MACHINE_CPUARCH}
-.endif
+.PATH: ${LIBSTAND_SRC}/${LIBSTAND_CPUARCH}
 SRCS+=	_setjmp.S
 
 # decompression functionality from libbz2
