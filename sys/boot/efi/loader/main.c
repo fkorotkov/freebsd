@@ -463,12 +463,10 @@ command_nvram(int argc, char *argv[])
 		conout->OutputString(conout, var);
 		printf("=");
 		datasz = 0;
-		status = RS->GetVariable(var, &varguid, NULL, &datasz,
-		    NULL);
+		status = RS->GetVariable(var, &varguid, NULL, &datasz, NULL);
 		/* XXX: check status */
 		data = malloc(datasz);
-		status = RS->GetVariable(var, &varguid, NULL, &datasz,
-		    data);
+		status = RS->GetVariable(var, &varguid, NULL, &datasz, data);
 		if (EFI_ERROR(status))
 			printf("<error retrieving variable>");
 		else {
