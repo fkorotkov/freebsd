@@ -30,7 +30,7 @@
 
 #include "_libelftc.h"
 
-ELFTC_VCSID("$Id: elftc_bfdtarget.c 3174 2015-03-27 17:13:41Z emaste $");
+ELFTC_VCSID("$Id$");
 
 Elftc_Bfd_Target *
 elftc_bfd_find_target(const char *tgt_name)

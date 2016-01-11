@@ -36,7 +36,7 @@
 
 #include "elfcopy.h"
 
-ELFTC_VCSID("$Id: ascii.c 3177 2015-03-30 18:19:41Z emaste $");
+ELFTC_VCSID("$Id$");
 
 static void append_data(struct section *s, const void *buf, size_t sz);
 static char hex_digit(uint8_t n);

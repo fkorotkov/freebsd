@@ -33,7 +33,7 @@
 
 #include "elfcopy.h"
 
-ELFTC_VCSID("$Id: symbols.c 3222 2015-05-24 23:47:23Z kaiwang27 $");
+ELFTC_VCSID("$Id$");
 
 /* Symbol table buffer structure. */
 struct symbuf {
@@ -102,7 +102,8 @@ static int
 is_global_symbol(unsigned char st_info)
 {
 
-	if (GELF_ST_BIND(st_info) == STB_GLOBAL)
+	if (GELF_ST_BIND(st_info) == STB_GLOBAL ||
+	    GELF_ST_BIND(st_info) == STB_GNU_UNIQUE)
 		return (1);
 
 	return (0);
@@ -190,12 +191,6 @@ is_remove_symbol(struct elfcopy *ecp, size_t sc, int i, GElf_Sym *s,
 		SHN_UNDEF,	/* st_shndx */
 	};
 
-	if (lookup_symop_list(ecp, name, SYMOP_KEEP) != NULL)
-		return (0);
-
-	if (lookup_symop_list(ecp, name, SYMOP_STRIP) != NULL)
-		return (1);
-
 	/*
 	 * Keep the first symbol if it is the special reserved symbol.
 	 * XXX Should we generate one if it's missing?
@@ -208,14 +203,33 @@ is_remove_symbol(struct elfcopy *ecp, size_t sc, int i, GElf_Sym *s,
 	    ecp->secndx[s->st_shndx] == 0)
 		return (1);
 
+	/* Keep the symbol if specified by command line option -K. */
+	if (lookup_symop_list(ecp, name, SYMOP_KEEP) != NULL)
+		return (0);
+
 	if (ecp->strip == STRIP_ALL)
 		return (1);
 
+	/* Mark symbols used in relocation. */
 	if (ecp->v_rel == NULL)
 		mark_reloc_symbols(ecp, sc);
 
+	/* Mark symbols used in section groups. */
 	if (ecp->v_grp == NULL)
 		mark_section_group_symbols(ecp, sc);
+
+	/*
+	 * Strip the symbol if specified by command line option -N,
+	 * unless it's used in relocation.
+	 */
+	if (lookup_symop_list(ecp, name, SYMOP_STRIP) != NULL) {
+		if (BIT_ISSET(ecp->v_rel, i)) {
+			warnx("not stripping symbol `%s' because it is named"
+			    " in a relocation", name);
+			return (0);
+		}
+		return (1);
+	}
 
 	if (is_needed_symbol(ecp, i, s))
 		return (0);
