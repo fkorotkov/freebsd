@@ -38,7 +38,7 @@
 
 #include "_libelftc.h"
 
-ELFTC_VCSID("$Id: libelftc_hash.c 2870 2013-01-07 10:38:43Z jkoshy $");
+ELFTC_VCSID("$Id$");
 
 /*
  * Use the size of an 'int' to determine the magic numbers used by the
