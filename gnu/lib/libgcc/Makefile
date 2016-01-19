@@ -30,6 +30,10 @@ CFLAGS+=	-DIN_GCC -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED \
 		-I${GCCDIR}/config -I${GCCDIR} -I. \
 		-I${.CURDIR}/../../usr.bin/cc/cc_tools
 
+.if ${MK_DEBUG_FILES} != "no"
+SHARED_CFLAGS+= -g
+.endif
+
 LDFLAGS+=	-nodefaultlibs
 LIBADD+=	c
 
@@ -209,7 +213,7 @@ COMMONHDRS+=	unwind.h
 HIDE =  -fvisibility=hidden -DHIDE_EXPORTS
 CC_T =	${CC} -c ${CFLAGS} ${HIDE} -fPIC
 CC_P =	${CC} -c ${CFLAGS} ${HIDE} -p -fPIC
-CC_S =	${CC} -c ${CFLAGS} ${PICFLAG} -DSHARED
+CC_S =	${CC} -c ${SHARED_CFLAGS} ${CFLAGS} ${PICFLAG} -DSHARED
 
 #-----------------------------------------------------------------------
 #
