@@ -33,6 +33,11 @@
 
 #include "elfcopy.h"
 
+/* Backwards compatibility for systems with older ELF definitions. */
+#ifndef STB_GNU_UNIQUE
+#define	STB_GNU_UNIQUE 10
+#endif
+
 ELFTC_VCSID("$Id$");
 
 /* Symbol table buffer structure. */
