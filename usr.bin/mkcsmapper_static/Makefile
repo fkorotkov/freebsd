@@ -8,7 +8,7 @@ SRCS=	citrus_bcs.c citrus_db_factory.c citrus_db_hash.c \
 MAN=
 NO_SHARED= yes
 .if ${MACHINE} == "host"
-NO_WARNS= yes
+WARNS=	0
 .endif
 
 build-tools: mkcsmapper_static
