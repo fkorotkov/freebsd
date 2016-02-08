@@ -37,6 +37,13 @@
 #   -V OLD_FILES -V OLD_LIBS -V OLD_DIRS check-old | \
 #   xargs -n1 | sort | uniq -d;
 # done
+# 201601xx: kgzip and kgzldr removed
+OLD_FILES+=usr/lib/kgzldr.o
+OLD_FILES+=usr/sbin/kgzip
+OLD_FILES+=usr/share/man/man8/kgzip.8.gz
+
+
+
 
 # 20160317: rman_res_t size bump to uintmax_t
 OLD_LIBS+=usr/lib/libdevinfo.so.5
