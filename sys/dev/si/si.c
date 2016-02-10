@@ -314,25 +314,25 @@ siattach(device_t dev)
 #ifdef DEV_EISA
 		case SIEISA:
 			outb(sc->sc_iobase + 2, sc->sc_irq << 4);
+			break;
 #endif
-		break;
 		case SIPCI:
 			*(maddr+SIPCIRESET) = 0;
-		break;
+			break;
 		case SIJETPCI: /* fall through to JET ISA */
 		case SIJETISA:
 			*(maddr+SIJETCONFIG) = 0;
-		break;
+			break;
 		case SIHOST2:
 			*(maddr+SIPLRESET) = 0;
-		break;
+			break;
 		case SIHOST:
 			*(maddr+SIRESET) = 0;
-		break;
+			break;
 		default: /* this should never happen */
 			printf("si%d: unsupported configuration\n", unit);
 			return EINVAL;
-		break;
+			break;
 	}
 
 	/* OK, now lets download the download code */
