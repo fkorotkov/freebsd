@@ -46,7 +46,6 @@ __<src.opts.mk>__:
 __DEFAULT_YES_OPTIONS = \
     ACCT \
     ACPI \
-    AMD \
     APM \
     AT \
     ATM \
@@ -175,6 +174,7 @@ __DEFAULT_YES_OPTIONS = \
     ZONEINFO
 
 __DEFAULT_NO_OPTIONS = \
+    AMD \
     BSD_GREP \
     CLANG_EXTRAS \
     DTRACE_TESTS \
