@@ -4,6 +4,10 @@
 # linker:
 # make DEBUG_FLAGS=-g DEBUG=-DDEBUG MK_TESTS=no all
 
+# enable debugging
+DEBUG_FLAGS=-g
+DEBUG=-DDEBUG
+
 .include <src.opts.mk>
 MK_SSP=		no
 
