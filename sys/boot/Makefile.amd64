@@ -9,4 +9,5 @@ SUBDIR+=		userboot
 SUBDIR+=		ficl32
 .endif
 
-SUBDIR+=		i386
+# most/all i386 bootloaders fail due to lack of -N support in lld
+#SUBDIR+=		i386
