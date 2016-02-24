@@ -89,7 +89,7 @@ FILES+=	loader.efi
 FILESMODE_loader.efi=	${BINMODE}
 
 LDSCRIPT=	${.CURDIR}/arch/${MACHINE}/ldscript.${MACHINE}
-LDFLAGS+=	-Wl,-T${LDSCRIPT} -Wl,-Bsymbolic -shared
+LDFLAGS+=	-Wl,-T,${LDSCRIPT} -Wl,-Bsymbolic -shared
 
 CLEANFILES+=	vers.c loader.efi
 
