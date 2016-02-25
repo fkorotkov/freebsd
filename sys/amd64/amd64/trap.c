@@ -299,24 +299,30 @@ trap(struct trapframe *frame)
 			break;
 
 		case T_PROTFLT:		/* general protection fault */
+			printf("SIGBUS/BUS_OBJERR general protection fault\n");
 			i = SIGBUS;
 			ucode = BUS_OBJERR;
 			break;
 		case T_STKFLT:		/* stack fault */
 		case T_SEGNPFLT:	/* segment not present fault */
+			printf("SIGBUS/BUS_ADRERR stack or segment not present fault\n");
 			i = SIGBUS;
 			ucode = BUS_ADRERR;
 			break;
 		case T_TSSFLT:		/* invalid TSS fault */
+			printf("SIGBUS/BUS_OBJERR invalid TSS fault\n");
 			i = SIGBUS;
 			ucode = BUS_OBJERR;
 			break;
 		case T_ALIGNFLT:
+			printf("SIGBUS/BUS_ADRALN alignment fault\n");
 			i = SIGBUS;
 			ucode = BUS_ADRALN;
 			break;
 		case T_DOUBLEFLT:	/* double fault */
+			printf("SIGBUS/BUS_OBJERR double fault\n");
 		default:
+			printf("SIGBUS/BUS_OBJERR default path\n");
 			i = SIGBUS;
 			ucode = BUS_OBJERR;
 			break;
@@ -347,13 +353,16 @@ trap(struct trapframe *frame)
 					 */
 					if (SV_CURPROC_ABI() == SV_ABI_FREEBSD
 					    && p->p_osrel >= P_OSREL_SIGSEGV) {
+						printf("SIGSEGV SV_CURPROC_ABI=%#x p_osrel=%u\n", SV_CURPROC_ABI(), p->p_osrel);
 						i = SIGSEGV;
 						ucode = SEGV_ACCERR;
 					} else {
+						printf("SIGBUS/BUS_PAGE_FAULT page fault translation=0 SV_CURPROC_ABI=%#x p_osrel=%u\n", SV_CURPROC_ABI(), p->p_osrel);
 						i = SIGBUS;
 						ucode = BUS_PAGE_FAULT;
 					}
 				} else if (prot_fault_translation == 1) {
+					printf("SIGBUS/BUS_PAGE_FAULT page fault translation=1\n");
 					/*
 					 * Always compat mode.
 					 */
