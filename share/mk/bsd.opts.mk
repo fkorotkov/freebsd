@@ -62,7 +62,6 @@ __DEFAULT_YES_OPTIONS = \
     OPENSSH \
     PROFILE \
     SSP \
-    SYMVER \
     TOOLCHAIN \
     WARNS
 
@@ -70,7 +69,8 @@ __DEFAULT_NO_OPTIONS = \
     CCACHE_BUILD \
     CTF \
     INSTALL_AS_USER \
-    STALE_STAGED
+    STALE_STAGED \
+    SYMVER
 
 # meta mode related
 __DEFAULT_DEPENDENT_OPTIONS = \
