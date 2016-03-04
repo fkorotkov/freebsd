@@ -5,3 +5,4 @@ CFLAGS+=-DSOFTFLOAT
 
 MDSRCS+= machdep_ldisd.c
 SYM_MAPS+= ${LIBC_SRCTOP}/mips/Symbol.map
+ARCH_LIB_MIN_COMPAT=7

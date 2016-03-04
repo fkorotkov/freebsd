@@ -65,7 +65,7 @@ semctl(int semid, int semnum, int cmd, ...)
 	return (__semctl(semid, semnum, cmd, semun_ptr));
 }
 
-#ifndef NO_COMPAT7
+#if LIB_MIN_COMPAT <= 7
 int
 freebsd7_semctl(int semid, int semnum, int cmd, ...)
 {
