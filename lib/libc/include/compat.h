@@ -35,6 +35,7 @@
 #ifndef __LIBC_COMPAT_H__
 #define	__LIBC_COMPAT_H__
 
+#ifdef SYMVER_COMPAT
 #define	__sym_compat(sym,impl,verid)	\
 	.symver impl, sym@verid
 
@@ -43,6 +44,7 @@ __sym_compat(msgctl, freebsd7_msgctl, FBSD_1.0);
 __sym_compat(shmctl, freebsd7_shmctl, FBSD_1.0);
 
 #undef __sym_compat
+#endif
 
 #define	__weak_reference(sym,alias)	\
 	.weak	alias;.equ	alias,sym

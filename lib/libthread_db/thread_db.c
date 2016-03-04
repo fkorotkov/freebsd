@@ -175,6 +175,7 @@ td_thr_event_getmsg(const td_thrhandle_t *th, td_event_msg_t *msg)
 	return (ta->ta_ops->to_thr_event_getmsg(th, msg));
 }
 
+#ifdef SYMVER_COMPAT
 td_err_e
 td_thr_old_get_info(const td_thrhandle_t *th, td_old_thrinfo_t *info)
 {
@@ -182,6 +183,7 @@ td_thr_old_get_info(const td_thrhandle_t *th, td_old_thrinfo_t *info)
 	return (ta->ta_ops->to_thr_old_get_info(th, info));
 }
 __sym_compat(td_thr_get_info, td_thr_old_get_info, FBSD_1.0);
+#endif
 
 td_err_e
 td_thr_get_info(const td_thrhandle_t *th, td_thrinfo_t *info)

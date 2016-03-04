@@ -39,9 +39,11 @@ __FBSDID("$FreeBSD$");
 #include "libc_private.h"
 
 __weak_reference(__sys_openat, __openat);
+#ifdef SYMVER_COMPAT
 __sym_compat(openat, __impl_openat, FBSD_1.1);
 __weak_reference(openat, __impl_openat);
 __sym_default(openat, openat, FBSD_1.2);
+#endif
 
 #pragma weak openat
 int

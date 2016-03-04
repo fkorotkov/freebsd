@@ -61,6 +61,7 @@ semctl(int semid, int semnum, int cmd, ...)
 	return (__semctl(semid, semnum, cmd, semun_ptr));
 }
 
+#ifdef SYMVER_COMPAT
 int
 freebsd7_semctl(int semid, int semnum, int cmd, ...)
 {
@@ -82,3 +83,4 @@ freebsd7_semctl(int semid, int semnum, int cmd, ...)
 }
 
 __sym_compat(semctl, freebsd7_semctl, FBSD_1.0);
+#endif

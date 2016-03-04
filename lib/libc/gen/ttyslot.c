@@ -42,4 +42,6 @@ __ttyslot(void)
 	return (0);
 }
 
+#ifdef SYMVER_COMPAT
 __sym_compat(ttyslot, __ttyslot, FBSD_1.0);
+#endif
