@@ -11,3 +11,4 @@ SRCS+=	trivial-vdso_tc.c
 GDTOASRCS+=strtorQ.c
 MDSRCS+=machdep_ldisQ.c
 SYM_MAPS+=${LIBC_SRCTOP}/sparc64/Symbol.map
+ARCH_LIB_MIN_COMPAT=7

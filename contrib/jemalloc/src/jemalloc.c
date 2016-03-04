@@ -4,9 +4,11 @@
 /******************************************************************************/
 /* Data. */
 
+#if LIB_MIN_COMPAT <= 7
 /* Work around <http://llvm.org/bugs/show_bug.cgi?id=12623>: */
 const char	*__malloc_options_1_0 = NULL;
 __sym_compat(_malloc_options, __malloc_options_1_0, FBSD_1.0);
+#endif
 
 /* Runtime configuration options. */
 const char	*je_malloc_conf JEMALLOC_ATTR(weak);

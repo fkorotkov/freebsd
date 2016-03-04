@@ -42,4 +42,6 @@ __ttyslot(void)
 	return (0);
 }
 
+#if LIB_MIN_COMPAT <= 7
 __sym_compat(ttyslot, __ttyslot, FBSD_1.0);
+#endif
