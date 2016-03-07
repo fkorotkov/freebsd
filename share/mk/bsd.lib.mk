@@ -259,6 +259,9 @@ lib${LIB_PRIVATE}${LIB}_pic.a: ${SOBJS}
 	@rm -f ${.TARGET}
 	${AR} ${ARFLAGS} ${.TARGET} ${SOBJS} ${ARADD}
 	${RANLIB} ${RANLIBFLAGS} ${.TARGET}
+.if ${MK_SYMVER} == "no"
+	${OBJCOPY} -w --hide-symbol '*' ${.TARGET}
+.endif
 .endif
 
 .if defined(WANT_LINT) && !defined(NO_LINT) && defined(LIB) && !empty(LIB)
