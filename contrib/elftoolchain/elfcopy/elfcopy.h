@@ -47,6 +47,7 @@ struct symop {
 #define SYMOP_KEEPG	0x0010U
 #define SYMOP_WEAKEN	0x0020U
 #define SYMOP_REDEF	0x0040U
+#define SYMOP_HIDE	0x0080U
 
 	unsigned int	op;
 

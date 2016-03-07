@@ -54,6 +54,8 @@ enum options
 	ECP_GAP_FILL,
 	ECP_GLOBALIZE_SYMBOL,
 	ECP_GLOBALIZE_SYMBOLS,
+	ECP_HIDE_SYMBOL,
+	ECP_HIDE_SYMBOLS,
 	ECP_KEEP_SYMBOLS,
 	ECP_KEEP_GLOBAL_SYMBOLS,
 	ECP_LOCALIZE_HIDDEN,
@@ -131,6 +133,8 @@ static struct option elfcopy_longopts[] =
 	{"globalize-symbol", required_argument, NULL, ECP_GLOBALIZE_SYMBOL},
 	{"globalize-symbols", required_argument, NULL, ECP_GLOBALIZE_SYMBOLS},
 	{"help", no_argument, NULL, 'h'},
+	{"hide-symbol", required_argument, NULL, ECP_HIDE_SYMBOL},
+	{"hide-symbols", required_argument, NULL, ECP_HIDE_SYMBOLS},
 	{"input-target", required_argument, NULL, 'I'},
 	{"keep-symbol", required_argument, NULL, 'K'},
 	{"keep-symbols", required_argument, NULL, ECP_KEEP_SYMBOLS},
@@ -907,6 +911,12 @@ elfcopy_main(struct elfcopy *ecp, int argc, char **argv)
 			break;
 		case ECP_GLOBALIZE_SYMBOLS:
 			parse_symlist_file(ecp, optarg, SYMOP_GLOBALIZE);
+			break;
+		case ECP_HIDE_SYMBOL:
+			add_to_symop_list(ecp, optarg, NULL, SYMOP_HIDE);
+			break;
+		case ECP_HIDE_SYMBOLS:
+			parse_symlist_file(ecp, optarg, SYMOP_HIDE);
 			break;
 		case ECP_KEEP_SYMBOLS:
 			parse_symlist_file(ecp, optarg, SYMOP_KEEP);

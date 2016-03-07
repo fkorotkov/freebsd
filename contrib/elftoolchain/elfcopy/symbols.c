@@ -552,6 +552,9 @@ generate_symbols(struct elfcopy *ecp)
 				    GELF_ST_TYPE(sym.st_info));
 			/* XXX We should globalize weak symbol? */
 		}
+		if (!is_hidden_symbol(sym.st_other) &&
+		    lookup_symop_list(ecp, name, SYMOP_HIDE) != NULL)
+			sym.st_other = STV_HIDDEN;
 
 		/* Check if we need to rename this symbol. */
 		if ((sp = lookup_symop_list(ecp, name, SYMOP_REDEF)) != NULL)
