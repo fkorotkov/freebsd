@@ -879,8 +879,14 @@ cpu_set_syscall_retval(struct thread *td, int error)
 		int code = tf->fixreg[FIRSTARG + 1];
 		if (p->p_sysent->sv_mask)
 			code &= p->p_sysent->sv_mask;
-		fixup = (code != SYS_freebsd6_lseek && code != SYS_lseek) ?
-		    1 : 0;
+		if (code == SYS_lseek)
+			fixup = 1;
+#ifdef COMPAT_FREEBSD6
+		else if (code == SYS_freebsd6_lseek)
+			fixup = 1;
+#endif
+		else
+			fixup = 0;
 	} else
 		fixup = 0;
 
