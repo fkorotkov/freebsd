@@ -60,6 +60,7 @@ __DEFAULT_YES_OPTIONS = \
     BOOTPARAMD \
     BOOTPD \
     BSD_CPIO \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -95,7 +96,6 @@ __DEFAULT_YES_OPTIONS = \
     GCOV \
     GDB \
     GNU \
-    GNU_GREP_COMPAT \
     GPIO \
     GROFF \
     HAST \
@@ -175,10 +175,10 @@ __DEFAULT_YES_OPTIONS = \
 
 __DEFAULT_NO_OPTIONS = \
     AMD \
-    BSD_GREP \
     CLANG_EXTRAS \
     DTRACE_TESTS \
     EISA \
+    GNU_GREP_COMPAT \
     GPL_DTC \
     HESIOD \
     LIBSOFT \
