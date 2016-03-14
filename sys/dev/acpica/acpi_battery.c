@@ -492,6 +492,11 @@ acpi_battery_init(void)
 	"current status flags");
     SYSCTL_ADD_PROC(&acpi_battery_sysctl_ctx,
 	SYSCTL_CHILDREN(acpi_battery_sysctl_tree),
+	OID_AUTO, "rate", CTLTYPE_INT | CTLFLAG_RD,
+	&acpi_battery_battinfo.rate, 0, acpi_battery_sysctl, "I",
+	"current discharge rate (mW?)");
+    SYSCTL_ADD_PROC(&acpi_battery_sysctl_ctx,
+	SYSCTL_CHILDREN(acpi_battery_sysctl_tree),
 	OID_AUTO, "units", CTLTYPE_INT | CTLFLAG_RD,
 	NULL, 0, acpi_battery_units_sysctl, "I", "number of batteries");
     SYSCTL_ADD_INT(&acpi_battery_sysctl_ctx,
