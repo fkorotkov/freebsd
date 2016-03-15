@@ -1331,6 +1331,8 @@ _kbdcontrol=	usr.sbin/kbdcontrol
 _yacc=		lib/liby \
 		usr.bin/yacc
 
+_kbdcontrol=	usr.sbin/kbdcontrol
+
 ${_bt}-usr.bin/yacc: ${_bt}-lib/liby
 
 .if ${MK_BSNMP} != "no"
@@ -1394,6 +1396,7 @@ bootstrap-tools: .PHONY
     ${_dd} \
     ${_kbdcontrol} \
     usr.bin/lorder \
+    ${_kbdcontrol} \
     ${_libopenbsd} \
     ${_makewhatis} \
     usr.bin/rpcgen \
