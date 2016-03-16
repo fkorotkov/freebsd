@@ -135,7 +135,6 @@ SYMBOL_MAPS=${SYM_MAPS}
 .if ${MK_SYMVER} != "no"
 CFLAGS+= -DSYMBOL_VERSIONING
 .endif
-CFLAGS+=-DLIB_MIN_COMPAT=${LIB_MIN_COMPAT}
 
 # If there are no machine dependent sources, append all the
 # machine-independent sources:
@@ -173,6 +172,7 @@ SUBDIR+=	tests
 .endif
 
 .include <bsd.lib.mk>
+CFLAGS+=-DLIB_MIN_COMPAT=${LIB_MIN_COMPAT}
 
 .if !defined(_SKIP_BUILD)
 # We need libutil.h, get it directly to avoid
