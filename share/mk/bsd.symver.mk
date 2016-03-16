@@ -43,5 +43,12 @@ _vgen=  ${path}/${VERSION_GEN}
 ${VERSION_MAP}: ${VERSION_DEF} ${_vgen} ${SYMBOL_MAPS}
 	cat ${SYMBOL_MAPS} | ${CPP} - - \
 	    | awk -v vfile=${VERSION_DEF} -f ${_vgen} > ${.TARGET}
+
+LIB_MIN_COMPAT=	0
+
+.else	# !empty(VERSION_DEF) && !empty(SYMBOL_MAPS)
+
+LIB_MIN_COMPAT=	1000000
+
 .endif	# !empty(VERSION_DEF) && !empty(SYMBOL_MAPS)
 .endif  # !target(__<bsd.symver.mk>__)
