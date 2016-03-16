@@ -22,3 +22,4 @@ VERSION_DEF=${.CURDIR}/../libc/Versions.def
 NO_WCAST_ALIGN.clang=
 
 .include <bsd.lib.mk>
+CFLAGS+=-DMIN_LIB_COMPAT=${MIN_LIB_COMPAT}

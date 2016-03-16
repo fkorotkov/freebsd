@@ -67,3 +67,4 @@ SUBDIR+=	tests
 .endif
 
 .include <bsd.lib.mk>
+CFLAGS+=-DMIN_LIB_COMPAT=${MIN_LIB_COMPAT}
