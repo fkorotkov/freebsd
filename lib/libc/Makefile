@@ -132,12 +132,10 @@ STATICOBJS+=${LIBC_NONSHARED_SRCS:S/.c$/.o/}
 
 VERSION_DEF=${LIBC_SRCTOP}/Versions.def
 SYMBOL_MAPS=${SYM_MAPS}
-.if ${MK_SYMVER} == "no"
-CFLAGS+=-DLIB_MIN_COMPAT=9999
-.else
+.if ${MK_SYMVER} != "no"
 CFLAGS+= -DSYMBOL_VERSIONING
-CFLAGS+=-DLIB_MIN_COMPAT=${ARCH_LIB_MIN_COMPAT}
 .endif
+CFLAGS+=-DLIB_MIN_COMPAT=${LIB_MIN_COMPAT}
 
 # If there are no machine dependent sources, append all the
 # machine-independent sources:
