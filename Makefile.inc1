@@ -1331,7 +1331,10 @@ _kbdcontrol=	usr.sbin/kbdcontrol
 _yacc=		lib/liby \
 		usr.bin/yacc
 
+# r296926 -P keymap search path
+.if ${BOOTSTRAPPING} < 1100103
 _kbdcontrol=	usr.sbin/kbdcontrol
+.endif
 
 ${_bt}-usr.bin/yacc: ${_bt}-lib/liby
 
