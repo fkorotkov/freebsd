@@ -44,6 +44,7 @@ __FBSDID("$FreeBSD$");
 
 #include "thr_private.h"
 
+#if LIB_MIN_COMPAT <= 10
 FB10_COMPAT(_sem_init_compat, sem_init);
 FB10_COMPAT(_sem_destroy_compat, sem_destroy);
 FB10_COMPAT(_sem_getvalue_compat, sem_getvalue);
@@ -51,6 +52,7 @@ FB10_COMPAT(_sem_trywait_compat, sem_trywait);
 FB10_COMPAT(_sem_wait_compat, sem_wait);
 FB10_COMPAT(_sem_timedwait_compat, sem_timedwait);
 FB10_COMPAT(_sem_post_compat, sem_post);
+#endif
 
 typedef struct sem *sem_t;
 
