@@ -251,9 +251,21 @@ parse_bdf(FILE *fp, unsigned int map_idx)
 	size_t length;
 	uint8_t bytes[wbytes * height], bytes_r[wbytes * height];
 	unsigned int curchar = 0, dwidth = 0, i, line;
+	unsigned int h, w;
 
 	while ((ln = fgetln(fp, &length)) != NULL) {
 		ln[length - 1] = '\0';
+
+		if (strncmp(ln, "BBX ", 4) == 0 &&
+		    sscanf(ln + 4, "%u %u", &w, &h) == 2) {
+			if (h > height)
+				errx(1, "BBX height %u too large", h);
+			if (w > width)
+				errx(1, "BBX width %u too large", w);
+			height = h;
+			width = w;
+			printf("h,w set to %u %u\n", h, w);
+		}
 
 		if (strncmp(ln, "ENCODING ", 9) == 0) {
 			curchar = atoi(ln + 9);
