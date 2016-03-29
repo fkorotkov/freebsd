@@ -29,7 +29,9 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
+#if LIB_MIN_COMPAT <= 7
 #define _WANT_SEMUN_OLD
+#endif
 
 #include <sys/types.h>
 #include <sys/ipc.h>
