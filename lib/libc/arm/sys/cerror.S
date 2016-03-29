@@ -39,6 +39,7 @@ __FBSDID("$FreeBSD$");
 .type   _C_LABEL(__error),%function
 		
 ASENTRY(CERROR)
+.hidden CERROR
 	stmfd	sp!, {r4, lr}
 	mov	r4, r0
 	bl	PIC_SYM(_C_LABEL(__error), PLT)
