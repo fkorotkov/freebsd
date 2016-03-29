@@ -44,6 +44,7 @@ WEAK_ALIAS(sbrk, _sbrk)
 	.data
 	.align	0
 	.globl	CURBRK
+	.hidden	CURBRK
 	.type	CURBRK,#object
 CURBRK:
 	.word	_C_LABEL(_end)

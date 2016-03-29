@@ -45,6 +45,7 @@ WEAK_ALIAS(brk, _brk)
 	.data
 	.align	0
 	.globl	_C_LABEL(minbrk)
+	.hidden	_C_LABEL(minbrk)
 	.type	_C_LABEL(minbrk),#object
 _C_LABEL(minbrk):
 	.word	_C_LABEL(_end)
