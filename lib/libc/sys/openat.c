@@ -39,7 +39,7 @@ __FBSDID("$FreeBSD$");
 #include "libc_private.h"
 
 __weak_reference(__sys_openat, __openat);
-#if LIB_MIN_COMPAT <= 8
+#if LIB_MIN_COMPAT <= 10
 __sym_compat(openat, __impl_openat, FBSD_1.1);
 __weak_reference(openat, __impl_openat);
 __sym_default(openat, openat, FBSD_1.2);
