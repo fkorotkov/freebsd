@@ -36,6 +36,7 @@
 __FBSDID("$FreeBSD$");
 
 ENTRY(cerror)
+.hidden(cerror)
 	addi	sp, sp, -16
 	sd	a0, 0(sp)
 	sd	ra, 8(sp)
