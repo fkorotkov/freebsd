@@ -130,7 +130,23 @@ STATICOBJS+=${LIBC_NONSHARED_SRCS:S/.c$/.o/}
 
 VERSION_DEF=${LIBC_SRCTOP}/Versions.def
 SYMBOL_MAPS=${SYM_MAPS}
-CFLAGS+= -DSYMBOL_VERSIONING
+.if ${MK_SYMVER} != "no"
+# LIB_MIN_COMPAT is set to the major version of the first FreeBSD release that
+# supported the target architecture. When a major FreeBSD version "n"
+# introduces a new version of a symbol, the backwards compatibility (previous)
+# symbol version is required where LIB_MIN_COMPAT < n.
+CFLAGS+=-DLIB_MIN_COMPAT=${ARCH_LIB_MIN_COMPAT}
+.else
+# Set minimum compatability higher than any FreeBSD release
+CFLAGS+=-DLIB_MIN_COMPAT=999999
+.endif
+# Remove syscall wrappers for FreeBSD versions older than the first one
+# supported by this target.
+.for i in 4 5 6 7 8 9 10
+.if ${LIB_MIN_COMPAT} > ${i}
+MIASM:=	${MIASM:Nfreebsd${i}_*}
+.endif
+.endfor
 
 # If there are no machine dependent sources, append all the
 # machine-independent sources:

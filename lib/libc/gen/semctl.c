@@ -29,7 +29,7 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
-#ifndef NO_COMPAT7
+#if LIB_MIN_COMPAT < 8
 #define _WANT_SEMUN_OLD
 #endif
 
@@ -40,7 +40,7 @@ __FBSDID("$FreeBSD$");
 #include <stdlib.h>
 
 int	__semctl(int semid, int semnum, int cmd, union semun *arg);
-#ifndef NO_COMPAT7
+#if LIB_MIN_COMPAT < 8
 int	freebsd7___semctl(int semid, int semnum, int cmd, union semun_old *arg);
 int	freebsd7_semctl(int semid, int semnum, int cmd, ...);
 #endif
@@ -65,7 +65,7 @@ semctl(int semid, int semnum, int cmd, ...)
 	return (__semctl(semid, semnum, cmd, semun_ptr));
 }
 
-#ifndef NO_COMPAT7
+#if LIB_MIN_COMPAT < 8
 int
 freebsd7_semctl(int semid, int semnum, int cmd, ...)
 {

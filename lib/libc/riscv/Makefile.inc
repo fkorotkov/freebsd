@@ -7,3 +7,4 @@
 GDTOASRCS+=strtorQ.c
 MDSRCS+=machdep_ldisQ.c
 SYM_MAPS+=${LIBC_SRCTOP}/riscv/Symbol.map
+ARCH_LIB_MIN_COMPAT=11

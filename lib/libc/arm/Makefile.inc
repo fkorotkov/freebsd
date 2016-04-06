@@ -14,4 +14,5 @@ SYM_MAPS+=${LIBC_SRCTOP}/arm/Symbol.map
 .if ${MACHINE_ARCH:Marm*hf*} != ""
 SYM_MAPS+=${LIBC_SRCTOP}/arm/Symbol_vfp.map
 .endif
+ARCH_LIB_MIN_COMPAT=10
 

@@ -7,3 +7,4 @@
 GDTOASRCS+=strtorx.c
 MDSRCS+=machdep_ldisx.c
 SYM_MAPS+=${LIBC_SRCTOP}/amd64/Symbol.map
+ARCH_LIB_MIN_COMPAT=4

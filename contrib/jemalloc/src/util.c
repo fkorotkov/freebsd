@@ -78,9 +78,11 @@ wrtmessage_1_0(const char *s1, const char *s2, const char *s3,
 	wrtmessage(NULL, s4);
 }
 
+#if LIB_MIN_COMPAT < 10
 void	(*__malloc_message_1_0)(const char *s1, const char *s2, const char *s3,
     const char *s4) = wrtmessage_1_0;
 __sym_compat(_malloc_message, __malloc_message_1_0, FBSD_1.0);
+#endif
 
 /*
  * Wrapper around malloc_message() that avoids the need for
