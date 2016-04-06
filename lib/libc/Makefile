@@ -135,11 +135,12 @@ SYMBOL_MAPS=${SYM_MAPS}
 # supported the target architecture. When a major FreeBSD version "n"
 # introduces a new version of a symbol, the backwards compatibility (previous)
 # symbol version is required where LIB_MIN_COMPAT < n.
-CFLAGS+=-DLIB_MIN_COMPAT=${ARCH_LIB_MIN_COMPAT}
+LIB_MIN_COMPAT=${ARCH_LIB_MIN_COMPAT}
 .else
 # Set minimum compatability higher than any FreeBSD release
-CFLAGS+=-DLIB_MIN_COMPAT=999999
+LIB_MIN_COMPAT=999999
 .endif
+CFLAGS+=-DLIB_MIN_COMPAT=${LIB_MIN_COMPAT}
 # Remove syscall wrappers for FreeBSD versions older than the first one
 # supported by this target.
 .for i in 4 5 6 7 8 9 10
