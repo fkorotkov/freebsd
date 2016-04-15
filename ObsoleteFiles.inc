@@ -38,6 +38,9 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 2017xxxx: objdump disconnected
+OLD_FILES+=usr/bin/objdump
+OLD_FILES+=usr/share/man/man1/objdump.1.gz
 # 20180824: libbe(3) SHLIBDIR fixed to reflect correct location
 OLD_LIBS+=usr/lib/libbe.so.1
 # 20180819: Remove deprecated arc4random(3) stir/addrandom interfaces
