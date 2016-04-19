@@ -4,7 +4,7 @@
 
 LIB=	lldbTarget
 
-CFLAGS+=-I${.CURDIR}/../../../contrib/llvm/tools/lldb/source/Plugins/Process/Utility
+CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/Utility
 
 SRCDIR=	tools/lldb/source/Target
 SRCS=	ABI.cpp \

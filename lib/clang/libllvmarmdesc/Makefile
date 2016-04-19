@@ -18,7 +18,7 @@ SRCS=	ARMAsmBackend.cpp \
 	ARMUnwindOpAsm.cpp \
 	ARMWinCOFFObjectWriter.cpp \
 	ARMWinCOFFStreamer.cpp
-CFLAGS+= -I${LLVM_SRCS}/${SRCDIR}/..
+CFLAGS+= -I${LLVM_SRCS}/${SRCDIR:H}
 
 TGHDRS=	ARMGenInstrInfo \
 	ARMGenMCCodeEmitter \
