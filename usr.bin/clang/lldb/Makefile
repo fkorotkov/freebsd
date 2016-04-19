@@ -4,7 +4,7 @@
 
 PROG_CXX=lldb
 
-LLDB_SRCS=${.CURDIR}/../../../contrib/llvm/tools/lldb
+LLDB_SRCS=${.CURDIR:H:H:H}/contrib/llvm/tools/lldb
 
 CFLAGS+=	-I${LLDB_SRCS}/include
 CXXFLAGS+=	-std=c++11
@@ -82,8 +82,8 @@ LLDB_LIBS=\
 
 LDADD+=	-Wl,--start-group
 .for lib in ${LLDB_LIBS}
-DPADD+=	${.OBJDIR}/../../../lib/clang/lib${lib}/lib${lib}.a
-LDADD+=	${.OBJDIR}/../../../lib/clang/lib${lib}/lib${lib}.a
+DPADD+=	${.OBJDIR:H:H:H}/lib/clang/lib${lib}/lib${lib}.a
+LDADD+=	${.OBJDIR:H:H:H}/lib/clang/lib${lib}/lib${lib}.a
 .endfor
 LDADD+=	-Wl,--end-group
 

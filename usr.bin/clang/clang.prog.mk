@@ -1,12 +1,12 @@
 # $FreeBSD$
 
-LLVM_SRCS= ${.CURDIR}/../../../contrib/llvm
+LLVM_SRCS= ${.CURDIR:H:H:H}/contrib/llvm
 
 .include "../../lib/clang/clang.build.mk"
 
 .for lib in ${LIBDEPS}
-DPADD+=	${.OBJDIR}/../../../lib/clang/lib${lib}/lib${lib}.a
-LDADD+=	${.OBJDIR}/../../../lib/clang/lib${lib}/lib${lib}.a
+DPADD+=	${.OBJDIR:H:H:H}/lib/clang/lib${lib}/lib${lib}.a
+LDADD+=	${.OBJDIR:H:H:H}/lib/clang/lib${lib}/lib${lib}.a
 .endfor
 
 PACKAGE=	clang
