@@ -106,10 +106,10 @@ SECTIONS
     KEEP (*(SORT(.fini_array.*)))
     PROVIDE_HIDDEN (__fini_array_end = .);
   }
-  _start_ctors = .;
-  PROVIDE (start_ctors = .);
   .ctors          :
   {
+    _start_ctors = .;
+    PROVIDE (start_ctors = .);
     /* gcc uses crtbegin.o to find the start of
        the constructors, so we make sure it is
        first.  Because this is a wildcard, it
@@ -128,9 +128,9 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
     KEEP (*(SORT(.ctors.*)))
     KEEP (*(.ctors))
+    _stop_ctors = .;
+    PROVIDE (stop_ctors = .);
   }
-  _stop_ctors = .;
-  PROVIDE (stop_ctors = .);
   .dtors          :
   {
     KEEP (*crtbegin.o(.dtors))
