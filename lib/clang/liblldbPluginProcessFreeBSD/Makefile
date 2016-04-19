@@ -5,9 +5,9 @@
 LIB=	lldbPluginProcessFreeBSD
 
 # include_directories(.)
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/FreeBSD
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/Utility
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/FreeBSD
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/Utility
 
 SRCDIR=	tools/lldb/source/Plugins/Process/FreeBSD
 SRCS=	FreeBSDThread.cpp \

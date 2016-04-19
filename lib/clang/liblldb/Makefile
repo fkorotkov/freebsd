@@ -4,7 +4,7 @@
 
 LIB=	lldb
 
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
 
 SRCDIR=	tools/lldb/source
 SRCS=	lldb.cpp
