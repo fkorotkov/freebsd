@@ -14,7 +14,7 @@ SRCS=	AArch64AsmBackend.cpp \
 	AArch64MCTargetDesc.cpp \
 	AArch64MachObjectWriter.cpp \
 	AArch64TargetStreamer.cpp
-CFLAGS+= -I${LLVM_SRCS}/${SRCDIR}/..
+CFLAGS+= -I${LLVM_SRCS}/${SRCDIR:H}
 
 TGHDRS=	AArch64GenInstrInfo \
 	AArch64GenMCCodeEmitter \

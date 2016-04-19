@@ -17,7 +17,7 @@ SRCS=	MipsABIFlagsSection.cpp \
 	MipsNaClELFStreamer.cpp \
 	MipsOptionRecord.cpp \
 	MipsTargetStreamer.cpp
-CFLAGS+= -I${LLVM_SRCS}/${SRCDIR}/..
+CFLAGS+= -I${LLVM_SRCS}/${SRCDIR:H}
 
 TGHDRS=	Attributes \
 	MipsGenInstrInfo \

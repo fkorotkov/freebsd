@@ -13,7 +13,7 @@ SRCS=	PPCAsmBackend.cpp \
 	PPCMCTargetDesc.cpp \
 	PPCMachObjectWriter.cpp \
 	PPCPredicates.cpp
-CFLAGS+= -I${LLVM_SRCS}/${SRCDIR}/..
+CFLAGS+= -I${LLVM_SRCS}/${SRCDIR:H}
 
 TGHDRS=	PPCGenInstrInfo \
 	PPCGenMCCodeEmitter \
