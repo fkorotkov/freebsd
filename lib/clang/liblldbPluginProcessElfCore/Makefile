@@ -4,8 +4,8 @@
 
 LIB=	lldbPluginProcessElfCore
 
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
-CFLAGS+=-I${.CURDIR:H:H:H}/contrib/llvm/tools/lldb/source/Plugins/Process/Utility
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/POSIX
+CFLAGS+=-I${SRCTOP}/contrib/llvm/tools/lldb/source/Plugins/Process/Utility
 
 SRCDIR=	tools/lldb/source/Plugins/Process/elf-core
 SRCS=	ProcessElfCore.cpp \
