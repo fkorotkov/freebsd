@@ -1,6 +1,6 @@
 # $FreeBSD$
 
-LLVM_SRCS= ${.CURDIR:H:H:H}/contrib/llvm
+LLVM_SRCS= ${SRCTOP}/contrib/llvm
 
 .include "../../lib/clang/clang.build.mk"
 

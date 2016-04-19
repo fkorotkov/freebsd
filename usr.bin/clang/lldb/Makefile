@@ -4,7 +4,7 @@
 
 PROG_CXX=lldb
 
-LLDB_SRCS=${.CURDIR:H:H:H}/contrib/llvm/tools/lldb
+LLDB_SRCS=${SRCTOP}/contrib/llvm/tools/lldb
 
 CFLAGS+=	-I${LLDB_SRCS}/include
 CXXFLAGS+=	-std=c++11
