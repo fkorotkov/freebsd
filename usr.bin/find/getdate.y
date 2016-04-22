@@ -108,8 +108,10 @@ static char	*yyInput;
 static DSTMODE	yyDSTmode;
 static time_t	yyDayOrdinal;
 static time_t	yyDayNumber;
+static time_t	yyEpoch;
 static int	yyHaveDate;
 static int	yyHaveDay;
+static int	yyHaveEpoch;
 static int	yyHaveRel;
 static int	yyHaveTime;
 static int	yyHaveZone;
@@ -309,7 +311,11 @@ relunit	: tUNUMBER tMINUTE_UNIT {
 	}
 	;
 
-number	: tUNUMBER {
+number	: '@' tUNUMBER {
+	    yyHaveEpoch++;
+	    yyEpoch = $2;
+	}
+	| tUNUMBER {
 	    if (yyHaveTime && yyHaveDate && !yyHaveRel)
 		yyYear = $1;
 	    else {
@@ -899,13 +905,18 @@ get_date(char *p)
     yyRelMonth = 0;
     yyHaveDate = 0;
     yyHaveDay = 0;
+    yyHaveEpoch = 0;
     yyHaveRel = 0;
     yyHaveTime = 0;
     yyHaveZone = 0;
 
     if (yyparse()
-     || yyHaveTime > 1 || yyHaveZone > 1 || yyHaveDate > 1 || yyHaveDay > 1)
+     || yyHaveTime > 1 || yyHaveZone > 1 || yyHaveDate > 1 || yyHaveDay > 1
+     || yyHaveEpoch > 1)
 	return -1;
+
+    if (yyHaveEpoch)
+	return yyEpoch;
 
     if (yyHaveDate || yyHaveTime || yyHaveDay) {
 	Start = Convert(yyMonth, yyDay, yyYear, yyHour, yyMinutes, yySeconds,
