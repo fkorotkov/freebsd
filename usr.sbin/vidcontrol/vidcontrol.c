@@ -393,12 +393,11 @@ load_vt4mappingtable(unsigned int nmappings, FILE *f)
 	if (nmappings == 0)
 		return (NULL);
 
-	t = malloc(sizeof *t * nmappings);
+	if ((t = malloc(sizeof *t * nmappings)) == NULL)
+		err(1, "malloc");
 
-	if (fread(t, sizeof *t * nmappings, 1, f) != 1) {
-		perror("mappings");
-		exit(1);
-	}
+	if (fread(t, sizeof *t * nmappings, 1, f) != 1)
+		err(1, "read mappings");
 
 	for (i = 0; i < nmappings; i++) {
 		t[i].src = be32toh(t[i].src);
@@ -422,7 +421,7 @@ load_default_vt4font(void)
 	}
 }
 
-static int
+static void
 load_vt4font(FILE *f)
 {
 	struct vt4font_header fh;
@@ -430,15 +429,11 @@ load_vt4font(FILE *f)
 	size_t glyphsize;
 	unsigned int i;
 
-	if (fread(&fh, sizeof fh, 1, f) != 1) {
-		perror("file_header");
-		return (1);
-	}
+	if (fread(&fh, sizeof fh, 1, f) != 1)
+		err(1, "read file_header");
 
-	if (memcmp(fh.magic, "VFNT0002", 8) != 0) {
-		fprintf(stderr, "Bad magic\n");
-		return (1);
-	}
+	if (memcmp(fh.magic, "VFNT0002", 8) != 0)
+		errx(1, "Bad magic in font file\n");
 
 	for (i = 0; i < VFNT_MAPS; i++)
 		vfnt.map_count[i] = be32toh(fh.map_count[i]);
@@ -447,21 +442,21 @@ load_vt4font(FILE *f)
 	vfnt.height = fh.height;
 
 	glyphsize = howmany(vfnt.width, 8) * vfnt.height * vfnt.glyph_count;
-	vfnt.glyphs = malloc(glyphsize);
+	if ((vfnt.glyphs = malloc(glyphsize)) == NULL)
+		err(1, "malloc");
 
-	if (fread(vfnt.glyphs, glyphsize, 1, f) != 1) {
-		perror("glyphs");
-		return (1);
-	}
+	if (fread(vfnt.glyphs, glyphsize, 1, f) != 1)
+		err(1, "read glyphs");
 
 	for (i = 0; i < VFNT_MAPS; i++)
 		vfnt.map[i] = load_vt4mappingtable(vfnt.map_count[i], f);
 
-	if (ioctl(STDIN_FILENO, PIO_VFONT, &vfnt) == -1) {
-		perror("PIO_VFONT");
-		return (1);
-	}
-	return (0);
+	if (ioctl(STDIN_FILENO, PIO_VFONT, &vfnt) == -1)
+		err(1, "PIO_VFONT");
+
+	for (i = 0; i < VFNT_MAPS; i++)
+		free(vfnt.map[i]);
+	free(vfnt.glyphs);
 }
 
 /*
@@ -511,8 +506,7 @@ load_font(const char *type, const char *filename)
 	}
 
 	if (vt4_mode) {
-		if(load_vt4font(fd))
-			warn("failed to load font \"%s\"", filename);
+		load_vt4font(fd);
 		fclose(fd);
 		return;
 	}
