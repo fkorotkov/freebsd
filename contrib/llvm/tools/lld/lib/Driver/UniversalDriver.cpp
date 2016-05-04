@@ -15,7 +15,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "lld/Driver/Driver.h"
-#include "lld/Config/Version.h"
+//#include "lld/Config/Version.h"
 #include "lld/Core/LLVM.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/StringExtras.h"
@@ -193,8 +193,8 @@ bool UniversalDriver::link(llvm::MutableArrayRef<const char *> args,
 
   // Handle -version
   if (parsedArgs.getLastArg(OPT_version)) {
-    diagnostics << "LLVM Linker Version: " << getLLDVersion()
-                << getLLDRepositoryVersion() << "\n";
+//    diagnostics << "LLVM Linker Version: " << getLLDVersion()
+//                << getLLDRepositoryVersion() << "\n";
     return true;
   }
 
@@ -202,11 +202,14 @@ bool UniversalDriver::link(llvm::MutableArrayRef<const char *> args,
 
   // Switch to appropriate driver.
   switch (flavor) {
+#if 0
   case Flavor::old_gnu_ld:
     return GnuLdDriver::linkELF(args, diagnostics);
+#endif
   case Flavor::gnu_ld:
     elf2::link(args);
     return true;
+#if 0
   case Flavor::darwin_ld:
     return DarwinLdDriver::linkMachO(args, diagnostics);
   case Flavor::win_link:
@@ -214,6 +217,8 @@ bool UniversalDriver::link(llvm::MutableArrayRef<const char *> args,
     return true;
   case Flavor::core:
     return CoreDriver::link(args, diagnostics);
+#endif
+  default:
   case Flavor::invalid:
     diagnostics << "Select the appropriate flavor\n";
     table.PrintHelp(llvm::outs(), programName.data(), "LLVM Linker", false);
