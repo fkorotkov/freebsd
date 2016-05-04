@@ -247,6 +247,13 @@ Checkers.inc.h: ${CLANG_SRCS}/lib/StaticAnalyzer/Checkers/Checkers.td
 	    -I ${CLANG_SRCS}/include -d ${.TARGET:C/\.h$/.d/} -o ${.TARGET} \
 	    ${CLANG_SRCS}/lib/StaticAnalyzer/Checkers/Checkers.td
 
+# LLD
+UniversalDriverOptions.inc.h: ${LLVM_SRCS}/tools/lld/lib/Driver/UniversalDriverOptions.td
+	${LLVM_TBLGEN} -gen-opt-parser-defs \
+	    -I ${LLVM_SRCS}/include -o ${.TARGET} \
+	    ${LLVM_SRCS}/tools/lld/lib/Driver/UniversalDriverOptions.td
+
+
 .for dep in ${TGHDRS:C/$/.inc.d/}
 . if ${MAKE_VERSION} < 20160220
 .  if !make(depend)
