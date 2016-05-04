@@ -234,6 +234,12 @@ Options.inc.h: ${CLANG_SRCS}/include/clang/Driver/Options.td
 	    -I ${LLVM_SRCS}/include -I ${CLANG_SRCS}/include/clang/Driver \
 	    -d ${.TARGET:C/\.h$/.d/} -o ${.TARGET} \
 	    ${CLANG_SRCS}/include/clang/Driver/Options.td
+.elif ${LIB:U} == lldELF
+Options.inc.h: ${LLVM_SRCS}/tools/lld/ELF/Options.td
+	${LLVM_TBLGEN} -gen-opt-parser-defs \
+	    -I ${LLVM_SRCS}/include \
+	    -d ${.TARGET:C/\.h$/.d/} -o ${.TARGET} \
+	    ${LLVM_SRCS}/tools/lld/ELF/Options.td
 .endif
 
 Checkers.inc.h: ${CLANG_SRCS}/lib/StaticAnalyzer/Checkers/Checkers.td
