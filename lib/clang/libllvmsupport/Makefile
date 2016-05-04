@@ -93,11 +93,14 @@ SRCS=	APFloat.cpp \
 SRCS+=	ARMWinEH.cpp \
 	COM.cpp \
 	DataStream.cpp \
-	FileOutputBuffer.cpp \
 	FileUtilities.cpp \
 	SystemUtils.cpp \
 	ThreadPool.cpp \
 	Watchdog.cpp
+.endif
+
+.if ${MK_CLANG_EXTRAS} != "no" || ${MK_LLD} != "no"
+SRCS+=	FileOutputBuffer.cpp
 .endif
 
 .if ${MK_CLANG_EXTRAS} != "no" || ${MK_LLDB} != "no"
