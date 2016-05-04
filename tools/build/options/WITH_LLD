@@ -1,0 +1,2 @@
+.\" $FreeBSD$
+Set to build the lld linker and install it as ld.lld.
