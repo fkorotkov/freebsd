@@ -113,6 +113,13 @@ SUBDIR+=libllvmexecutionengine \
 	libllvmx86disassembler
 .endif # MK_CLANG_EXTRAS | LLDB
 
+.if ${MK_LLD} != "no"
+SUBDIR+=liblldELF \
+	liblldlibConfig \
+	liblldlibCore \
+	liblldlibDriver
+.endif # MK_LLD
+
 .if ${MK_LLDB} != "no"
 SUBDIR+=liblldb \
 	\
