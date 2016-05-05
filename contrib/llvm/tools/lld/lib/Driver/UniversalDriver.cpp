@@ -202,22 +202,9 @@ bool UniversalDriver::link(llvm::MutableArrayRef<const char *> args,
 
   // Switch to appropriate driver.
   switch (flavor) {
-#if 0
-  case Flavor::old_gnu_ld:
-    return GnuLdDriver::linkELF(args, diagnostics);
-#endif
   case Flavor::gnu_ld:
     elf2::link(args);
     return true;
-#if 0
-  case Flavor::darwin_ld:
-    return DarwinLdDriver::linkMachO(args, diagnostics);
-  case Flavor::win_link:
-    coff::link(args);
-    return true;
-  case Flavor::core:
-    return CoreDriver::link(args, diagnostics);
-#endif
   default:
   case Flavor::invalid:
     diagnostics << "Select the appropriate flavor\n";
