@@ -41,6 +41,7 @@ BOOT_BOOT0_TICKS?=	0xb6
 # unless you are glutton for punishment.
 BOOT_BOOT0_ORG?=	0x600
 
+# XXX repurpose obsolete speeds?
 # Comm settings for boot0sio.
 # Bit(s) Description
 # 7-5    data rate (110,150,300,600,1200,2400,4800,9600 bps)
