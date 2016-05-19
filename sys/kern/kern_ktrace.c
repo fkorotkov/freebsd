@@ -437,9 +437,7 @@ ktr_freeproc(struct proc *p, struct ucred **uc, struct vnode **vp)
 }
 
 void
-ktrsyscall(code, narg, args)
-	int code, narg;
-	register_t args[];
+ktrsyscall(int code, int narg, register_t args[])
 {
 	struct ktr_request *req;
 	struct ktr_syscall *ktp;
@@ -468,9 +466,7 @@ ktrsyscall(code, narg, args)
 }
 
 void
-ktrsysret(code, error, retval)
-	int code, error;
-	register_t retval;
+ktrsysret(int code, int error, register_t retval)
 {
 	struct ktr_request *req;
 	struct ktr_sysret *ktp;
@@ -632,9 +628,7 @@ ktrnamei(path)
 }
 
 void
-ktrsysctl(name, namelen)
-	int *name;
-	u_int namelen;
+ktrsysctl(int *name, u_int namelen)
 {
 	struct ktr_request *req;
 	u_int mib[CTL_MAXNAME + 2];
@@ -666,11 +660,7 @@ ktrsysctl(name, namelen)
 }
 
 void
-ktrgenio(fd, rw, uio, error)
-	int fd;
-	enum uio_rw rw;
-	struct uio *uio;
-	int error;
+ktrgenio(int fd, enum uio_rw rw, struct uio *uio, int error)
 {
 	struct ktr_request *req;
 	struct ktr_genio *ktg;
@@ -705,11 +695,7 @@ ktrgenio(fd, rw, uio, error)
 }
 
 void
-ktrpsig(sig, action, mask, code)
-	int sig;
-	sig_t action;
-	sigset_t *mask;
-	int code;
+ktrpsig(int sig, sig_t action, sigset_t *mask, int code)
 {
 	struct thread *td = curthread;
 	struct ktr_request *req;
@@ -728,9 +714,7 @@ ktrpsig(sig, action, mask, code)
 }
 
 void
-ktrcsw(out, user, wmesg)
-	int out, user;
-	const char *wmesg;
+ktrcsw(int out, int user, const char *wmesg)
 {
 	struct thread *td = curthread;
 	struct ktr_request *req;
@@ -751,10 +735,7 @@ ktrcsw(out, user, wmesg)
 }
 
 void
-ktrstruct(name, data, datalen)
-	const char *name;
-	void *data;
-	size_t datalen;
+ktrstruct(const char *name, void *data, size_t datalen)
 {
 	struct ktr_request *req;
 	char *buf;
@@ -777,10 +758,8 @@ ktrstruct(name, data, datalen)
 }
 
 void
-ktrcapfail(type, needed, held)
-	enum ktr_cap_fail_type type;
-	const cap_rights_t *needed;
-	const cap_rights_t *held;
+ktrcapfail(enum ktr_cap_fail_type type, const cap_rights_t *needed,
+    const cap_rights_t *held)
 {
 	struct thread *td = curthread;
 	struct ktr_request *req;
@@ -804,9 +783,7 @@ ktrcapfail(type, needed, held)
 }
 
 void
-ktrfault(vaddr, type)
-	vm_offset_t vaddr;
-	int type;
+ktrfault(vm_offset_t vaddr, int type)
 {
 	struct thread *td = curthread;
 	struct ktr_request *req;
@@ -823,8 +800,7 @@ ktrfault(vaddr, type)
 }
 
 void
-ktrfaultend(result)
-	int result;
+ktrfaultend(int result)
 {
 	struct thread *td = curthread;
 	struct ktr_request *req;
@@ -852,9 +828,7 @@ struct ktrace_args {
 #endif
 /* ARGSUSED */
 int
-sys_ktrace(td, uap)
-	struct thread *td;
-	register struct ktrace_args *uap;
+sys_ktrace(struct thread *td, register struct ktrace_args *uap)
 {
 #ifdef KTRACE
 	register struct vnode *vp = NULL;
@@ -997,9 +971,7 @@ done:
 
 /* ARGSUSED */
 int
-sys_utrace(td, uap)
-	struct thread *td;
-	register struct utrace_args *uap;
+sys_utrace(struct thread *td, register struct utrace_args *uap)
 {
 
 #ifdef KTRACE
@@ -1033,11 +1005,7 @@ sys_utrace(td, uap)
 
 #ifdef KTRACE
 static int
-ktrops(td, p, ops, facs, vp)
-	struct thread *td;
-	struct proc *p;
-	int ops, facs;
-	struct vnode *vp;
+ktrops(struct thread *td, struct proc *p, int ops, int facs, struct vnode *vp)
 {
 	struct vnode *tracevp = NULL;
 	struct ucred *tracecred = NULL;
@@ -1088,11 +1056,8 @@ ktrops(td, p, ops, facs, vp)
 }
 
 static int
-ktrsetchildren(td, top, ops, facs, vp)
-	struct thread *td;
-	struct proc *top;
-	int ops, facs;
-	struct vnode *vp;
+ktrsetchildren(struct thread *td, struct proc *top, int ops, int facs,
+    struct vnode *vp)
 {
 	register struct proc *p;
 	register int ret = 0;
@@ -1255,9 +1220,7 @@ ktr_writerequest(struct thread *td, struct ktr_request *req)
  * so, only root may further change it.
  */
 static int
-ktrcanset(td, targetp)
-	struct thread *td;
-	struct proc *targetp;
+ktrcanset(struct thread *td, struct proc *targetp)
 {
 
 	PROC_LOCK_ASSERT(targetp, MA_OWNED);
