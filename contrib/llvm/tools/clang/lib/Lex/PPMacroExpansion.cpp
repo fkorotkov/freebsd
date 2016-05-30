@@ -1013,8 +1013,16 @@ void Preprocessor::removeCachedMacroExpandedTokensOfLastLexer() {
 /// the identifier tokens inserted.
 static void ComputeDATE_TIME(SourceLocation &DATELoc, SourceLocation &TIMELoc,
                              Preprocessor &PP) {
-  time_t TT = time(nullptr);
-  struct tm *TM = localtime(&TT);
+  time_t TT;
+  struct tm *TM;
+  const char *envValue = getenv("SOURCE_DATE_EPOCH");
+  if (envValue != nullptr) {
+    TT = strtol(envValue, nullptr, 10);
+    TM = gmtime(&TT);
+  } else {
+    TT = time(nullptr);
+    TM = localtime(&TT);
+  }
 
   static const char * const Months[] = {
     "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
