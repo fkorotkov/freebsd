@@ -1,0 +1,1637 @@
+commit a9be096024ffc1a3505f9a16366ba0b39f2afab8
+Author: tsutsui <tsutsui>
+Date:   Fri Nov 19 15:47:32 2010 +0000
+
+    cd9960 -> cd9660
+
+ usr.sbin/makefs/cd9660.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit 96ced2cc53ca181c48e23ae7c4aab78c839811d3
+Author: wiz <wiz>
+Date:   Tue Jan 4 09:48:21 2011 +0000
+
+    Fix fd leaks in error cases. Found by cppcheck.
+
+ usr.sbin/makefs/cd9660/cd9660_write.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 1e7f975e36d072ba69e1cc76b004a69ae2331be7
+Author: bouyer <bouyer>
+Date:   Sun Mar 6 17:08:10 2011 +0000
+
+    merge the bouyer-quota2 branch. This adds a new on-disk format
+    to store disk quota usage and limits, integrated with ffs
+    metadata. Usage is checked by fsck_ffs (no more quotacheck)
+    and is covered by the WAPBL journal. Enabled with kernel
+    option QUOTA2 (added where QUOTA was enabled in kernel config files),
+    turned on with tunefs(8) on a per-filesystem
+    basis. mount_mfs(8) can also turn quotas on.
+    
+    See http://mail-index.netbsd.org/tech-kern/2011/02/19/msg010025.html
+    for details.
+
+ usr.sbin/makefs/ffs/ffs_alloc.c | 94 +----------------------------------------
+ 1 file changed, 2 insertions(+), 92 deletions(-)
+
+commit 4bf6abfbcb905350d8d8d3341c78919782fb6f99
+Author: christos <christos>
+Date:   Wed Mar 23 13:11:51 2011 +0000
+
+    Fix typos in character ranges from: Baptiste Daroussin bapt at freebsd dot org
+
+ usr.sbin/makefs/cd9660/cd9660_strings.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 0c44bf5bd9b1365796e166f5f26f3f46b180544a
+Author: christos <christos>
+Date:   Sun May 22 21:51:39 2011 +0000
+
+    From Nathan Whitehorn (nwhitehorn at freebsd dot org):
+    Add code to generate bootable ISOs on Powermac and CHRP systems.
+    Synthesize some partition maps (APM and MBR, respectively) pointing
+    to (a) the whole disk, and (b) relevant El Torito boot images that
+    have been added by other code. These partition maps are a little
+    bit funny looking, but they seem to work. FreeBSD has been using
+    this successfully in their release generation on powerpc, as well
+    as generating all non-SPARC install media. SPARC support could
+    probably be added as an extension of this patch.
+
+ usr.sbin/makefs/cd9660.c                 |   7 +-
+ usr.sbin/makefs/cd9660.h                 |   3 +-
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c | 158 ++++++++++++++++++++++++++++++-
+ usr.sbin/makefs/makefs.8                 |   7 +-
+ 4 files changed, 168 insertions(+), 7 deletions(-)
+
+commit 94f584c07bd0e3c5f55de48ec925594b366f7bb7
+Author: christos <christos>
+Date:   Mon May 23 00:21:50 2011 +0000
+
+    include system headers after config.h
+
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 60752e272d60189e3c867b3c1f57c7c4b0391773
+Author: tsutsui <tsutsui>
+Date:   Sat May 28 11:59:29 2011 +0000
+
+    - remove unnecessary (pasto?) line on RRIP PL handling for moved dir
+    - RRIP RE length should be 4, not 0
+
+ usr.sbin/makefs/cd9660/iso9660_rrip.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+commit ffa806a87cc07e2b0814a7a3228666e70ced4a67
+Author: tsutsui <tsutsui>
+Date:   Sun May 29 17:07:57 2011 +0000
+
+    Apply fixes for PR bin/44114 (makefs(8) -t cd9660 -o rockridge creates
+    corrupted cd9660fs):
+     - makefs/cd9660.c:
+      - cd9660_rrip_move_directory() should also update lenght[0] and
+        name_len[0] in dir->isoDirRecord
+     - makefs/cd9660/iso9660_rrip.c:
+      - cd9660_rrip_finalize_node() should check rr_real_parent in node->parent,
+        not in node itself in RRIP_PL case
+      - cd9660_rrip_initialize_node() should update only node passed as arg
+        so handle RRIP_PL in DOTDOT case
+    
+    Fixes malformed dotdot entries in deep (more than 8 level) directories
+    moved into .rr_moved dir.
+    
+    Should be pulled up to netbsd-5.
+    (no official ISO has such deep dirs, but cobalt restorecd is affected)
+
+ usr.sbin/makefs/cd9660.c              |  6 ++++--
+ usr.sbin/makefs/cd9660/iso9660_rrip.c | 23 ++++++++++++-----------
+ 2 files changed, 16 insertions(+), 13 deletions(-)
+
+commit 50fb4eafc5255b1ab21dbe1b21c32c8f6aa4439e
+Author: mrg <mrg>
+Date:   Mon Jun 20 07:43:56 2011 +0000
+
+    remove most of the remaining HAVE_GCC tests that are always true in
+    the modern world.
+
+ usr.sbin/makefs/cd9660/Makefile.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 599fca76c5232a5afddc31edd9286f96d28fc86f
+Author: enami <enami>
+Date:   Thu Jun 23 02:35:56 2011 +0000
+
+    Move inclusion of sys/endian.h from cd9660_eltorito.c to cd9660.h
+    since actual user is not cd9660_eltorito.c but iso.h and
+    cd9660_eltorito.h.
+    
+    Actually, include order/place of sys/endian.h doesn't matter on
+    netbsd since it is always included by sys/types.h but it's not
+    true on other system.  This should fix cross build breakage on
+    freebsd introduced by rev. 1.16 of cd9660_eltorito.c.
+    Problem reported and fix suggested on twitter.
+
+ usr.sbin/makefs/cd9660.h                 | 3 ++-
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c | 6 ++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+commit 5f578bc991c10e6951f0f60e98508f202bdcd2e5
+Author: uch <uch>
+Date:   Mon Jul 18 08:58:38 2011 +0000
+
+    v7fs(7th edition(V7) file system) support.
+
+ usr.sbin/makefs/Makefile             |   5 +-
+ usr.sbin/makefs/README               |   3 +-
+ usr.sbin/makefs/makefs.8             |  18 ++-
+ usr.sbin/makefs/makefs.c             |   6 +-
+ usr.sbin/makefs/makefs.h             |   6 +-
+ usr.sbin/makefs/v7fs.c               | 181 +++++++++++++++++++++
+ usr.sbin/makefs/v7fs/Makefile.inc    |  18 +++
+ usr.sbin/makefs/v7fs/v7fs_estimate.c | 277 ++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/v7fs/v7fs_populate.c | 299 +++++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/v7fs_makefs.h        |  48 ++++++
+ 10 files changed, 853 insertions(+), 8 deletions(-)
+
+commit c6585a6c11510a15a08cd1c3927fbbf3957798ff
+Author: tron <tron>
+Date:   Mon Jul 18 17:15:06 2011 +0000
+
+    Don't include v7fs support into tool version of makefs because it
+    breaks the build.
+
+ usr.sbin/makefs/v7fs/Makefile.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2e190d6b1f4bc07cdf1e7fdd7cb7a372badfa922
+Author: tron <tron>
+Date:   Mon Jul 18 17:15:07 2011 +0000
+
+    Fix broken error check found by GCC 4.5.
+
+ usr.sbin/makefs/v7fs/v7fs_populate.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit d25115141414cef50c970b7a0ff67c9d654d19dd
+Author: tron <tron>
+Date:   Mon Jul 18 17:15:51 2011 +0000
+
+    Don't include v7fs support into tool version of "makefs" because it
+    breaks the build.
+
+ usr.sbin/makefs/Makefile | 8 +++++---
+ usr.sbin/makefs/makefs.c | 6 ++++--
+ usr.sbin/makefs/makefs.h | 4 +++-
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+
+commit 89961340e0e1fb7407f3f579976084f605347f33
+Author: tron <tron>
+Date:   Mon Jul 18 21:22:55 2011 +0000
+
+    Define "USE_V7FS" in the makefile of the directory with the actual source.
+
+ usr.sbin/makefs/Makefile          | 6 ++++--
+ usr.sbin/makefs/v7fs/Makefile.inc | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+commit b472e894850706fca66485d7f0c350ddc40de660
+Author: tron <tron>
+Date:   Mon Jul 18 22:52:37 2011 +0000
+
+    Re-enable v7fs support in the tools version of "makefs" after the
+    issues have been fixed by Alan Barrett. Tested under Mac OS X.
+
+ usr.sbin/makefs/Makefile | 10 +++-------
+ usr.sbin/makefs/makefs.c |  6 ++----
+ usr.sbin/makefs/makefs.h |  4 +---
+ 3 files changed, 6 insertions(+), 14 deletions(-)
+
+commit b96ad94adb68de5ba0199f6c39e7888c1ea29588
+Author: joerg <joerg>
+Date:   Tue Jul 19 18:29:41 2011 +0000
+
+    Allow cross-compiling from Linux
+
+ usr.sbin/makefs/v7fs.c            | 13 ++++++++++---
+ usr.sbin/makefs/v7fs/Makefile.inc |  4 +++-
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+commit b45e819b2b46471f4d84dd8c67b9a90faa7e4af3
+Author: wiz <wiz>
+Date:   Fri Jul 22 13:04:00 2011 +0000
+
+    Bump date for previous, fix typo.
+
+ usr.sbin/makefs/makefs.8 | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 0d7ad4d38963adc553dad9d4ba9a313a7d020b57
+Author: christos <christos>
+Date:   Sat Aug 6 23:25:19 2011 +0000
+
+    PR/45217: Martin Matuska: Use proper lengths to space pad fields and don't
+    overwrite them according to the spec.
+
+ usr.sbin/makefs/cd9660.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+commit 77abe5d95fd7ef55114939637b739527f0261bf5
+Author: uch <uch>
+Date:   Wed Aug 10 11:31:49 2011 +0000
+
+    newfs_v7fs(8)'s -v and -P options are obsolete. changed to newfs(8) compatible -V option.
+
+ usr.sbin/makefs/v7fs.c               | 8 ++++----
+ usr.sbin/makefs/v7fs/v7fs_estimate.c | 7 +++----
+ usr.sbin/makefs/v7fs/v7fs_populate.c | 7 +++----
+ usr.sbin/makefs/v7fs_makefs.h        | 3 ++-
+ 4 files changed, 12 insertions(+), 13 deletions(-)
+
+commit 9fdd0bb5d4206d873732c4be438b07eca9c039d9
+Author: wiz <wiz>
+Date:   Mon Aug 15 14:45:01 2011 +0000
+
+    Re-order `usage' alphabetically;
+    rename option arguments in the manpage's `SYNOPSIS' section to
+    match those from `usage' (not the other way around; the `usage'-line
+    (and other parts of makefs.c) contain the correct names);
+    minor punctuation improvements.
+    
+    From Snader_LB.
+
+ usr.sbin/makefs/makefs.8 | 24 ++++++++++++------------
+ usr.sbin/makefs/makefs.c | 12 ++++++------
+ 2 files changed, 18 insertions(+), 18 deletions(-)
+
+commit 4e76861bdcaba7187d3b0147df7c83c5547b2b0f
+Author: christos <christos>
+Date:   Tue Aug 23 17:09:11 2011 +0000
+
+    PR/45285: Martin Matuska: makefs does not properly convert ISO level 1 and 2
+    filenames (buffer overflow)
+    
+    makefs does not properly verify the maximum filename length in the
+    special "." case for both ISO level 1 and ISO level 2 filename
+    conversion.  This creates broken images or causes a buffer overflow
+    (ISO level 2).
+    
+    ISO level 1:
+    If a filename contains only dots or up to 8 characters followed by
+    dots the 8+3 limit check doesn't work.
+    
+    ISO level 2:
+    If a filename contains a dot in the first 30 characters and a dot
+    on the 30th character, the length limit check doesn't work and the
+    buffer is overflowed.
+    
+    $ mkdir level1
+    $ touch level1/12345............
+    $ makefs -t cd9660 -o isolevel=1 test.iso level1
+    
+    $ mkdir level2
+    $ touch level2/1234567890.2345678901234567.....34567890123456789012345
+    $ makefs -t cd9660 -o isolevel=2 test.iso level2
+
+ usr.sbin/makefs/cd9660.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+commit 1cd9a6c5cb3b48791de55dd6e4ab248c1e353c6f
+Author: christos <christos>
+Date:   Tue Aug 23 19:17:07 2011 +0000
+
+    remove stray brace, minor knf
+
+ usr.sbin/makefs/cd9660.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit f1f5657d22192c61408f5334f5ea510e1ac8aeb5
+Author: christos <christos>
+Date:   Tue Aug 23 19:57:24 2011 +0000
+
+    more fixes from martin
+
+ usr.sbin/makefs/cd9660.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit beb641dfc65098f7bd007d0d92f841e1068713bb
+Author: christos <christos>
+Date:   Sun Oct 9 21:33:43 2011 +0000
+
+    add support for setting the ufs label. (Nathan Whitehorn)
+
+ usr.sbin/makefs/ffs.c      | 7 +++++--
+ usr.sbin/makefs/ffs.h      | 6 +++++-
+ usr.sbin/makefs/ffs/mkfs.c | 9 ++++++---
+ usr.sbin/makefs/makefs.8   | 6 ++++--
+ 4 files changed, 20 insertions(+), 8 deletions(-)
+
+commit 54e424dd4b9d0a885085d1f8459b7c30db03e662
+Author: christos <christos>
+Date:   Sat Jan 28 02:35:46 2012 +0000
+
+    Patch from Jung-uk Kim (jkim at FreeBSD dot org) to allow contents of multiple
+    directories to be merged to the current image.
+
+ usr.sbin/makefs/cd9660.c              |  29 +++-----
+ usr.sbin/makefs/cd9660.h              |   6 +-
+ usr.sbin/makefs/cd9660/cd9660_write.c |   6 +-
+ usr.sbin/makefs/ffs.c                 |   8 +--
+ usr.sbin/makefs/makefs.8              |  12 +++-
+ usr.sbin/makefs/makefs.c              |  26 +++++--
+ usr.sbin/makefs/makefs.h              |   8 ++-
+ usr.sbin/makefs/walk.c                | 131 +++++++++++++++++++++++++---------
+ 8 files changed, 150 insertions(+), 76 deletions(-)
+
+commit 2b5129aa30ddcda4cbc0190a2290203cd98d49d2
+Author: christos <christos>
+Date:   Mon Apr 2 19:01:21 2012 +0000
+
+    Pull FreeBSD fix from Andreas Tobbler:
+    
+    - Write the ISO9660 descriptor after the apm partition entries.
+    - Fill the needed pmPartStatus flags. At least the OpenBIOS
+      implementation relies on these flags.
+    
+    This commit fixes the panic seen on OS-X when inserting a FreeBSD/ppc disc.
+    Additionally OpenBIOS recognizes the partition where the boot code is located.
+    This lets us load a FreeBSD/ppc PowerMac kernel inside qemu.
+
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c | 43 ++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
+
+commit 894c865874bbcdd43c976866d3fd22757badbf97
+Author: ttoth <ttoth>
+Date:   Thu Apr 19 15:36:06 2012 +0000
+
+    added chfs support for makefs
+
+ usr.sbin/makefs/Makefile          |   5 +-
+ usr.sbin/makefs/chfs.c            | 230 ++++++++++++++++++++++++++++++
+ usr.sbin/makefs/chfs/Makefile.inc |   9 ++
+ usr.sbin/makefs/chfs/chfs_mkfs.c  | 290 ++++++++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/chfs/chfs_mkfs.h  |  44 ++++++
+ usr.sbin/makefs/chfs_makefs.h     |  50 +++++++
+ usr.sbin/makefs/makefs.8          |  26 +++-
+ usr.sbin/makefs/makefs.c          |   6 +-
+ usr.sbin/makefs/makefs.h          |   7 +-
+ 9 files changed, 659 insertions(+), 8 deletions(-)
+
+commit 54ed4885061c052b5bd85de770c81fe7da408b1a
+Author: wiz <wiz>
+Date:   Thu Apr 19 16:00:25 2012 +0000
+
+    New sentence, new line.
+
+ usr.sbin/makefs/makefs.8 | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 896d9811316f3213127f094b8ff345aeba0c1939
+Author: christos <christos>
+Date:   Thu Apr 19 17:09:53 2012 +0000
+
+    - fix compilation isses
+    - add some error checking
+    - avoid alloca
+    - add missing frees
+
+ usr.sbin/makefs/chfs.c           |  1 +
+ usr.sbin/makefs/chfs/chfs_mkfs.c | 66 +++++++++++++++++++++++++---------------
+ usr.sbin/makefs/makefs.c         |  6 ++--
+ usr.sbin/makefs/makefs.h         |  4 +--
+ 4 files changed, 48 insertions(+), 29 deletions(-)
+
+commit 238dcaa57ba58e57cc4e3009f9cc7e2ddb0115c7
+Author: christos <christos>
+Date:   Thu Apr 19 17:28:25 2012 +0000
+
+    WARNS=5
+
+ usr.sbin/makefs/Makefile                 |  4 ++--
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c |  6 +++---
+ usr.sbin/makefs/chfs.c                   |  5 ++---
+ usr.sbin/makefs/chfs/chfs_mkfs.c         |  5 +++--
+ usr.sbin/makefs/ffs.c                    | 21 +++++++++++----------
+ usr.sbin/makefs/ffs/ffs_alloc.c          | 14 +++++---------
+ usr.sbin/makefs/ffs/mkfs.c               | 10 +++++-----
+ usr.sbin/makefs/v7fs/v7fs_estimate.c     |  7 +++----
+ usr.sbin/makefs/walk.c                   |  6 +++---
+ 9 files changed, 37 insertions(+), 41 deletions(-)
+
+commit 5a26cbca9936a32b6f719179c1f84ae93a3fd799
+Author: dholland <dholland>
+Date:   Thu Apr 19 19:48:14 2012 +0000
+
+    Fix build failure reported by bracket.
+    
+    (shouldn't this size_t be ino_t?)
+
+ usr.sbin/makefs/ffs/mkfs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 9244e40a414d94ade533dbe6fd33555949b009df
+Author: adam <adam>
+Date:   Fri Apr 20 13:28:27 2012 +0000
+
+    Fix building tools
+
+ usr.sbin/makefs/chfs/Makefile.inc | 2 ++
+ usr.sbin/makefs/chfs/chfs_mkfs.c  | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+commit 5b485c65809b9b1de44626cf7a923e13a82a3e09
+Author: dogcow <dogcow>
+Date:   Fri Apr 27 20:58:54 2012 +0000
+
+    As this code is used by tools, and thus needs to be portable,
+    eliminate all the mucking around for an undocumented, seemingly
+    unused field and use 0.
+
+ usr.sbin/makefs/chfs/chfs_mkfs.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+commit 968a53a1c0675bf5d3f391b76b31c4634c4f7a46
+Author: joerg <joerg>
+Date:   Sun Apr 29 13:32:21 2012 +0000
+
+    usage is dead. name_len should be read as unsigned byte.
+
+ usr.sbin/makefs/cd9660/iso9660_rrip.c | 8 ++++----
+ usr.sbin/makefs/makefs.c              | 7 +++----
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+
+commit ca5fbcc1d1723d7fd748ff1b6272e55c1f52eb23
+Author: sjg <sjg>
+Date:   Fri Jun 22 06:15:18 2012 +0000
+
+    Add -Z to enable sparse files - for ffs at least.
+    Based on a patch from shesha at juniper.
+
+ usr.sbin/makefs/ffs.c    | 22 +++++++++++++++++-----
+ usr.sbin/makefs/makefs.8 | 10 +++++++---
+ usr.sbin/makefs/makefs.c | 12 ++++++++----
+ usr.sbin/makefs/makefs.h |  3 ++-
+ 4 files changed, 34 insertions(+), 13 deletions(-)
+
+commit b79dad47de085f2a59995ff9fc96f4919fd9dcdb
+Author: joerg <joerg>
+Date:   Fri Aug 10 12:10:27 2012 +0000
+
+    Remove many HAVE_GCC || HAVE_PCC conditionals as the options also apply
+    to Clang. Add a few cases of HAVE_LLVM for -fno-strict-aliasing.
+
+ usr.sbin/makefs/cd9660/Makefile.inc | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit 21715284ee96fdf916713cae23d661e0f1c6e7d1
+Author: dholland <dholland>
+Date:   Tue Jan 22 09:39:11 2013 +0000
+
+    Stuff UFS_ in front of a few of ufs's symbols to reduce namespace
+    pollution. Specifically:
+       ROOTINO -> UFS_ROOTINO
+       WINO -> UFS_WINO
+       NXADDR -> UFS_NXADDR
+       NDADDR -> UFS_NDADDR
+       NIADDR -> UFS_NIADDR
+       MAXSYMLINKLEN -> UFS_MAXSYMLINKLEN
+       MAXSYMLINKLEN_UFS[12] -> UFS[12]_MAXSYMLINKLEN (for consistency)
+    
+    Sort out ext2fs's misuse of NDADDR and NIADDR; fortunately, these have
+    the same values in ext2fs and ffs.
+    
+    No functional change intended.
+
+ usr.sbin/makefs/ffs.c            | 20 ++++++++++----------
+ usr.sbin/makefs/ffs/ffs_alloc.c  |  8 ++++----
+ usr.sbin/makefs/ffs/ffs_balloc.c | 24 ++++++++++++------------
+ usr.sbin/makefs/ffs/mkfs.c       | 20 ++++++++++----------
+ usr.sbin/makefs/ffs/ufs_bmap.c   | 18 +++++++++---------
+ 5 files changed, 45 insertions(+), 45 deletions(-)
+
+commit 8cab703e1f7c053eb2f5c428f9cabd8ce8884ad0
+Author: christos <christos>
+Date:   Wed Jan 23 20:46:39 2013 +0000
+
+    - add support for parsing different types; not just int.
+    - add beginning of msdos support.
+
+ usr.sbin/makefs/Makefile           |   5 +-
+ usr.sbin/makefs/cd9660.c           |  29 +++----
+ usr.sbin/makefs/chfs.c             |  10 ++-
+ usr.sbin/makefs/ffs.c              |  46 +++++-----
+ usr.sbin/makefs/makefs.c           |  63 ++++++++++----
+ usr.sbin/makefs/makefs.h           |  50 ++++++-----
+ usr.sbin/makefs/msdos.c            | 166 +++++++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/msdos/Makefile.inc |   9 ++
+ usr.sbin/makefs/v7fs.c             |   9 +-
+ 9 files changed, 298 insertions(+), 89 deletions(-)
+
+commit e30fe1274592adb160fd1164588760506ca64b82
+Author: christos <christos>
+Date:   Wed Jan 23 21:03:15 2013 +0000
+
+    don't reuse the same variables
+
+ usr.sbin/makefs/msdos/Makefile.inc |  8 ++++----
+ usr.sbin/makefs/v7fs/Makefile.inc  | 10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+commit f07fad0e67fb576463f61c04aeef9d2902a45f66
+Author: christos <christos>
+Date:   Wed Jan 23 21:32:32 2013 +0000
+
+    remove duplicated code, and try to cleanup parsing by using the shared code.
+    cd9660 needs a lot of work.
+
+ usr.sbin/makefs/cd9660.c |  6 +++---
+ usr.sbin/makefs/chfs.c   | 20 +-------------------
+ usr.sbin/makefs/ffs.c    | 48 ++++++++++++++++++++----------------------------
+ usr.sbin/makefs/makefs.c | 30 +++++++++++++++++++++++++++---
+ usr.sbin/makefs/makefs.h |  5 +++--
+ usr.sbin/makefs/msdos.c  |  8 +++-----
+ usr.sbin/makefs/v7fs.c   |  6 +++---
+ 7 files changed, 60 insertions(+), 63 deletions(-)
+
+commit 4e001e64593769933cee1aefaa906250d8a05e78
+Author: christos <christos>
+Date:   Wed Jan 23 21:42:22 2013 +0000
+
+    return the bit of the option set, so that others can act on it.
+
+ usr.sbin/makefs/ffs.c    |  7 +++++--
+ usr.sbin/makefs/makefs.c |  6 +++---
+ usr.sbin/makefs/msdos.c  | 22 +++++++++++++++++++---
+ 3 files changed, 27 insertions(+), 8 deletions(-)
+
+commit d7f91f6e6257e1b3ef94561a7c3ed35ac654569c
+Author: christos <christos>
+Date:   Wed Jan 23 22:47:18 2013 +0000
+
+    ok, we can create the filesystem now.
+
+ usr.sbin/makefs/Makefile           |  4 ++--
+ usr.sbin/makefs/msdos.c            | 14 ++++++++++++--
+ usr.sbin/makefs/msdos/Makefile.inc |  6 ++++--
+ 3 files changed, 18 insertions(+), 6 deletions(-)
+
+commit ab3ba917038a793e382b9453c50a995e6296707b
+Author: christos <christos>
+Date:   Thu Jan 24 01:10:47 2013 +0000
+
+    - Fix single letter option parsing.
+    - Instead of returning 1 << index and 0 on error,
+      return just index and -1 on error for the set_option*() routines.
+
+ usr.sbin/makefs/cd9660.c |  6 +++---
+ usr.sbin/makefs/chfs.c   |  2 +-
+ usr.sbin/makefs/ffs.c    | 17 +++++++----------
+ usr.sbin/makefs/makefs.c | 12 ++++++------
+ usr.sbin/makefs/msdos.c  | 21 ++++++++-------------
+ usr.sbin/makefs/v7fs.c   |  8 +++-----
+ 6 files changed, 28 insertions(+), 38 deletions(-)
+
+commit 03dc6da80956f995c02320b03d526a57400d24c3
+Author: christos <christos>
+Date:   Sat Jan 26 00:19:39 2013 +0000
+
+    make the buffer functions look exactly like the kernel ones and add other
+    cruft to make the kernel files compile.
+
+ usr.sbin/makefs/ffs.c            |  6 +--
+ usr.sbin/makefs/ffs/buf.c        | 18 +++++---
+ usr.sbin/makefs/ffs/buf.h        | 59 +++++++++++++++++++++++++--
+ usr.sbin/makefs/ffs/ffs_alloc.c  | 24 ++++++-----
+ usr.sbin/makefs/ffs/ffs_balloc.c | 88 ++++++++++++++++++++--------------------
+ 5 files changed, 127 insertions(+), 68 deletions(-)
+
+commit aaaebddd8130a27bee32b14c11d38471955901e8
+Author: christos <christos>
+Date:   Sat Jan 26 00:20:40 2013 +0000
+
+    add more msdos stuff.
+
+ usr.sbin/makefs/msdos.c                | 112 ++++++---
+ usr.sbin/makefs/msdos.h                |  41 ++++
+ usr.sbin/makefs/msdos/Makefile.inc     |   7 +-
+ usr.sbin/makefs/msdos/msdosfs_denode.c | 379 +++++++++++++++++++++++++++++
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c | 429 +++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 359 +++++++++++++++++++++++++++
+ 6 files changed, 1297 insertions(+), 30 deletions(-)
+
+commit 8eda91a98d3dc60ea6fd1beb6082a8e55c534154
+Author: christos <christos>
+Date:   Sat Jan 26 00:31:49 2013 +0000
+
+    add debugging, fix warnings.
+
+ usr.sbin/makefs/Makefile               |  3 ++-
+ usr.sbin/makefs/msdos.h                |  5 +++--
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  9 +++++----
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 10 ++++++----
+ 4 files changed, 16 insertions(+), 11 deletions(-)
+
+commit 9a63952e906c9331c76e5a77766383441925f7c0
+Author: christos <christos>
+Date:   Sat Jan 26 16:50:46 2013 +0000
+
+    make this cross-compile friendly.
+
+ usr.sbin/makefs/ffs/buf.h              |  5 ++++-
+ usr.sbin/makefs/msdos/Makefile.inc     |  7 +++++--
+ usr.sbin/makefs/msdos/msdosfs_denode.c | 31 +++++++------------------------
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c | 15 +--------------
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 23 ++++++++++++++++-------
+ 5 files changed, 33 insertions(+), 48 deletions(-)
+
+commit a3b49691b922ce59c68ea3263eb7844eb0b75922
+Author: christos <christos>
+Date:   Sat Jan 26 16:58:14 2013 +0000
+
+    depend on TOOLS instead of __NetBSD__ for extra functionality
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit beb78352a834e331c8c3c01aec42300ad32ff573
+Author: mbalmer <mbalmer>
+Date:   Sun Jan 27 10:07:23 2013 +0000
+
+    Allow this to compile on 32bit architectures.
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 3edbd44618a5b47ab55ad7a85835fb364c448def
+Author: martin <martin>
+Date:   Sun Jan 27 12:25:13 2013 +0000
+
+    Make it compile on 32bit AND 64bit archs.
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit f2e53acd1503e5087cac96caff75c9e1713774a4
+Author: christos <christos>
+Date:   Sun Jan 27 14:07:12 2013 +0000
+
+    fix single letter parsing.
+
+ usr.sbin/makefs/makefs.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit d41565f66d65c47fc0bcf2afb3e2b557af49e07a
+Author: christos <christos>
+Date:   Sun Jan 27 14:10:03 2013 +0000
+
+    Don't print the pointers in debugging, it is not useful.
+    zero all memory
+
+ usr.sbin/makefs/ffs/buf.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+commit bc7c29cc3c9fad76816c569d434595c5a5b0bdbf
+Author: christos <christos>
+Date:   Sun Jan 27 14:10:22 2013 +0000
+
+    zero memory
+
+ usr.sbin/makefs/ffs/buf.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 482e1094f5fc937504a277aaee236eba50f0eaea
+Author: christos <christos>
+Date:   Sun Jan 27 15:35:45 2013 +0000
+
+    fixed directory entry allocation. Now the file data remains and is currently
+    broken.
+
+ usr.sbin/makefs/msdos.c                |  12 +-
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  17 +-
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 286 ++++++++++++++++++++++++++++++---
+ 3 files changed, 281 insertions(+), 34 deletions(-)
+
+commit f97236b682673600499b5da092de4bb76195b069
+Author: christos <christos>
+Date:   Sun Jan 27 16:03:15 2013 +0000
+
+    the max msdos file size is less than size_t so don't bother checking against it.
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit e62dea3139fd8fdd79f339944d0e59a1a84a3151
+Author: christos <christos>
+Date:   Sun Jan 27 20:05:46 2013 +0000
+
+    This works well enough to populate plain files in the root dir. creating
+    directories fails.
+
+ usr.sbin/makefs/Makefile               |  4 +-
+ usr.sbin/makefs/ffs.c                  |  5 +-
+ usr.sbin/makefs/ffs/buf.c              |  6 +--
+ usr.sbin/makefs/ffs/buf.h              |  3 +-
+ usr.sbin/makefs/ffs/ffs_alloc.c        | 11 ++--
+ usr.sbin/makefs/ffs/ffs_balloc.c       |  8 +--
+ usr.sbin/makefs/msdos.c                |  7 ++-
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  8 ++-
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 93 ++++++++++++++++++++--------------
+ 9 files changed, 81 insertions(+), 64 deletions(-)
+
+commit 0b12928eec21a97f93ee0150697c9b61d28185a9
+Author: christos <christos>
+Date:   Sun Jan 27 22:07:19 2013 +0000
+
+    - some more debugging
+    - use msdosfs_update() -- should not be needed.
+    - remove <sys/mount.h>
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit 0fd63ee3831c4686e73d01cb2782123d9da42bbb
+Author: christos <christos>
+Date:   Sun Jan 27 22:09:24 2013 +0000
+
+    undo c99
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 2bb38336a3ef00b6f880fc49d0fa54fe591e6ff4
+Author: christos <christos>
+Date:   Sun Jan 27 22:52:19 2013 +0000
+
+    - don't forget to set de_pmp
+    - unexpand inserted tabs to the "." and ".." strings!
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit fa13f49bce36a0ee51ff78abec373e5172f928c6
+Author: christos <christos>
+Date:   Sun Jan 27 22:52:38 2013 +0000
+
+    fix root detection (although the code is a noop)
+
+ usr.sbin/makefs/msdos/msdosfs_denode.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 0d9a545d48b9653f67a1c21ec5333a012b74a424
+Author: christos <christos>
+Date:   Sun Jan 27 22:53:03 2013 +0000
+
+    fix recursion error handling. top level directory works.
+
+ usr.sbin/makefs/msdos.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+commit 1001678326599416227ea54336150baf9a393081
+Author: christos <christos>
+Date:   Mon Jan 28 00:16:24 2013 +0000
+
+    don't forget to initialize the cache.
+
+ usr.sbin/makefs/msdos/msdosfs_denode.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit e1fb0f30df628f4b5bc490dcdd141d5e8744f971
+Author: christos <christos>
+Date:   Mon Jan 28 00:16:48 2013 +0000
+
+    use pcbmap instead of the open coded hack now the pcbmap works.
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+commit c5fd0356bcc172eefc54a79f6942c3ca66eb0c11
+Author: christos <christos>
+Date:   Mon Jan 28 00:23:18 2013 +0000
+
+    now that msdos works, document it.
+
+ usr.sbin/makefs/makefs.8 | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit aeffc6166fbff7136152df6def1be6ba4f3f03b9
+Author: mlelstv <mlelstv>
+Date:   Mon Jan 28 10:16:35 2013 +0000
+
+    Do not use *bp after freeing it in brelse.
+
+ usr.sbin/makefs/ffs/buf.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+commit 1156d66ffda8fe85d299ac73f99cd6fa66abacc5
+Author: christos <christos>
+Date:   Mon Jan 28 21:03:26 2013 +0000
+
+    - use emalloc and friends
+    - kill a bunch of global variables, more work to be done here
+    - homogenize option parsing. more work for cd9660
+    - use the new options parsing code to print an fs-specific usage
+
+ usr.sbin/makefs/cd9660.c                   | 734 ++++++++++++++---------------
+ usr.sbin/makefs/cd9660.h                   |  28 +-
+ usr.sbin/makefs/cd9660/cd9660_archimedes.c |  12 +-
+ usr.sbin/makefs/cd9660/cd9660_debug.c      |  14 +-
+ usr.sbin/makefs/cd9660/cd9660_eltorito.c   | 141 +++---
+ usr.sbin/makefs/cd9660/cd9660_write.c      | 161 +++----
+ usr.sbin/makefs/cd9660/iso9660_rrip.c      |  74 +--
+ usr.sbin/makefs/cd9660/iso9660_rrip.h      |  16 +-
+ usr.sbin/makefs/chfs.c                     |  54 ++-
+ usr.sbin/makefs/chfs/chfs_mkfs.c           |  30 +-
+ usr.sbin/makefs/chfs_makefs.h              |   2 -
+ usr.sbin/makefs/ffs.c                      |  96 ++--
+ usr.sbin/makefs/ffs/buf.c                  |  13 +-
+ usr.sbin/makefs/ffs/buf.h                  |   4 +-
+ usr.sbin/makefs/ffs/mkfs.c                 |  17 +-
+ usr.sbin/makefs/makefs.c                   |  45 +-
+ usr.sbin/makefs/makefs.h                   |  53 ++-
+ usr.sbin/makefs/msdos.c                    |  46 +-
+ usr.sbin/makefs/msdos/msdosfs_denode.c     |  13 +-
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c     |  13 +-
+ usr.sbin/makefs/v7fs.c                     |  34 +-
+ usr.sbin/makefs/walk.c                     |  31 +-
+ 22 files changed, 789 insertions(+), 842 deletions(-)
+
+commit c65cb69dc80906fa2d1d1564eb6ff0b8c666cd87
+Author: christos <christos>
+Date:   Tue Jan 29 01:05:57 2013 +0000
+
+    handle some of the options by the generic parser.
+
+ usr.sbin/makefs/cd9660.c | 46 ++++++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 22 deletions(-)
+
+commit 21ee0993aaa475a510eb51e4217033d5483294d3
+Author: christos <christos>
+Date:   Tue Jan 29 01:06:15 2013 +0000
+
+    deal with options that don't have a single letter argument.
+
+ usr.sbin/makefs/makefs.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit 8c0e21a638884dd34108d9c3b2c4267873a57c17
+Author: christos <christos>
+Date:   Tue Jan 29 01:52:04 2013 +0000
+
+    mention me
+
+ usr.sbin/makefs/makefs.8 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit d5a2b4a18abb5880b5f615677b715dccbb16e458
+Author: christos <christos>
+Date:   Tue Jan 29 14:09:48 2013 +0000
+
+    Allow options without values meaning the empty string for string options
+    and = 1 to numerics.
+
+ usr.sbin/makefs/makefs.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+commit 6d8be4c9d159281058416479521103064f93780f
+Author: christos <christos>
+Date:   Tue Jan 29 15:52:25 2013 +0000
+
+    make everything use the generic options parser.
+
+ usr.sbin/makefs/cd9660.c | 231 +++++++++++++++++++++++++++--------------------
+ usr.sbin/makefs/cd9660.h |   8 +-
+ usr.sbin/makefs/chfs.c   |   2 +-
+ usr.sbin/makefs/ffs.c    |  25 ++---
+ usr.sbin/makefs/makefs.c |  17 ++--
+ usr.sbin/makefs/makefs.h |   8 +-
+ usr.sbin/makefs/v7fs.c   |   6 +-
+ 7 files changed, 167 insertions(+), 130 deletions(-)
+
+commit 932bf772311632926788d244a5082087d7b6e624
+Author: christos <christos>
+Date:   Tue Jan 29 19:45:47 2013 +0000
+
+    workaround for gcc/vax
+
+ usr.sbin/makefs/msdos/msdosfs_vnops.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 47a6448973bba3173851ff981e608ad377c71ac6
+Author: christos <christos>
+Date:   Tue Jan 29 21:54:19 2013 +0000
+
+    add missing arguments.
+
+ usr.sbin/makefs/msdos.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 8c5d44d3f2ed1af5534122c8145a6fdd083727a1
+Author: christos <christos>
+Date:   Wed Jan 30 02:53:54 2013 +0000
+
+    use "val" not "var"
+
+ usr.sbin/makefs/makefs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 20b5b2891155a056bcce15751111320de1e693a8
+Author: christos <christos>
+Date:   Wed Jan 30 17:29:05 2013 +0000
+
+    buf is generic; it has nothing to do with ffs and will eventually be moved.
+    gc sectorize.
+
+ usr.sbin/makefs/ffs/buf.c | 28 +++++++++-------------------
+ usr.sbin/makefs/ffs/buf.h |  4 ++--
+ 2 files changed, 11 insertions(+), 21 deletions(-)
+
+commit 6588798a69e06d2f19ab2e64f32b2b718f5cbf9d
+Author: christos <christos>
+Date:   Wed Jan 30 17:29:25 2013 +0000
+
+    gc global sectorsize.
+
+ usr.sbin/makefs/ffs.c   |  9 ++-------
+ usr.sbin/makefs/msdos.c | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 12 deletions(-)
+
+commit 161ca6ae3c6a9a84f013f97b3761afc8b55b86c2
+Author: christos <christos>
+Date:   Wed Jan 30 19:19:19 2013 +0000
+
+    - don't abuse vp->fs to mean struct fs for ffs and struct msdos_opts;
+      make it always fsinfo_t and change void * to that.
+    - kill unused structure members.
+
+ usr.sbin/makefs/ffs.c                  |  7 +++--
+ usr.sbin/makefs/ffs/buf.c              | 13 ++++-----
+ usr.sbin/makefs/ffs/buf.h              |  9 +++---
+ usr.sbin/makefs/ffs/ffs_alloc.c        | 14 ++++-----
+ usr.sbin/makefs/ffs/ffs_balloc.c       | 52 +++++++++++++++++-----------------
+ usr.sbin/makefs/ffs/ufs_inode.h        |  4 +--
+ usr.sbin/makefs/makefs.h               |  4 +--
+ usr.sbin/makefs/msdos.c                | 12 ++++----
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  4 +--
+ 9 files changed, 58 insertions(+), 61 deletions(-)
+
+commit 3a4665119963abe492e4e702337669f0c8f149ab
+Author: christos <christos>
+Date:   Thu Jan 31 14:56:32 2013 +0000
+
+    the allow options are 8 bits wide.
+
+ usr.sbin/makefs/cd9660.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit bbed1cd58c7ec41b801aa4a060a3ab10aaac9a67
+Author: christos <christos>
+Date:   Thu Jan 31 15:15:15 2013 +0000
+
+    macroize to make it more type-safe.
+
+ usr.sbin/makefs/cd9660.c | 121 +++++++++++++++++++++++------------------------
+ 1 file changed, 60 insertions(+), 61 deletions(-)
+
+commit db4926378253e96e3ab8b72a0deedfa1a371c672
+Author: christos <christos>
+Date:   Fri Feb 1 14:00:33 2013 +0000
+
+    while it is studly to play with token pasting, passing directly the type
+    is a lot more readable.
+
+ usr.sbin/makefs/makefs.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+commit 627f6f6c0cee14706f35f9385c471c0eb338d83e
+Author: christos <christos>
+Date:   Fri Feb 1 14:02:17 2013 +0000
+
+    remove bogus err.
+
+ usr.sbin/makefs/makefs.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 167922160f6c1c5a2ce842e6bfe3961dd9e4b1d4
+Author: christos <christos>
+Date:   Sat Feb 2 20:42:02 2013 +0000
+
+    add and document offset.
+
+ usr.sbin/makefs/ffs/buf.c |  8 ++++----
+ usr.sbin/makefs/makefs.8  | 12 ++++++++++--
+ usr.sbin/makefs/makefs.c  | 15 ++++++++++-----
+ usr.sbin/makefs/makefs.h  |  5 +++--
+ 4 files changed, 27 insertions(+), 13 deletions(-)
+
+commit a3b83be1be7d3d8ad359eda7f757c2ed65315b9e
+Author: christos <christos>
+Date:   Sun Feb 3 03:21:21 2013 +0000
+
+    - more changes to make -O work
+    - fix err* calls.
+
+ usr.sbin/makefs/ffs.c      | 16 ++++++++++++----
+ usr.sbin/makefs/ffs/buf.c  | 18 +++++++++---------
+ usr.sbin/makefs/ffs/mkfs.c | 39 ++++++++++++++++++---------------------
+ usr.sbin/makefs/msdos.c    |  5 +++--
+ 4 files changed, 42 insertions(+), 36 deletions(-)
+
+commit b3868a850887bed3ef54f2318fa7b0bc2ec80710
+Author: christos <christos>
+Date:   Sun Feb 3 06:16:53 2013 +0000
+
+    add a replace flag so we can overlay exiting files when we merge directories.
+
+ usr.sbin/makefs/makefs.8 |  6 ++++--
+ usr.sbin/makefs/makefs.c | 16 ++++++++++------
+ usr.sbin/makefs/makefs.h |  5 +++--
+ usr.sbin/makefs/walk.c   | 36 ++++++++++++++++++++++++++++--------
+ 4 files changed, 45 insertions(+), 18 deletions(-)
+
+commit 71523fef2630f1b44ea60e3ab8264788a53d7150
+Author: dholland <dholland>
+Date:   Sun Jun 9 17:57:08 2013 +0000
+
+    Stick UFS_ in front of these symbols:
+       DIRBLKSIZ
+       DIRECTSIZ
+       DIRSIZ
+       OLDDIRFMT
+       NEWDIRFMT
+    
+    Part of PR 47909.
+
+ usr.sbin/makefs/ffs.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+commit 6b60866dcd9d05679ce6355231f127a38b8a65ba
+Author: dholland <dholland>
+Date:   Wed Jun 19 17:51:25 2013 +0000
+
+    Rename ambiguous macros:
+       MAXDIRSIZE -> UFS_MAXDIRSIZE or LFS_MAXDIRSIZE
+       NINDIR -> FFS_NINDIR, EXT2_NINDIR, LFS_NINDIR, or MFS_NINDIR
+       INOPB -> FFS_INOPB, LFS_INOPB
+       INOPF -> FFS_INOPF, LFS_INOPF
+       blksize -> ffs_blksize, ext2_blksize, or lfs_blksize
+       sblksize -> ffs_blksize
+    
+    These are not the only ambiguously defined filesystem macros, of
+    course, there's a pile more. I may not have found all the ambiguous
+    definitions of blksize(), too, as there are a lot of other things
+    called 'blksize' in the system.
+
+ usr.sbin/makefs/ffs.c            | 10 +++++-----
+ usr.sbin/makefs/ffs/ffs_alloc.c  | 12 ++++++------
+ usr.sbin/makefs/ffs/ffs_balloc.c | 16 ++++++++--------
+ usr.sbin/makefs/ffs/mkfs.c       | 36 ++++++++++++++++++------------------
+ usr.sbin/makefs/ffs/ufs_bmap.c   |  8 ++++----
+ 5 files changed, 41 insertions(+), 41 deletions(-)
+
+commit b50aacae60620682cd799cb74351673bcff70e00
+Author: dholland <dholland>
+Date:   Sun Jun 23 02:06:04 2013 +0000
+
+    fsbtodb() -> FFS_FSBTODB(), EXT2_FSBTODB(), or MFS_FSBTODB()
+    dbtofsb() -> FFS_DBTOFSB() or EXT2_DBTOFSB()
+    
+    (Christos already did the lfs ones a few days back)
+
+ usr.sbin/makefs/ffs.c            | 12 ++++++------
+ usr.sbin/makefs/ffs/ffs_alloc.c  |  8 ++++----
+ usr.sbin/makefs/ffs/ffs_balloc.c | 20 ++++++++++----------
+ usr.sbin/makefs/ffs/mkfs.c       | 20 ++++++++++----------
+ 4 files changed, 30 insertions(+), 30 deletions(-)
+
+commit ce5066d5b7358a50b1281d789df1761b75b37e7e
+Author: dholland <dholland>
+Date:   Sun Jun 23 07:28:36 2013 +0000
+
+    Stick ffs_, ext2_, chfs_, filecore_, cd9660_, or mfs_ in front of
+    the following symbols so as to disambiguate fully. (Christos already
+    did the lfs ones.)
+    
+       lblkno
+       lblktosize
+       lfragtosize
+       numfrags
+       blkroundup
+       fragroundup
+
+ usr.sbin/makefs/ffs/ffs_alloc.c  | 10 +++++-----
+ usr.sbin/makefs/ffs/ffs_balloc.c | 32 ++++++++++++++++----------------
+ usr.sbin/makefs/ffs/mkfs.c       | 14 +++++++-------
+ 3 files changed, 28 insertions(+), 28 deletions(-)
+
+commit 3c4de68d0989a0977cf3ca2befe767988612636b
+Author: dholland <dholland>
+Date:   Sun Jun 23 22:03:34 2013 +0000
+
+    Stick ffs_ in front of the following macros:
+       fragstoblks()
+       blkstofrags()
+       fragnum()
+       blknum()
+    
+    to finish the job of distinguishing them from the lfs versions, which
+    Christos renamed the other day.
+    
+    I believe this is the last of the overtly ambiguous exported symbols
+    from ffs... or at least, the last of the ones that conflicted with lfs.
+    ffs still pollutes the C namespace very broadly (as does ufs) and this
+    needs quite a bit more cleanup.
+    
+    XXX: boo on macros with lowercase names. But I'm not tackling that just yet.
+
+ usr.sbin/makefs/ffs/ffs_alloc.c | 18 +++++++++---------
+ usr.sbin/makefs/ffs/mkfs.c      | 14 +++++++-------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
+commit 23d9dbe6b32441900e151feeceb67e420adbe959
+Author: reinoud <reinoud>
+Date:   Tue Jul 30 16:02:23 2013 +0000
+
+    `makefs -t cd9660' fix from FreeBSD:
+    Submitted by:   Thomas Schmitt via marius@freebsd.org
+    Obtained from:  FreeBSD r253707
+    
+    - Correctly set the Expiration Time in the Primary Volume Descriptor;
+      according to ISO 9660 8.4.26.1 unspecified date and time are denoted by the
+      digit 0 in RBP 1 to 16 but the number 0 in RBP 17.
+    
+    - Rock Ridge TF entries should use a length of 5, because after the 4 bytes of
+      generic SUSP header there is one byte of flags. See typedef of ISO_RRIP_TF
+      in iso9660_rrip.h.
+
+ usr.sbin/makefs/cd9660.c              | 7 ++++---
+ usr.sbin/makefs/cd9660/iso9660_rrip.c | 6 +++---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
+
+commit 8ef95706104f573a53f3c464b8a81f72100223a6
+Author: reinoud <reinoud>
+Date:   Mon Aug 5 14:41:57 2013 +0000
+
+    Implement `makefs -t udf'.
+    
+    Formatting options may be enhanced to make it more in line with newfs_udf on
+    say labeling.
+
+ usr.sbin/makefs/Makefile         |    6 +-
+ usr.sbin/makefs/makefs.8         |   30 +-
+ usr.sbin/makefs/makefs.c         |    5 +-
+ usr.sbin/makefs/makefs.h         |    4 +-
+ usr.sbin/makefs/udf.c            | 1252 ++++++++++++++++++++++++++++++++++++++
+ usr.sbin/makefs/udf/Makefile.inc |   20 +
+ 6 files changed, 1311 insertions(+), 6 deletions(-)
+
+commit dda43d76d6e58d01d758e57051a52e6a3afe1f26
+Author: wiz <wiz>
+Date:   Mon Aug 5 14:50:32 2013 +0000
+
+    Sort. Improve table formatting.
+
+ usr.sbin/makefs/makefs.8 | 35 +++++++++++++++--------------------
+ 1 file changed, 15 insertions(+), 20 deletions(-)
+
+commit 88cef02de4f21a987fe7816933bc7c65bf49b985
+Author: reinoud <reinoud>
+Date:   Mon Aug 5 16:43:46 2013 +0000
+
+    Make memset() usage consequent in using the right types
+
+ usr.sbin/makefs/udf.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit b0fd010c1e18899878f4c221bedcaf16b187c84b
+Author: joerg <joerg>
+Date:   Mon Aug 5 17:12:04 2013 +0000
+
+    Allow building UDF parts of makefs on !NetBSD.
+
+ usr.sbin/makefs/udf.c | 33 ++++++++++++++++++++++++++++-----
+ 1 file changed, 28 insertions(+), 5 deletions(-)
+
+commit 42e548c0a7c937066f978cfe444fb574e59fbfbf
+Author: reinoud <reinoud>
+Date:   Mon Aug 5 18:44:16 2013 +0000
+
+    Revert joergs patch and make it compile in both the normal as in the tools
+    environment by providing the MMC datastructures separately for compat.
+
+ usr.sbin/makefs/udf.c                  |  35 ++-----
+ usr.sbin/makefs/udf/cdio_mmc_structs.h | 163 +++++++++++++++++++++++++++++++++
+ 2 files changed, 171 insertions(+), 27 deletions(-)
+
+commit 369f1bae99a7cb4048f5209175f32d71e9ebfb31
+Author: reinoud <reinoud>
+Date:   Mon Aug 5 18:45:00 2013 +0000
+
+    Cleanup makefile for makefs
+
+ usr.sbin/makefs/udf/Makefile.inc | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+commit 6b723d51df3f7ae59b826f37fa55f1f14a298739
+Author: reinoud <reinoud>
+Date:   Mon Aug 5 18:49:58 2013 +0000
+
+    Note that i added the UDF support to makefs(8) and bump data
+
+ usr.sbin/makefs/makefs.8 | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 560ffceb5b13a7094734e24593f2629961e02dc4
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 08:18:08 2013 +0000
+
+    Fix memory leaks found by Coverity and fix memoryleaks in the new code
+
+ usr.sbin/makefs/udf.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
+
+commit 5c9d91f739176b4f25b2ef473a15023e02e4e9ea
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 08:24:56 2013 +0000
+
+    Fix assert() on allocation type by masking it with the flag allocation bit
+    mask. Fixes internal allocation writing in nodes with suid/sgid/sticky
+    accessnode.
+
+ usr.sbin/makefs/udf.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 6e9bc553ef324f42b258647cf7b30d6cefa867e6
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 09:32:23 2013 +0000
+
+    Implement auto-setting of sector size and disc size when specifying
+    -oT=<devtype> to one of the supported disk types.
+    
+    While here, also fix where the -s size argument would be overriden by the
+    calculated size.
+
+ usr.sbin/makefs/udf.c | 61 +++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 52 insertions(+), 9 deletions(-)
+
+commit 1d2b693aed6334c734354a938ebf582548e36521
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 09:43:41 2013 +0000
+
+    Update makefs(8) man page to reflect the selection of default sector and disc
+    sizes based on the disc type.
+
+ usr.sbin/makefs/makefs.8 | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit 0837bdad156215ea003f0eca07bb7ac63ace77d2
+Author: wiz <wiz>
+Date:   Tue Aug 6 12:12:51 2013 +0000
+
+    New sentence, new line.
+
+ usr.sbin/makefs/makefs.8 | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 0a829bad35645abf0121d7b3bcee960dc73d4f79
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 12:19:34 2013 +0000
+
+    Allow for the logical volume label to be specified as well as the physical
+    volume label. Also allow the volumeset name to be specified if desired. The
+    syntax follows the newfs_udf(8) syntax.
+
+ usr.sbin/makefs/makefs.8 | 17 +++++++++++++----
+ usr.sbin/makefs/udf.c    | 38 +++++++++++++++++++++++++++++++-------
+ 2 files changed, 44 insertions(+), 11 deletions(-)
+
+commit e477e2e19b1b935e53a1dd1106efb940a0f527e2
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 12:47:21 2013 +0000
+
+    Add minimum UDF version specification to makefs(8) -t udf.
+
+ usr.sbin/makefs/makefs.8 |  7 +++++-
+ usr.sbin/makefs/udf.c    | 56 +++++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 50 insertions(+), 13 deletions(-)
+
+commit 7135a94e98650dda43ce6cbd3623ac8d05e3b68f
+Author: reinoud <reinoud>
+Date:   Tue Aug 6 13:15:30 2013 +0000
+
+    Switch back program version to the version of the newfs_udf/makefs code.
+    
+    While here, visit the 80 columns police :)
+
+ usr.sbin/makefs/udf.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit 9b4075a2b472878dc2587e56d8739ee86ed5b527
+Author: wiz <wiz>
+Date:   Tue Aug 6 20:16:54 2013 +0000
+
+    New sentence, new line.
+    Use one list instead of two consecutive ones.
+    Add .El to end list.
+
+ usr.sbin/makefs/makefs.8 | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+commit e66162b79bf6eb97a8fc12db642717adf1d6cb66
+Author: reinoud <reinoud>
+Date:   Fri Aug 9 11:29:44 2013 +0000
+
+    Oops, used size_t when off_t was meant. This results in the 4G file size
+    modulation seen on 32 bit machines due to size_t being 32 bit there.
+    
+    While here, also fix compilation errors he@ discovered while compiling on
+    NetBSD/vax.
+
+ usr.sbin/makefs/udf.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+commit bb343b0d66e9a78ec3fd12f02cd4da45eef2731f
+Author: reinoud <reinoud>
+Date:   Fri Aug 9 15:11:08 2013 +0000
+
+    Fix possible 32 bit issues. In practice hard to reach but better be safe than
+    sorry.
+
+ usr.sbin/makefs/udf.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+commit bb06f88c9d1fe2cbca6bb95a8af182de81cf0401
+Author: jmcneill <jmcneill>
+Date:   Wed Aug 14 10:16:04 2013 +0000
+
+    when building as a tool, only use struct tm tm_gmtoff if HAVE_STRUCT_TM_TM_GMTOFF is defined -- fixes cygwin build
+
+ usr.sbin/makefs/udf.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+commit 19fbc0eaea3cc0f6b716ceed90b0db0684e49c76
+Author: christos <christos>
+Date:   Sat Oct 19 17:16:37 2013 +0000
+
+    fix unused variable warnings.
+
+ usr.sbin/makefs/cd9660.c               | 26 ++++++++++----------------
+ usr.sbin/makefs/cd9660/cd9660_debug.c  |  5 +++--
+ usr.sbin/makefs/cd9660/cd9660_write.c  | 10 +++-------
+ usr.sbin/makefs/ffs/mkfs.c             |  7 +++----
+ usr.sbin/makefs/msdos/msdosfs_denode.c |  7 +++----
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  |  6 ++----
+ usr.sbin/makefs/udf.c                  |  7 ++-----
+ 7 files changed, 26 insertions(+), 42 deletions(-)
+
+commit 96c0cc2917209cf1de2dc0eaeb91cb1ab88d85a1
+Author: mrg <mrg>
+Date:   Sat Oct 19 20:49:22 2013 +0000
+
+    avoid using __USE() in the tools version of this.
+
+ usr.sbin/makefs/cd9660.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit d1c38d0243a9704e1300d94cb5b5e256b9542e1f
+Author: apb <apb>
+Date:   Thu Oct 24 14:01:01 2013 +0000
+
+    Now that tools/compat/compat_defs.h defones __USE, there's no
+    need to treat the tools build as a special case.
+
+ usr.sbin/makefs/cd9660.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 3289df5edf290710f69ada2cd90a85e8c4f50d14
+Author: christos <christos>
+Date:   Thu Dec 19 22:10:03 2013 +0000
+
+    initialize dummy_ref
+
+ usr.sbin/makefs/udf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit be6b0ddc304586a125c8b742340287faf222623a
+Author: joerg <joerg>
+Date:   Thu Dec 19 23:00:50 2013 +0000
+
+    long_ad is a mix of struct and union, so use memset to initialise in the
+    one place it is used.
+
+ usr.sbin/makefs/udf.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 107e9b1429e5d5f040c93090deaf1485be03dab4
+Author: martin <martin>
+Date:   Fri May 30 13:14:47 2014 +0000
+
+    PR kern/48852 (which should have been bin/ in retrospect): apply patch
+    from Thomas Schmitt to fix rockridge encoding of device nodes.
+
+ usr.sbin/makefs/cd9660/iso9660_rrip.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit 6c24549de828528370be517d4b33286f09da9d85
+Author: maxv <maxv>
+Date:   Wed Jul 9 06:04:16 2014 +0000
+
+    What a terrible use-after-free
+
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 78afb60a7cc92743aca35332c82b0823a5cea0ea
+Author: martin <martin>
+Date:   Mon Sep 1 09:09:47 2014 +0000
+
+    Make msdosfs time conversion use the y/m/d/h/m/s conversion functions
+    from clock_subr.c and compile that into the userland (and tools)
+    makefs as well.
+
+ usr.sbin/makefs/msdos/Makefile.inc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 08496fa11d887d2c99ad833a6549b3bb887bcaa7
+Author: snj <snj>
+Date:   Sat Oct 18 08:33:23 2014 +0000
+
+    src is too big these days to tolerate superfluous apostrophes.  It's
+    "its", people!
+
+ usr.sbin/makefs/README | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 44b696924b7ab91c56930bb5f818e0c3182871e9
+Author: christos <christos>
+Date:   Mon Jan 12 19:50:25 2015 +0000
+
+    PR/49559: Christian Brueffer: Fix typo maxbpf instead of maxbpg.
+
+ usr.sbin/makefs/ffs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit b7b46244b7233104013b1b14fc066db83247cca3
+Author: christos <christos>
+Date:   Mon Jan 12 19:50:47 2015 +0000
+
+    reflect reality about filesystems supported.
+
+ usr.sbin/makefs/README | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+commit 5b8b9f0639a66c239bfd5e7d854eb4face1a4685
+Author: agc <agc>
+Date:   Sun Mar 29 05:52:59 2015 +0000
+
+    Make the userland signature and uses of bread() match the kernel ones,
+    after the removal of the cred argument.
+
+ usr.sbin/makefs/ffs/buf.c              |  8 ++++----
+ usr.sbin/makefs/ffs/buf.h              |  5 ++---
+ usr.sbin/makefs/ffs/ffs_alloc.c        |  8 ++++----
+ usr.sbin/makefs/ffs/ffs_balloc.c       | 21 ++++++++++-----------
+ usr.sbin/makefs/msdos/msdosfs_denode.c |  6 +++---
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  6 +++---
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  |  8 ++++----
+ 7 files changed, 30 insertions(+), 32 deletions(-)
+
+commit 7bb94f950560939bdd83cff1002c0dfa7e8bfafe
+Author: christos <christos>
+Date:   Tue Jun 16 23:04:13 2015 +0000
+
+    improve error messages (remove \n, use __func__, etc)
+
+ usr.sbin/makefs/cd9660.c | 53 ++++++++++++++++++++++++------------------------
+ usr.sbin/makefs/udf.c    |  6 +++---
+ 2 files changed, 30 insertions(+), 29 deletions(-)
+
+commit 52743b96bb79c472be11d71d335fab7834d60ef5
+Author: christos <christos>
+Date:   Wed Jun 17 01:05:41 2015 +0000
+
+    more error normalization
+
+ usr.sbin/makefs/cd9660.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit a8c3ad0cf90d6c22c65bc68cf9690dda26672a7a
+Author: christos <christos>
+Date:   Fri Oct 16 16:40:02 2015 +0000
+
+    remove clause 3.
+
+ usr.sbin/makefs/msdos.c | 7 ++-----
+ usr.sbin/makefs/msdos.h | 5 +----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
+
+commit 30c9c2b04b8a55f7893e5d7f4c06d2256d024914
+Author: christos <christos>
+Date:   Wed Nov 25 00:48:49 2015 +0000
+
+    Provide a -T option to set timestamps to a consistent value for MKREPRO
+
+ usr.sbin/makefs/cd9660.c |  6 +++--
+ usr.sbin/makefs/makefs.8 | 20 +++++++++++++++--
+ usr.sbin/makefs/makefs.c | 58 ++++++++++++++++++++++++++++++++++++++++++------
+ usr.sbin/makefs/makefs.h |  3 ++-
+ usr.sbin/makefs/walk.c   | 18 +++++++++++++--
+ 5 files changed, 91 insertions(+), 14 deletions(-)
+
+commit b95552f484fd5125385368b685967e4f96726180
+Author: wiz <wiz>
+Date:   Wed Nov 25 16:32:00 2015 +0000
+
+    "file system" as two words.
+
+ usr.sbin/makefs/makefs.8 | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 7c6a9a79ce98d1c5430a464c24cafec9c5977b3c
+Author: wiz <wiz>
+Date:   Wed Nov 25 16:32:20 2015 +0000
+
+    Sort options in usage to match man page order.
+
+ usr.sbin/makefs/makefs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit f8cf74c79bc8954f4ed40ad04d8be0b6188e319a
+Author: joerg <joerg>
+Date:   Fri Nov 27 15:10:32 2015 +0000
+
+    Don't pass garbage to parsedate, but do use the return value.
+
+ usr.sbin/makefs/makefs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 5ff31fa7981c7bfd0b478e53670b09615456f553
+Author: christos <christos>
+Date:   Sun Dec 20 22:54:44 2015 +0000
+
+    Add timestamp support to the ffs image creation; needed for in kernel memory
+    images MKREPRO.
+
+ usr.sbin/makefs/ffs.c | 48 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
+
+commit 55657dcb1f52d8f3a1aead24d331cb814e942ee6
+Author: christos <christos>
+Date:   Mon Dec 21 00:58:08 2015 +0000
+
+    more deterministic ffs for reproducible builds.
+
+ usr.sbin/makefs/ffs.c              | 16 ++++++++++++----
+ usr.sbin/makefs/ffs/mkfs.c         | 16 ++++++++--------
+ usr.sbin/makefs/ffs/newfs_extern.h |  4 ++--
+ 3 files changed, 22 insertions(+), 14 deletions(-)
+
+commit 1f805331c66978ff678c80fbfb48a605a66b892e
+Author: christos <christos>
+Date:   Mon Dec 21 03:19:17 2015 +0000
+
+    Fix some more MKREPRO issues in cdrom creation. Now amd64 passes MKREPRO.
+
+ usr.sbin/makefs/cd9660.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+commit e0878eef8bee2bd3ebe5ef276afefc2e37fb8fac
+Author: christos <christos>
+Date:   Thu Dec 24 15:52:37 2015 +0000
+
+    little size_t/ssize_t...
+
+ usr.sbin/makefs/cd9660.c                | 13 +++++++------
+ usr.sbin/makefs/cd9660.h                |  4 ++--
+ usr.sbin/makefs/cd9660/cd9660_strings.c |  8 ++++----
+ usr.sbin/makefs/ffs/buf.c               | 18 +++++++++---------
+ 4 files changed, 22 insertions(+), 21 deletions(-)
+
+commit 95fc6b4598bc3f824039a9e30b3907815897082b
+Author: mlelstv <mlelstv>
+Date:   Sat Jan 30 09:59:27 2016 +0000
+
+    Add support to msdosfs and makefs to generate correct Unicode (UCS-2) directory
+    entries from UTF8 encoded file names.
+
+ usr.sbin/makefs/msdos.c                | 43 +++++++++++++++++++++++-----------
+ usr.sbin/makefs/msdos/msdosfs_vfsops.c |  8 ++++++-
+ usr.sbin/makefs/msdos/msdosfs_vnops.c  | 11 +++++----
+ 3 files changed, 42 insertions(+), 20 deletions(-)
+
+commit 74ee51af09b0690e51c0b0cc356a3fa97382a940
+Author: mlelstv <mlelstv>
+Date:   Sat Feb 6 10:40:58 2016 +0000
+
+    Split case folding table into separate source file and add full
+    copyright and permission notice from http://www.unicode.org/copyright.html
+
+ usr.sbin/makefs/msdos/Makefile.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 610241eae24084af29aff40d89c55093dcdc5e59
+Author: christos <christos>
+Date:   Mon Mar 7 15:58:05 2016 +0000
+
+    PR/50911: David Binderman: Optimize memset
+
+ usr.sbin/makefs/chfs/chfs_mkfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
