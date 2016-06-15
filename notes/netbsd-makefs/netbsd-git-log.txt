@@ -1,21 +1,3 @@
-commit a9be096024ffc1a3505f9a16366ba0b39f2afab8
-Author: tsutsui <tsutsui>
-Date:   Fri Nov 19 15:47:32 2010 +0000
-
-    cd9960 -> cd9660
-
- usr.sbin/makefs/cd9660.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-commit 96ced2cc53ca181c48e23ae7c4aab78c839811d3
-Author: wiz <wiz>
-Date:   Tue Jan 4 09:48:21 2011 +0000
-
-    Fix fd leaks in error cases. Found by cppcheck.
-
- usr.sbin/makefs/cd9660/cd9660_write.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
 commit 1e7f975e36d072ba69e1cc76b004a69ae2331be7
 Author: bouyer <bouyer>
 Date:   Sun Mar 6 17:08:10 2011 +0000
@@ -33,107 +15,6 @@ Date:   Sun Mar 6 17:08:10 2011 +0000
 
  usr.sbin/makefs/ffs/ffs_alloc.c | 94 +----------------------------------------
  1 file changed, 2 insertions(+), 92 deletions(-)
-
-commit 4bf6abfbcb905350d8d8d3341c78919782fb6f99
-Author: christos <christos>
-Date:   Wed Mar 23 13:11:51 2011 +0000
-
-    Fix typos in character ranges from: Baptiste Daroussin bapt at freebsd dot org
-
- usr.sbin/makefs/cd9660/cd9660_strings.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-commit 0c44bf5bd9b1365796e166f5f26f3f46b180544a
-Author: christos <christos>
-Date:   Sun May 22 21:51:39 2011 +0000
-
-    From Nathan Whitehorn (nwhitehorn at freebsd dot org):
-    Add code to generate bootable ISOs on Powermac and CHRP systems.
-    Synthesize some partition maps (APM and MBR, respectively) pointing
-    to (a) the whole disk, and (b) relevant El Torito boot images that
-    have been added by other code. These partition maps are a little
-    bit funny looking, but they seem to work. FreeBSD has been using
-    this successfully in their release generation on powerpc, as well
-    as generating all non-SPARC install media. SPARC support could
-    probably be added as an extension of this patch.
-
- usr.sbin/makefs/cd9660.c                 |   7 +-
- usr.sbin/makefs/cd9660.h                 |   3 +-
- usr.sbin/makefs/cd9660/cd9660_eltorito.c | 158 ++++++++++++++++++++++++++++++-
- usr.sbin/makefs/makefs.8                 |   7 +-
- 4 files changed, 168 insertions(+), 7 deletions(-)
-
-commit 94f584c07bd0e3c5f55de48ec925594b366f7bb7
-Author: christos <christos>
-Date:   Mon May 23 00:21:50 2011 +0000
-
-    include system headers after config.h
-
- usr.sbin/makefs/cd9660/cd9660_eltorito.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-commit 60752e272d60189e3c867b3c1f57c7c4b0391773
-Author: tsutsui <tsutsui>
-Date:   Sat May 28 11:59:29 2011 +0000
-
-    - remove unnecessary (pasto?) line on RRIP PL handling for moved dir
-    - RRIP RE length should be 4, not 0
-
- usr.sbin/makefs/cd9660/iso9660_rrip.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-commit ffa806a87cc07e2b0814a7a3228666e70ced4a67
-Author: tsutsui <tsutsui>
-Date:   Sun May 29 17:07:57 2011 +0000
-
-    Apply fixes for PR bin/44114 (makefs(8) -t cd9660 -o rockridge creates
-    corrupted cd9660fs):
-     - makefs/cd9660.c:
-      - cd9660_rrip_move_directory() should also update lenght[0] and
-        name_len[0] in dir->isoDirRecord
-     - makefs/cd9660/iso9660_rrip.c:
-      - cd9660_rrip_finalize_node() should check rr_real_parent in node->parent,
-        not in node itself in RRIP_PL case
-      - cd9660_rrip_initialize_node() should update only node passed as arg
-        so handle RRIP_PL in DOTDOT case
-    
-    Fixes malformed dotdot entries in deep (more than 8 level) directories
-    moved into .rr_moved dir.
-    
-    Should be pulled up to netbsd-5.
-    (no official ISO has such deep dirs, but cobalt restorecd is affected)
-
- usr.sbin/makefs/cd9660.c              |  6 ++++--
- usr.sbin/makefs/cd9660/iso9660_rrip.c | 23 ++++++++++++-----------
- 2 files changed, 16 insertions(+), 13 deletions(-)
-
-commit 50fb4eafc5255b1ab21dbe1b21c32c8f6aa4439e
-Author: mrg <mrg>
-Date:   Mon Jun 20 07:43:56 2011 +0000
-
-    remove most of the remaining HAVE_GCC tests that are always true in
-    the modern world.
-
- usr.sbin/makefs/cd9660/Makefile.inc | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit 599fca76c5232a5afddc31edd9286f96d28fc86f
-Author: enami <enami>
-Date:   Thu Jun 23 02:35:56 2011 +0000
-
-    Move inclusion of sys/endian.h from cd9660_eltorito.c to cd9660.h
-    since actual user is not cd9660_eltorito.c but iso.h and
-    cd9660_eltorito.h.
-    
-    Actually, include order/place of sys/endian.h doesn't matter on
-    netbsd since it is always included by sys/types.h but it's not
-    true on other system.  This should fix cross build breakage on
-    freebsd introduced by rev. 1.16 of cd9660_eltorito.c.
-    Problem reported and fix suggested on twitter.
-
- usr.sbin/makefs/cd9660.h                 | 3 ++-
- usr.sbin/makefs/cd9660/cd9660_eltorito.c | 6 ++----
- 2 files changed, 4 insertions(+), 5 deletions(-)
 
 commit 5f578bc991c10e6951f0f60e98508f202bdcd2e5
 Author: uch <uch>
@@ -225,16 +106,6 @@ Date:   Fri Jul 22 13:04:00 2011 +0000
  usr.sbin/makefs/makefs.8 | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-commit 0d7ad4d38963adc553dad9d4ba9a313a7d020b57
-Author: christos <christos>
-Date:   Sat Aug 6 23:25:19 2011 +0000
-
-    PR/45217: Martin Matuska: Use proper lengths to space pad fields and don't
-    overwrite them according to the spec.
-
- usr.sbin/makefs/cd9660.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
 commit 77abe5d95fd7ef55114939637b739527f0261bf5
 Author: uch <uch>
 Date:   Wed Aug 10 11:31:49 2011 +0000
@@ -246,54 +117,6 @@ Date:   Wed Aug 10 11:31:49 2011 +0000
  usr.sbin/makefs/v7fs/v7fs_populate.c | 7 +++----
  usr.sbin/makefs/v7fs_makefs.h        | 3 ++-
  4 files changed, 12 insertions(+), 13 deletions(-)
-
-commit 9fdd0bb5d4206d873732c4be438b07eca9c039d9
-Author: wiz <wiz>
-Date:   Mon Aug 15 14:45:01 2011 +0000
-
-    Re-order `usage' alphabetically;
-    rename option arguments in the manpage's `SYNOPSIS' section to
-    match those from `usage' (not the other way around; the `usage'-line
-    (and other parts of makefs.c) contain the correct names);
-    minor punctuation improvements.
-    
-    From Snader_LB.
-
- usr.sbin/makefs/makefs.8 | 24 ++++++++++++------------
- usr.sbin/makefs/makefs.c | 12 ++++++------
- 2 files changed, 18 insertions(+), 18 deletions(-)
-
-commit 4e76861bdcaba7187d3b0147df7c83c5547b2b0f
-Author: christos <christos>
-Date:   Tue Aug 23 17:09:11 2011 +0000
-
-    PR/45285: Martin Matuska: makefs does not properly convert ISO level 1 and 2
-    filenames (buffer overflow)
-    
-    makefs does not properly verify the maximum filename length in the
-    special "." case for both ISO level 1 and ISO level 2 filename
-    conversion.  This creates broken images or causes a buffer overflow
-    (ISO level 2).
-    
-    ISO level 1:
-    If a filename contains only dots or up to 8 characters followed by
-    dots the 8+3 limit check doesn't work.
-    
-    ISO level 2:
-    If a filename contains a dot in the first 30 characters and a dot
-    on the 30th character, the length limit check doesn't work and the
-    buffer is overflowed.
-    
-    $ mkdir level1
-    $ touch level1/12345............
-    $ makefs -t cd9660 -o isolevel=1 test.iso level1
-    
-    $ mkdir level2
-    $ touch level2/1234567890.2345678901234567.....34567890123456789012345
-    $ makefs -t cd9660 -o isolevel=2 test.iso level2
-
- usr.sbin/makefs/cd9660.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
 
 commit 1cd9a6c5cb3b48791de55dd6e4ab248c1e353c6f
 Author: christos <christos>
