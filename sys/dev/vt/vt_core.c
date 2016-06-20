@@ -2243,6 +2243,9 @@ skip_thunk:
 	case CONS_GETVERS:
 		*(int *)data = 0x200;
 		return (0);
+	case CONS_HISTORY:
+		vtbuf_sethistory_size(&vw->vw_buf, *(int *)data);
+		return (0);
 	case CONS_MODEINFO:
 		/* XXX */
 		return (0);
