@@ -2244,7 +2244,15 @@ skip_thunk:
 		*(int *)data = 0x200;
 		return (0);
 	case CONS_HISTORY:
+		/*
+	 	 * XXX We'd prefer to avoid terminal_mute as mentioned in
+		 * vt_change_font.
+		 */
+		terminal_mute(tm, 1);
 		vtbuf_sethistory_size(&vw->vw_buf, *(int *)data);
+		terminal_set_winsize_blank(tm, &wsz, 0, NULL);
+		terminal_set_cursor(tm, &vw->vw_buf.vb_cursor);
+		terminal_mute(tm, 0);
 		return (0);
 	case CONS_MODEINFO:
 		/* XXX */
