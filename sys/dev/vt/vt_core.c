@@ -2250,7 +2250,7 @@ skip_thunk:
 		 */
 		terminal_mute(tm, 1);
 		vtbuf_sethistory_size(&vw->vw_buf, *(int *)data);
-		terminal_set_winsize_blank(tm, &wsz, 0, NULL);
+		//terminal_set_winsize_blank(tm, &wsz, 0, NULL);
 		terminal_set_cursor(tm, &vw->vw_buf.vb_cursor);
 		terminal_mute(tm, 0);
 		return (0);
