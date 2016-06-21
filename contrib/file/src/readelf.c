@@ -509,12 +509,26 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     size_t noff, size_t doff, int *flags)
 {
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
-	    type == NT_GNU_BUILD_ID && (descsz == 16 || descsz == 20)) {
+	    type == NT_GNU_BUILD_ID && (descsz >= 4 || descsz <= 20)) {
 		uint8_t desc[20];
+		const char *type;
 		uint32_t i;
 		*flags |= FLAGS_DID_BUILD_ID;
-		if (file_printf(ms, ", BuildID[%s]=", descsz == 16 ? "md5/uuid" :
-		    "sha1") == -1)
+		switch (descsz) {
+		case 8:
+		    type = "xxHash";
+		    break;
+		case 16:
+		    type = "md5/uuid";
+		    break;
+		case 20:
+		    type = "sha1";
+		    break;
+		default:
+		    type = "unknown";
+		    break;
+		}
+		if (file_printf(ms, ", BuildID[%s]=", type) == -1)
 			return 1;
 		(void)memcpy(desc, &nbuf[doff], descsz);
 		for (i = 0; i < descsz; i++)
