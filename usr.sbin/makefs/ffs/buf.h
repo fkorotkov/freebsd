@@ -43,8 +43,6 @@
 #include <sys/param.h>
 #include <sys/queue.h>
 
-struct ucred;
-
 struct vnode {
 	int fd;
 	void *fs;
@@ -64,6 +62,7 @@ struct buf {
 	TAILQ_ENTRY(buf)	b_tailq;
 };
 
+struct ucred;
 void		bcleanup(void);
 int		bread(struct vnode *, daddr_t, int, struct ucred *,
     struct buf **);
