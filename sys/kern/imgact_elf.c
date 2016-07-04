@@ -1458,8 +1458,8 @@ cb_size_segment(vm_map_entry_t entry, void *closure)
 }
 
 /*
- * For each writable segment in the process's memory map, call the given
- * function with a pointer to the map entry and some arbitrary
+ * For each segment in the process's memory map that should appear in the dump,
+ * call the given function with a pointer to the map entry and some arbitrary
  * caller-supplied data.
  */
 static void
