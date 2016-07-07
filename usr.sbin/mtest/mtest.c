@@ -257,7 +257,7 @@ process_file(char *fname, int s, int s6)
 
 	fp = fopen(fname, "r");
 	if (fp == NULL) {
-		warn("fopen");
+		warn("fopen %s", fname);
 		return;
 	}
 
