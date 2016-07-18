@@ -65,9 +65,12 @@ private:
 
   static pint_t getCFA(A &addressSpace, const PrologInfo &prolog,
                        const R &registers) {
-    if (prolog.cfaRegister != 0)
+    if (prolog.cfaRegister != 0) {
+      fprintf(stderr, "%s:%d cfaRegster=%d\n", __FILE__, __LINE__,
+        prolog.cfaRegister);
       return (pint_t)((sint_t)registers.getRegister((int)prolog.cfaRegister) +
              prolog.cfaRegisterOffset);
+}
     if (prolog.cfaExpression != 0)
       return evaluateExpression((pint_t)prolog.cfaExpression, addressSpace, 
                                 registers, 0);
@@ -156,6 +159,8 @@ int DwarfInstructions<A, R>::stepWithDwarf(A &addressSpace, pint_t pc,
                                            pint_t fdeStart, R &registers) {
   FDE_Info fdeInfo;
   CIE_Info cieInfo;
+  fprintf(stderr, "%s:%d pc=0x%llx\n", __FILE__, __LINE__,
+    (unsigned long long)pc);
   if (CFI_Parser<A>::decodeFDE(addressSpace, fdeStart, &fdeInfo,
                                &cieInfo) == NULL) {
     PrologInfo prolog;
@@ -163,6 +168,8 @@ int DwarfInstructions<A, R>::stepWithDwarf(A &addressSpace, pint_t pc,
                                             &prolog)) {
       // get pointer to cfa (architecture specific)
       pint_t cfa = getCFA(addressSpace, prolog, registers);
+      fprintf(stderr, "%s:%d cfa=0x%llx\n", __FILE__, __LINE__,
+        (unsigned long long)cfa);
 
        // restore registers that dwarf says were saved
       R newRegisters = registers;
@@ -183,15 +190,24 @@ int DwarfInstructions<A, R>::stepWithDwarf(A &addressSpace, pint_t pc,
             newRegisters.setVectorRegister(
                 i, getSavedVectorRegister(addressSpace, registers, cfa,
                                           prolog.savedRegisters[i]));
-          else if (i == (int)cieInfo.returnAddressRegister)
+          else if (i == (int)cieInfo.returnAddressRegister) {
             returnAddress = getSavedRegister(addressSpace, registers, cfa,
                                              prolog.savedRegisters[i]);
-          else if (registers.validRegister(i))
+            fprintf(stderr, "%s:%d found returnAddressRegister %d returnAddress=0x%llx\n",
+               __FILE__, __LINE__, i, (unsigned long long)returnAddress);
+          }
+          else if (registers.validRegister(i)) {
+            fprintf(stderr, "%s:%d found valid register %d (val=%llx)\n",
+              __FILE__, __LINE__, i,
+              (unsigned long long)getSavedRegister(addressSpace, registers, cfa,
+                                    prolog.savedRegisters[i]));
             newRegisters.setRegister(
                 i, getSavedRegister(addressSpace, registers, cfa,
                                     prolog.savedRegisters[i]));
-          else
+          } else {
+            fprintf(stderr, "%s:%d return UNW_EBADREG\n", __FILE__, __LINE__);
             return UNW_EBADREG;
+          }
         }
       }
 
@@ -209,6 +225,7 @@ int DwarfInstructions<A, R>::stepWithDwarf(A &addressSpace, pint_t pc,
       return UNW_STEP_SUCCESS;
     }
   }
+  fprintf(stderr, "%s:%d return UNW_EBADFRAME\n", __FILE__, __LINE__);
   return UNW_EBADFRAME;
 }
 
