@@ -935,7 +935,7 @@ bool UnwindCursor<A, R>::getInfoFromDwarfSection(pint_t pc,
       return true;
     }
   }
-  _LIBUNWIND_DEBUG_LOG("can't find/use FDE for pc=0x%llX\n", (uint64_t)pc);
+  //_LIBUNWIND_DEBUG_LOG("can't find/use FDE for pc=0x%llX\n", (uint64_t)pc);
   return false;
 }
 #endif // _LIBUNWIND_SUPPORT_DWARF_UNWIND
@@ -1201,8 +1201,6 @@ bool UnwindCursor<A, R>::getInfoFromCompactEncodingSection(pint_t pc,
 template <typename A, typename R>
 void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
   pint_t pc = (pint_t)this->getReg(UNW_REG_IP);
-  fprintf(stderr, "%s:%d pc=0x%llx\n", __FILE__, __LINE__,
-    (unsigned long long)pc);
 #if _LIBUNWIND_ARM_EHABI
   // Remove the thumb bit so the IP represents the actual instruction address.
   // This matches the behaviour of _Unwind_GetIP on arm.
@@ -1328,10 +1326,8 @@ void UnwindCursor<A, R>::setInfoBasedOnIPRegister(bool isReturnAddress) {
 template <typename A, typename R>
 int UnwindCursor<A, R>::step() {
   // Bottom of stack is defined is when unwind info cannot be found.
-  if (_unwindInfoMissing) {
-    fprintf(stderr, "%s:%d _unwindInfoMissing\n", __FILE__, __LINE__);
+  if (_unwindInfoMissing)
     return UNW_STEP_END;
-  }
 
   // Use unwinding info to modify register set as if function returned.
   int result;
@@ -1347,14 +1343,11 @@ int UnwindCursor<A, R>::step() {
               _LIBUNWIND_ARM_EHABI
 #endif
 
-  fprintf(stderr, "%s:%d result=%d\n", __FILE__, __LINE__, result);
   // update info based on new PC
   if (result == UNW_STEP_SUCCESS) {
     this->setInfoBasedOnIPRegister(true);
-    if (_unwindInfoMissing) {
-      fprintf(stderr, "%s:%d _unwindInfoMissing\n", __FILE__, __LINE__);
+    if (_unwindInfoMissing)
       return UNW_STEP_END;
-    }
     if (_info.gp)
       setReg(UNW_REG_SP, getReg(UNW_REG_SP) + _info.gp);
   }
