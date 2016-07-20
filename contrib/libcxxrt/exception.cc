@@ -473,11 +473,9 @@ static char *emergency_malloc(size_t size)
 		// enough memory for us to use, so try the allocation again - no point
 		// using the emergency buffer if there is some real memory that we can
 		// use...
-		void *m;
-		posix_memalign(&m, alignof(__cxa_exception), size);
+		void *m = calloc(1, size);
 		if (0 != m)
 		{
-			memset(m, 0, size);
 			pthread_mutex_unlock(&emergency_malloc_lock);
 			return static_cast<char*>(m);
 		}
@@ -542,10 +540,10 @@ static void emergency_malloc_free(char *ptr)
 
 static char *alloc_or_die(size_t size)
 {
-	void *buffer;
-	posix_memalign(&buffer, alignof(__cxa_exception), size);
+	char *buffer = static_cast<char*>(calloc(1, size));
 
-	// If we failed to get any memory, try using an emergency buffer.
+	// If calloc() doesn't want to give us any memory, try using an emergency
+	// buffer.
 	if (0 == buffer)
 	{
 		buffer = emergency_malloc(size);
@@ -556,10 +554,8 @@ static char *alloc_or_die(size_t size)
 			fprintf(stderr, "Out of memory attempting to allocate exception\n");
 			std::terminate();
 		}
-	} else {
-		memset(buffer, 0, size);
 	}
-	return static_cast<char *>(buffer);
+	return buffer;
 }
 static void free_exception(char *e)
 {
