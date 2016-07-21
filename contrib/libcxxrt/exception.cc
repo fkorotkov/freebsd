@@ -573,13 +573,11 @@ static void free_exception(char *e)
 }
 
 #ifdef __LP64__
-/**
- * There's an ABI bug in __cxa_exception: unwindHeader requires 16-byte
- * alignment but it was broken by the addition of the referenceCount.
- * The unwindHeader is at offset 0x58 in __cxa_exception.  In order to keep
- * compatibility with consumers of the broken __cxa_exception, explicitly add
- * padding on allocation (and account for it on free).
- */
+// There's an ABI bug in __cxa_exception: unwindHeader requires 16-byte
+// alignment but it was broken by the addition of the referenceCount.
+// The unwindHeader is at offset 0x58 in __cxa_exception.  In order to keep
+// compatibility with consumers of the broken __cxa_exception, explicitly add
+// padding on allocation (and account for it on free).
 static const int exception_alignment_padding = 8;
 #else
 static const int exception_alignment_padding = 0;
