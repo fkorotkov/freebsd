@@ -88,6 +88,13 @@ struct __cxa_exception
 	 * of the end (where the exception object can be stored).
 	 */
 	uintptr_t referenceCount;
+	/**
+	 * Prior to the addition of the referenceCount the unwindHeader was at
+	 * offset 0x50, and it requires 16-byte alignment, so padding is
+	 * required. Explicitly add it here for compatibility with the layout
+	 * in libstdc++.
+	 */
+	uintptr_t _padding;
 #endif
 	/** Type info for the thrown object. */
 	std::type_info *exceptionType;
