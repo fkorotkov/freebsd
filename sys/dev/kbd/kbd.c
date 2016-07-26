@@ -33,7 +33,9 @@ __FBSDID("$FreeBSD$");
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/kernel.h>
+#include <sys/lock.h>
 #include <sys/malloc.h>
+#include <sys/mutex.h>
 #include <sys/conf.h>
 #include <sys/fcntl.h>
 #include <sys/poll.h>
@@ -422,6 +424,7 @@ kbd_change_callback(keyboard_t *kbd, void *id, kbd_callback_func_t *func,
 keyboard_t *
 kbd_get_keyboard(int index)
 {
+	mtx_assert(&Giant, MA_OWNED);
 	if ((index < 0) || (index >= keyboards))
 		return (NULL);
 	if (keyboard[index] == NULL)
