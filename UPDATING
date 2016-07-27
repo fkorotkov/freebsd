@@ -31,6 +31,10 @@ NOTE TO PEOPLE WHO THINK THAT FreeBSD 12.x IS SLOW:
 	disable the most expensive debugging functionality run
 	"ln -s 'abort:false,junk:false' /etc/malloc.conf".)
 
+2016xxxx:
+	The WITHOUT_ELFCOPY_AS_OBJCOPY src.conf(5) knob has been retired.
+	ELF Tool Chain's elfcopy is always installed as /usr/bin/objcopy.
+
 20160908:
 	The queue(3) debugging macro, QUEUE_MACRO_DEBUG, has been split into
 	two separate components, QUEUE_MACRO_DEBUG_TRACE and
