@@ -112,6 +112,7 @@ static struct speed const speeds[] =
     DATA(2400),
     DATA(4800),
     DATA(9600),
+#if 0
 #ifdef B19200
     DATA(19200),
 #elif defined(EXTA)
@@ -138,6 +139,7 @@ static struct speed const speeds[] =
 #endif
 #ifdef B921600
     DATA(921600),
+#endif
 #endif
 #endif
 };
