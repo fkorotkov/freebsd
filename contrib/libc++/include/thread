@@ -179,6 +179,8 @@ __thread_specific_ptr<_Tp>::__thread_specific_ptr()
     if (__ec)
         throw system_error(error_code(__ec, system_category()),
                            "__thread_specific_ptr construction failed");
+#else
+    static_cast<void>(__ec);
 #endif
 }
 
