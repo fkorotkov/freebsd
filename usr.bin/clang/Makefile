@@ -4,6 +4,7 @@
 
 SUBDIR+=	clang
 SUBDIR+=	clang-tblgen
+SUBDIR+=	lld
 SUBDIR+=	llvm-tblgen
 
 .if !defined(TOOLS_PREFIX)
