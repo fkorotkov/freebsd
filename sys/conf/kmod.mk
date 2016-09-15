@@ -74,6 +74,7 @@ OBJCOPY?=	objcopy
 # do this after bsd.own.mk.
 .include "kern.opts.mk"
 .include <bsd.compiler.mk>
+.include <bsd.ld-emulation.mk>
 .include "config.mk"
 
 # Search for kernel source tree in standard places.
@@ -171,12 +172,12 @@ ${_firmw:C/\:.*$/.fwo/:T}:	${_firmw:C/\:.*$//}
 	@${ECHO} ${_firmw:C/\:.*$//} ${.ALLSRC:M*${_firmw:C/\:.*$//}}
 	@if [ -e ${_firmw:C/\:.*$//} ]; then			\
 		${LD} -b binary --no-warn-mismatch ${_LDFLAGS}	\
-		    -m elf_${MACHINE_ARCH}_fbsd -r -d 		\
+		    -m ${LD_EMULATION} -r -d 			\
 		    -o ${.TARGET} ${_firmw:C/\:.*$//};		\
 	else							\
 		ln -s ${.ALLSRC:M*${_firmw:C/\:.*$//}} ${_firmw:C/\:.*$//}; \
 		${LD} -b binary --no-warn-mismatch ${_LDFLAGS}	\
-		    -m elf_${MACHINE_ARCH}_fbsd -r -d 		\
+		    -m ${LD_EMULATION} -r -d	 		\
 		    -o ${.TARGET} ${_firmw:C/\:.*$//};		\
 		rm ${_firmw:C/\:.*$//};				\
 	fi
