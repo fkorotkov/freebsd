@@ -17,6 +17,7 @@ _srcconf_included_:
 
 .include <bsd.own.mk>
 .include <bsd.compiler.mk>
+.include <bsd.ld-emulation.mk>
 .include "kern.opts.mk"
 
 # The kernel build always occurs in the object directory which is .CURDIR.
@@ -119,7 +120,7 @@ NORMAL_M= ${AWK} -f $S/tools/makeobjops.awk ${.IMPSRC} -c ; \
 
 NORMAL_FW= uudecode -o ${.TARGET} ${.ALLSRC}
 NORMAL_FWO= ${LD} -b binary --no-warn-mismatch -d -warn-common -r \
-	-o ${.TARGET} ${.ALLSRC:M*.fw}
+	-m ${LD_EMULATION} -o ${.TARGET} ${.ALLSRC:M*.fw}
 
 # Common for dtrace / zfs
 CDDL_CFLAGS=	-DFREEBSD_NAMECACHE -nostdinc -I$S/cddl/compat/opensolaris -I$S/cddl/contrib/opensolaris/uts/common -I$S -I$S/cddl/contrib/opensolaris/common ${CFLAGS} -Wno-unknown-pragmas -Wno-missing-prototypes -Wno-undef -Wno-strict-prototypes -Wno-cast-qual -Wno-parentheses -Wno-redundant-decls -Wno-missing-braces -Wno-uninitialized -Wno-unused -Wno-inline -Wno-switch -Wno-pointer-arith -Wno-unknown-pragmas
