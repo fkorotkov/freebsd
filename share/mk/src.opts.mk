@@ -54,14 +54,13 @@ __DEFAULT_YES_OPTIONS = \
     AUTHPF \
     AUTOFS \
     BHYVE \
-    BINUTILS \
-    BINUTILS_BOOTSTRAP \
     BLACKLIST \
     BLUETOOTH \
     BOOT \
     BOOTPARAMD \
     BOOTPD \
     BSD_CPIO \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -76,7 +75,6 @@ __DEFAULT_YES_OPTIONS = \
     CTM \
     CUSE \
     CXX \
-    DIALOG \
     DICT \
     DMAGENT \
     DYNAMICROOT \
@@ -96,14 +94,8 @@ __DEFAULT_YES_OPTIONS = \
     FTP \
     GAMES \
     GCOV \
-    GDB \
     GNU \
-    GNU_DIFF \
-    GNU_GREP \
-    GNU_GREP_COMPAT \
     GPIO \
-    GPL_DTC \
-    GROFF \
     HAST \
     HTML \
     HYPERV \
@@ -180,10 +172,18 @@ __DEFAULT_YES_OPTIONS = \
     ZONEINFO
 
 __DEFAULT_NO_OPTIONS = \
-    BSD_GREP \
+    BINUTILS \
+    BINUTILS_BOOTSTRAP \
     CLANG_EXTRAS \
+    DIALOG \
     DTRACE_TESTS \
     EISA \
+    GDB \
+    GNU_DIFF \
+    GNU_GREP \
+    GNU_GREP_COMPAT \
+    GPL_DTC \
+    GROFF \
     HESIOD \
     LIBSOFT \
     NAND \
