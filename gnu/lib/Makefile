@@ -2,7 +2,6 @@
 
 .include <src.opts.mk>
 
-SUBDIR=			csu
 SUBDIR.${MK_DIALOG}+=	libdialog
 SUBDIR.${MK_GCC}+=	libgcov libgomp
 SUBDIR.${MK_SSP}+=	libssp
