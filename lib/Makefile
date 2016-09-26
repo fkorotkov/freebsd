@@ -242,6 +242,9 @@ _libcplusplus=	libc++
 _libthr=	libthr
 .endif
 
+SUBDIR.${MK_LLVM_LIBUNWIND}+=	libgcc_eh
+SUBDIR.${MK_LLVM_LIBUNWIND}+=	libgcc_s
+
 .if ${MK_NAND} != "no"
 _libnandfs=	libnandfs
 .endif
