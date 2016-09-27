@@ -198,38 +198,27 @@ X${BINUTIL}?=	${${BINUTIL}}
 # system here would require fine-grained ordering of all components based
 # on their dependencies.
 .if !empty(SUBDIR_OVERRIDE)
-SUBDIR=	${SUBDIR_OVERRIDE}
+SUBDIR=			${SUBDIR_OVERRIDE}
 .else
-SUBDIR=	lib libexec
+SUBDIR=			lib libexec
 .if !defined(NO_ROOT) && (make(installworld) || make(install))
 # Ensure libraries are installed before progressing.
-SUBDIR+=.WAIT
+SUBDIR+=		.WAIT
 .endif
-SUBDIR+=bin
-.if ${MK_CDDL} != "no"
-SUBDIR+=cddl
-.endif
-SUBDIR+=gnu include
-.if ${MK_KERBEROS} != "no"
-SUBDIR+=kerberos5
-.endif
-.if ${MK_RESCUE} != "no"
-SUBDIR+=rescue
-.endif
-SUBDIR+=sbin
-.if ${MK_CRYPT} != "no"
-SUBDIR+=secure
-.endif
+SUBDIR+=		bin
+SUBDIR.${MK_CDDL}+=	cddl
+SUBDIR+=		gnu
+SUBDIR+=		include
+SUBDIR.${MK_KERBEROS}+=	kerberos5
+SUBDIR.${MK_RESCUE}+=	rescue
+SUBDIR+=		sbin
+SUBDIR.${MK_CRYPT}+	=secure
 .if !defined(NO_SHARE)
-SUBDIR+=share
+SUBDIR+=		share
 .endif
-SUBDIR+=sys usr.bin usr.sbin
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
-.if ${MK_OFED} != "no"
-SUBDIR+=contrib/ofed
-.endif
+SUBDIR+=		sys usr.bin usr.sbin
+SUBDIR.${MK_TESTS}+=	tests
+SUBDIR.${MK_OFED}+=	contrib/ofed
 
 # Local directories are last, since it is nice to at least get the base
 # system rebuilt before you do them.
