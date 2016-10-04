@@ -135,6 +135,21 @@ SYSCTL_INT(_kern_elf32, OID_AUTO, read_exec, CTLFLAG_RW, &i386_read_exec, 0,
 #endif
 #endif
 
+static int __elfN(aslr_enabled) = 1;
+SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
+    aslr_enabled, CTLFLAG_RWTUN, &__elfN(aslr_enabled), 0,
+    __XSTRING(__CONCAT(ELF, __ELF_WORD_SIZE)) ": enable aslr");
+
+static int __elfN(pie_aslr_enabled) = 1;
+SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
+    pie_aslr_enabled, CTLFLAG_RWTUN, &__elfN(pie_aslr_enabled), 0,
+    __XSTRING(__CONCAT(ELF, __ELF_WORD_SIZE)) ": enable aslr for PIE binaries");
+
+static int __elfN(aslr_care_sbrk) = 0;
+SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
+    aslr_care_sbrk, CTLFLAG_RW, &__elfN(aslr_care_sbrk), 0,
+    __XSTRING(__CONCAT(ELF, __ELF_WORD_SIZE)) ": assume sbrk is used");
+
 static Elf_Brandinfo *elf_brand_list[MAX_BRANDS];
 
 #define	trunc_page_ps(va, ps)	rounddown2(va, ps)
@@ -422,13 +437,14 @@ __elfN(map_partial)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 }
 
 static int
-__elfN(map_insert)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
-    vm_offset_t start, vm_offset_t end, vm_prot_t prot, int cow)
+__elfN(map_insert)(struct image_params *imgp, vm_map_t map, vm_object_t object,
+    vm_ooffset_t offset, vm_offset_t start, vm_offset_t end, vm_prot_t prot,
+    int cow)
 {
 	struct sf_buf *sf;
 	vm_offset_t off;
 	vm_size_t sz;
-	int error, rv;
+	int error, locked, rv;
 
 	if (start != trunc_page(start)) {
 		rv = __elfN(map_partial)(map, object, offset, start,
@@ -451,9 +467,10 @@ __elfN(map_insert)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 			 * The mapping is not page aligned. This means we have
 			 * to copy the data. Sigh.
 			 */
-			rv = vm_map_find(map, NULL, 0, &start, end - start, 0,
-			    VMFS_NO_SPACE, prot | VM_PROT_WRITE, VM_PROT_ALL,
-			    0);
+			vm_map_lock(map);
+			rv = vm_map_insert(map, NULL, 0, start, end,
+			    prot | VM_PROT_WRITE, VM_PROT_ALL, 0);
+			vm_map_unlock(map);
 			if (rv != KERN_SUCCESS)
 				return (rv);
 			if (object == NULL)
@@ -480,8 +497,12 @@ __elfN(map_insert)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 			rv = vm_map_insert(map, object, offset, start, end,
 			    prot, VM_PROT_ALL, cow);
 			vm_map_unlock(map);
-			if (rv != KERN_SUCCESS)
+			if (rv != KERN_SUCCESS) {
+				locked = VOP_ISLOCKED(imgp->vp);
+				VOP_UNLOCK(imgp->vp, 0);
 				vm_object_deallocate(object);
+				vn_lock(imgp->vp, locked | LK_RETRY);
+			}
 		}
 		return (rv);
 	} else {
@@ -538,7 +559,7 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		cow = MAP_COPY_ON_WRITE | MAP_PREFAULT |
 		    (prot & VM_PROT_WRITE ? 0 : MAP_DISABLE_COREDUMP);
 
-		rv = __elfN(map_insert)(map,
+		rv = __elfN(map_insert)(imgp, map,
 				      object,
 				      file_addr,	/* file offset */
 				      map_addr,		/* virtual start */
@@ -568,8 +589,8 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 
 	/* This had damn well better be true! */
 	if (map_len != 0) {
-		rv = __elfN(map_insert)(map, NULL, 0, map_addr, map_addr +
-		    map_len, VM_PROT_ALL, 0);
+		rv = __elfN(map_insert)(imgp, map, NULL, 0, map_addr,
+		    map_addr + map_len, VM_PROT_ALL, 0);
 		if (rv != KERN_SUCCESS) {
 			return (EINVAL);
 		}
@@ -744,6 +765,24 @@ fail:
 	return (error);
 }
 
+static u_long
+__CONCAT(rnd_, __elfN(base))(u_long base, u_long minv, u_long maxv,
+    u_int align)
+{
+	u_long rbase, res;
+
+	arc4rand(&rbase, sizeof(rbase), 0);
+	res = base + rbase % (maxv - minv);
+	res &= ~((u_long)align - 1);
+	KASSERT(res >= base,
+	    ("res %#lx < base %#lx, minv %#lx maxv %#lx rbase %#lx",
+	    res, base, minv, maxv, rbase));
+	KASSERT(res < maxv,
+	    ("res %#lx > maxv %#lx, minv %#lx base %#lx rbase %#lx",
+	    res, maxv, minv, base, rbase));
+	return (res);
+}
+
 static int
 __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 {
@@ -752,6 +791,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	const Elf_Phdr *phdr;
 	Elf_Auxargs *elf_auxargs;
 	struct vmspace *vmspace;
+	vm_map_t map;
 	const char *err_str, *newinterp;
 	char *interp, *interp_buf, *path;
 	Elf_Brandinfo *brand_info;
@@ -759,6 +799,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	vm_prot_t prot;
 	u_long text_size, data_size, total_size, text_addr, data_addr;
 	u_long seg_size, seg_addr, addr, baddr, et_dyn_addr, entry, proghdr;
+	u_long maxalign, mapsz, maxv;
 	int32_t osrel;
 	int error, i, n, interp_name_len, have_interp;
 
@@ -800,12 +841,17 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	err_str = newinterp = NULL;
 	interp = interp_buf = NULL;
 	td = curthread;
+	maxalign = PAGE_SIZE;
+	mapsz = 0;
 
 	for (i = 0; i < hdr->e_phnum; i++) {
 		switch (phdr[i].p_type) {
 		case PT_LOAD:
 			if (n == 0)
 				baddr = phdr[i].p_vaddr;
+			if (phdr[i].p_align > maxalign)
+				maxalign = phdr[i].p_align;
+			mapsz += phdr[i].p_memsz;
 			n++;
 			break;
 		case PT_INTERP:
@@ -859,6 +905,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		error = ENOEXEC;
 		goto ret;
 	}
+	sv = brand_info->sysvec;
+	et_dyn_addr = 0;
 	if (hdr->e_type == ET_DYN) {
 		if ((brand_info->flags & BI_CAN_EXEC_DYN) == 0) {
 			uprintf("Cannot execute shared object\n");
@@ -869,13 +917,17 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		 * Honour the base load address from the dso if it is
 		 * non-zero for some reason.
 		 */
-		if (baddr == 0)
-			et_dyn_addr = ET_DYN_LOAD_ADDR;
-		else
-			et_dyn_addr = 0;
-	} else
-		et_dyn_addr = 0;
-	sv = brand_info->sysvec;
+		if (baddr == 0) {
+			if ((sv->sv_flags & SV_ASLR) == 0)
+				et_dyn_addr = ET_DYN_LOAD_ADDR;
+			else if ((__elfN(pie_aslr_enabled) &&
+			    (imgp->proc->p_flag2 & P2_ASLR_DISABLE) == 0) ||
+			    (imgp->proc->p_flag2 & P2_ASLR_ENABLE) != 0)
+				et_dyn_addr = 1;
+			else
+				et_dyn_addr = ET_DYN_LOAD_ADDR;
+		}
+	}
 	if (interp != NULL && brand_info->interp_newpath != NULL)
 		newinterp = brand_info->interp_newpath;
 
@@ -894,6 +946,49 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	error = exec_new_vmspace(imgp, sv);
 	imgp->proc->p_sysent = sv;
+	vmspace = imgp->proc->p_vmspace;
+	map = &vmspace->vm_map;
+
+	/*
+	 * Decide to enable randomization of user mappings.  First,
+	 * reset user preferences for the setid binaries.  Then,
+	 * account for the support of the randomization by the ABI, by
+	 * user preferences, and make special treatment for PIE
+	 * binaries.
+	 */
+	if (imgp->credential_setid) {
+		PROC_LOCK(imgp->proc);
+		imgp->proc->p_flag2 &= ~(P2_ASLR_ENABLE | P2_ASLR_DISABLE);
+		PROC_UNLOCK(imgp->proc);
+	}
+	if ((sv->sv_flags & SV_ASLR) == 0 ||
+	    (imgp->proc->p_flag2 & P2_ASLR_DISABLE) != 0) {
+		KASSERT(et_dyn_addr != 1, ("et_dyn_addr == 1 and !ASLR"));
+	} else if ((imgp->proc->p_flag2 & P2_ASLR_ENABLE) != 0 ||
+	    (__elfN(aslr_enabled) && hdr->e_type == ET_EXEC) ||
+	    et_dyn_addr == 1) {
+		vm_map_lock(map);
+		map->flags |= MAP_ASLR;
+		/*
+		 * If user does not care about sbrk, utilize the bss
+		 * grow region for mappings as well.  We can select
+		 * the base for the image anywere and still not suffer
+		 * from the fragmentation.
+		 */
+		if (!__elfN(aslr_care_sbrk) ||
+		    (imgp->proc->p_flag2 & P2_ASLR_IGNSTART) != 0)
+			map->flags |= MAP_ASLR_IGNSTART;
+		vm_map_unlock(map);
+	}
+	maxv = vm_map_max(map) - lim_max(td, RLIMIT_STACK);
+	if (et_dyn_addr == 1) {
+		KASSERT((map->flags & MAP_ASLR) != 0,
+		    ("et_dyn_addr but !MAP_ASLR"));
+		et_dyn_addr = __CONCAT(rnd_, __elfN(base))(vm_map_min(map),
+		    vm_map_min(map) + mapsz + lim_max(td, RLIMIT_DATA),
+		    /* reserve half of the address space to interpreter */
+		    maxv / 2, 1UL << flsl(maxalign));
+	}
 
 	vn_lock(imgp->vp, LK_EXCLUSIVE | LK_RETRY);
 	if (error != 0)
@@ -986,7 +1081,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		goto ret;
 	}
 
-	vmspace = imgp->proc->p_vmspace;
 	vmspace->vm_tsize = text_size >> PAGE_SHIFT;
 	vmspace->vm_taddr = (caddr_t)(uintptr_t)text_addr;
 	vmspace->vm_dsize = data_size >> PAGE_SHIFT;
@@ -1007,6 +1101,11 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	if (interp != NULL) {
 		have_interp = FALSE;
 		VOP_UNLOCK(imgp->vp, 0);
+		if ((map->flags & MAP_ASLR) != 0) {
+			addr = __CONCAT(rnd_, __elfN(base))(addr, addr,
+			    /* Assume that interpeter fits into 1/4 of AS */
+			    (maxv + addr) / 2, PAGE_SIZE);
+		}
 		if (brand_info->emul_path != NULL &&
 		    brand_info->emul_path[0] != '\0') {
 			path = malloc(MAXPATHLEN, M_TEMP, M_WAITOK);

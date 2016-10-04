@@ -42,6 +42,7 @@ enum {
 	MODE_INVALID,
 	MODE_TRACE,
 	MODE_TRAPCAP,
+	MODE_ASLR,
 };
 
 static pid_t
@@ -62,7 +63,7 @@ static void __dead2
 usage(void)
 {
 
-	fprintf(stderr, "Usage: proccontrol -m (trace|trapcap) [-q] "
+	fprintf(stderr, "Usage: proccontrol -m (trace|trapcap|aslr) [-q] "
 	    "[-s (enable|disable)] [-p pid | command]\n");
 	exit(1);
 }
@@ -85,6 +86,8 @@ main(int argc, char *argv[])
 				mode = MODE_TRACE;
 			else if (strcmp(optarg, "trapcap") == 0)
 				mode = MODE_TRAPCAP;
+			else if (strcmp(optarg, "aslr") == 0)
+				mode = MODE_ASLR;
 			else
 				usage();
 			break;
@@ -127,6 +130,9 @@ main(int argc, char *argv[])
 		case MODE_TRAPCAP:
 			error = procctl(P_PID, pid, PROC_TRAPCAP_STATUS, &arg);
 			break;
+		case MODE_ASLR:
+			error = procctl(P_PID, pid, PROC_ASLR_STATUS, &arg);
+			break;
 		default:
 			usage();
 			break;
@@ -152,6 +158,23 @@ main(int argc, char *argv[])
 				break;
 			}
 			break;
+		case MODE_ASLR:
+			switch (arg & ~PROC_ASLR_ACTIVE) {
+			case PROC_ASLR_FORCE_ENABLE:
+				printf("force enabled");
+				break;
+			case PROC_ASLR_FORCE_DISABLE:
+				printf("force disabled");
+				break;
+			case PROC_ASLR_NOFORCE:
+				printf("not forced");
+				break;
+			}
+			if ((arg & PROC_ASLR_ACTIVE) != 0)
+				printf(", active\n");
+			else
+				printf(", not active\n");
+			break;
 		}
 	} else {
 		switch (mode) {
@@ -164,6 +187,11 @@ main(int argc, char *argv[])
 			arg = enable ? PROC_TRAPCAP_CTL_ENABLE :
 			    PROC_TRAPCAP_CTL_DISABLE;
 			error = procctl(P_PID, pid, PROC_TRAPCAP_CTL, &arg);
+			break;
+		case MODE_ASLR:
+			arg = enable ? PROC_ASLR_FORCE_ENABLE :
+			    PROC_ASLR_FORCE_DISABLE;
+			error = procctl(P_PID, pid, PROC_ASLR_CTL, &arg);
 			break;
 		default:
 			usage();
