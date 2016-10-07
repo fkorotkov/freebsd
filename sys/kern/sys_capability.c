@@ -136,14 +136,16 @@ int
 sys_cap_enter(struct thread *td, struct cap_enter_args *uap)
 {
 
-	return (ENOSYS);
+	return (0);
 }
 
 int
 sys_cap_getmode(struct thread *td, struct cap_getmode_args *uap)
 {
+	u_int i;
 
-	return (ENOSYS);
+	i = 0;
+	return (copyout(&i, uap->modep, sizeof(i)));
 }
 
 #endif /* CAPABILITY_MODE */
@@ -628,7 +630,7 @@ int
 sys_cap_rights_limit(struct thread *td, struct cap_rights_limit_args *uap)
 {
 
-	return (ENOSYS);
+	return (0);
 }
 
 int
@@ -642,7 +644,7 @@ int
 sys_cap_ioctls_limit(struct thread *td, struct cap_ioctls_limit_args *uap)
 {
 
-	return (ENOSYS);
+	return (0);
 }
 
 int
@@ -656,7 +658,7 @@ int
 sys_cap_fcntls_limit(struct thread *td, struct cap_fcntls_limit_args *uap)
 {
 
-	return (ENOSYS);
+	return (0);
 }
 
 int
