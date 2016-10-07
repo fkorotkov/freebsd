@@ -1306,8 +1306,8 @@ nfsv4_loadattr(struct nfsrv_descript *nd, vnode_t vp,
 			NFSM_DISSECT(tl, u_int32_t *, NFSX_UNSIGNED);
 			if (compare) {
 				if (!(*retcmpp)) {
-				    if (nap->na_type != nfsv34tov_type(*tl))
-					*retcmpp = NFSERR_NOTSAME;
+					if (nap->na_type != nfsv34tov_type(*tl))
+						*retcmpp = NFSERR_NOTSAME;
 				}
 			} else if (nap != NULL) {
 				nap->na_type = nfsv34tov_type(*tl);
