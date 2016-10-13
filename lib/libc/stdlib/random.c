@@ -283,10 +283,10 @@ srandomdev(void)
 	mib[1] = KERN_ARND;
 	if (sysctl(mib, 2, state, &len, NULL, 0) == -1 || len != expected) {
 		/*
-		 * The sysctl cannot fail. If it does fail on some FreeBSD
+		 * The sysctl cannot fail.  If it does fail on some FreeBSD
 		 * derivative or after some future change, just abort so that
-		 * the problem will be found and fixed. abort is not normally
-		 * suitable for a library but makes sense here.
+		 * the problem will be found and fixed.  This is not normally
+		 * suitable in a library but makes sense here.
 		 */
 		abort();
 	}
