@@ -39,7 +39,7 @@ __FBSDID("$FreeBSD$");
 #include <sys/systm.h>
 #include <sys/bus.h>
 #include <sys/cpuset.h>
-#ifdef GPROF 
+#ifdef GPROF
 #include <sys/gmon.h>
 #endif
 #include <sys/kernel.h>

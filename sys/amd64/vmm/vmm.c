@@ -266,7 +266,7 @@ vcpu_cleanup(struct vm *vm, int i, bool destroy)
 
 	VLAPIC_CLEANUP(vm->cookie, vcpu->vlapic);
 	if (destroy) {
-		vmm_stat_free(vcpu->stats);	
+		vmm_stat_free(vcpu->stats);
 		fpu_save_area_free(vcpu->guestfpu);
 	}
 }
@@ -278,7 +278,7 @@ vcpu_init(struct vm *vm, int vcpu_id, bool create)
 
 	KASSERT(vcpu_id >= 0 && vcpu_id < VM_MAXCPU,
 	    ("vcpu_init: invalid vcpu %d", vcpu_id));
-	  
+
 	vcpu = &vm->vcpu[vcpu_id];
 
 	if (create) {
@@ -344,7 +344,7 @@ vmm_init(void)
 	error = vmm_mem_init();
 	if (error)
 		return (error);
-	
+
 	if (vmm_is_intel())
 		ops = &vmm_ops_intel;
 	else if (vmm_is_amd())
@@ -1052,7 +1052,7 @@ is_descriptor_table(int reg)
 static boolean_t
 is_segment_register(int reg)
 {
-	
+
 	switch (reg) {
 	case VM_REG_GUEST_ES:
 	case VM_REG_GUEST_CS:
@@ -2255,7 +2255,7 @@ vmm_is_pptdev(int bus, int slot, int func)
 				found = 1;
 				break;
 			}
-		
+
 			if (cp2 != NULL)
 				*cp2++ = ' ';
 
@@ -2651,7 +2651,7 @@ vm_copyin(struct vm *vm, int vcpuid, struct vm_copyinfo *copyinfo, void *kaddr,
 {
 	char *dst;
 	int idx;
-	
+
 	dst = kaddr;
 	idx = 0;
 	while (len > 0) {
@@ -2693,7 +2693,7 @@ vm_get_rescnt(struct vm *vm, int vcpu, struct vmm_stat_type *stat)
 	if (vcpu == 0) {
 		vmm_stat_set(vm, vcpu, VMM_MEM_RESIDENT,
 	       	    PAGE_SIZE * vmspace_resident_count(vm->vmspace));
-	}	
+	}
 }
 
 static void
@@ -2703,7 +2703,7 @@ vm_get_wiredcnt(struct vm *vm, int vcpu, struct vmm_stat_type *stat)
 	if (vcpu == 0) {
 		vmm_stat_set(vm, vcpu, VMM_MEM_WIRED,
 	      	    PAGE_SIZE * pmap_wired_count(vmspace_pmap(vm->vmspace)));
-	}	
+	}
 }
 
 VMM_STAT_FUNC(VMM_MEM_RESIDENT, "Resident memory", vm_get_rescnt);

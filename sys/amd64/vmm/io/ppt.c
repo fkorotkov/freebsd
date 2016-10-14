@@ -249,7 +249,7 @@ ppt_teardown_msi(struct pptdev *ppt)
 
 		if (res != NULL)
 			bus_release_resource(ppt->dev, SYS_RES_IRQ, rid, res);
-		
+
 		ppt->msi.res[i] = NULL;
 		ppt->msi.cookie[i] = NULL;
 	}
@@ -260,7 +260,7 @@ ppt_teardown_msi(struct pptdev *ppt)
 	ppt->msi.num_msgs = 0;
 }
 
-static void 
+static void
 ppt_teardown_msix_intr(struct pptdev *ppt, int idx)
 {
 	int rid;
@@ -271,29 +271,29 @@ ppt_teardown_msix_intr(struct pptdev *ppt, int idx)
 	res = ppt->msix.res[idx];
 	cookie = ppt->msix.cookie[idx];
 
-	if (cookie != NULL) 
+	if (cookie != NULL)
 		bus_teardown_intr(ppt->dev, res, cookie);
 
-	if (res != NULL) 
+	if (res != NULL)
 		bus_release_resource(ppt->dev, SYS_RES_IRQ, rid, res);
 
 	ppt->msix.res[idx] = NULL;
 	ppt->msix.cookie[idx] = NULL;
 }
 
-static void 
+static void
 ppt_teardown_msix(struct pptdev *ppt)
 {
 	int i;
 
-	if (ppt->msix.num_msgs == 0) 
+	if (ppt->msix.num_msgs == 0)
 		return;
 
-	for (i = 0; i < ppt->msix.num_msgs; i++) 
+	for (i = 0; i < ppt->msix.num_msgs; i++)
 		ppt_teardown_msix_intr(ppt, i);
 
 	if (ppt->msix.msix_table_res) {
-		bus_release_resource(ppt->dev, SYS_RES_MEMORY, 
+		bus_release_resource(ppt->dev, SYS_RES_MEMORY,
 				     ppt->msix.msix_table_rid,
 				     ppt->msix.msix_table_res);
 		ppt->msix.msix_table_res = NULL;
@@ -481,7 +481,7 @@ pptintr(void *arg)
 {
 	struct pptdev *ppt;
 	struct pptintr_arg *pptarg;
-	
+
 	pptarg = arg;
 	ppt = pptarg->pptdev;
 
@@ -559,7 +559,7 @@ ppt_setup_msi(struct vm *vm, int vcpu, int bus, int slot, int func,
 			/* success */
 		}
 	}
-	
+
 	ppt->msi.startrid = startrid;
 
 	/*
@@ -586,7 +586,7 @@ ppt_setup_msi(struct vm *vm, int vcpu, int bus, int slot, int func,
 		if (error != 0)
 			break;
 	}
-	
+
 	if (i < numvec) {
 		ppt_teardown_msi(ppt);
 		return (ENXIO);
@@ -611,10 +611,10 @@ ppt_setup_msix(struct vm *vm, int vcpu, int bus, int slot, int func,
 		return (EBUSY);
 
 	dinfo = device_get_ivars(ppt->dev);
-	if (!dinfo) 
+	if (!dinfo)
 		return (ENXIO);
 
-	/* 
+	/*
 	 * First-time configuration:
 	 * 	Allocate the MSI-X table
 	 *	Allocate the IRQ resources
@@ -666,17 +666,17 @@ ppt_setup_msix(struct vm *vm, int vcpu, int bus, int slot, int func,
 							    &rid, RF_ACTIVE);
 		if (ppt->msix.res[idx] == NULL)
 			return (ENXIO);
-	
+
 		ppt->msix.arg[idx].pptdev = ppt;
 		ppt->msix.arg[idx].addr = addr;
 		ppt->msix.arg[idx].msg_data = msg;
-	
+
 		/* Setup the MSI-X interrupt */
 		error = bus_setup_intr(ppt->dev, ppt->msix.res[idx],
 				       INTR_TYPE_NET | INTR_MPSAFE,
 				       pptintr, NULL, &ppt->msix.arg[idx],
 				       &ppt->msix.cookie[idx]);
-	
+
 		if (error != 0) {
 			bus_teardown_intr(ppt->dev, ppt->msix.res[idx], ppt->msix.cookie[idx]);
 			bus_release_resource(ppt->dev, SYS_RES_IRQ, rid, ppt->msix.res[idx]);

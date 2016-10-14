@@ -71,8 +71,8 @@ static int mcfg_enable = 1;
 SYSCTL_INT(_hw_pci, OID_AUTO, mcfg, CTLFLAG_RDTUN, &mcfg_enable, 0,
     "Enable support for PCI-e memory mapped config access");
 
-/* 
- * Initialise access to PCI configuration space 
+/*
+ * Initialise access to PCI configuration space
  */
 int
 pci_cfgregopen(void)
@@ -127,7 +127,7 @@ pci_docfgregread(int bus, int slot, int func, int reg, int bytes)
 		return (pcireg_cfgread(bus, slot, func, reg, bytes));
 }
 
-/* 
+/*
  * Read configuration space register
  */
 u_int32_t
@@ -155,8 +155,8 @@ pci_cfgregread(int bus, int slot, int func, int reg, int bytes)
 	return (pci_docfgregread(bus, slot, func, reg, bytes));
 }
 
-/* 
- * Write configuration space register 
+/*
+ * Write configuration space register
  */
 void
 pci_cfgregwrite(int bus, int slot, int func, int reg, u_int32_t data, int bytes)
@@ -173,7 +173,7 @@ pci_cfgregwrite(int bus, int slot, int func, int reg, u_int32_t data, int bytes)
 		pcireg_cfgwrite(bus, slot, func, reg, data, bytes);
 }
 
-/* 
+/*
  * Configuration space access using direct register operations
  */
 
@@ -186,7 +186,7 @@ pci_cfgenable(unsigned bus, unsigned slot, unsigned func, int reg, int bytes)
 	if (bus <= PCI_BUSMAX && slot <= PCI_SLOTMAX && func <= PCI_FUNCMAX &&
 	    (unsigned)reg <= PCI_REGMAX && bytes != 3 &&
 	    (unsigned)bytes <= 4 && (reg & (bytes - 1)) == 0) {
-		outl(CONF1_ADDR_PORT, (1U << 31) | (bus << 16) | (slot << 11) 
+		outl(CONF1_ADDR_PORT, (1U << 31) | (bus << 16) | (slot << 11)
 		    | (func << 8) | (reg & ~0x03));
 		dataport = CONF1_DATA_PORT + (reg & 0x03);
 	}

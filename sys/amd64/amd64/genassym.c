@@ -233,7 +233,7 @@ ASSYM(PC_PTI_STACK, offsetof(struct pcpu, pc_pti_stack));
 ASSYM(PC_PTI_STACK_SZ, PC_PTI_STACK_SZ);
 ASSYM(PC_PTI_RSP0, offsetof(struct pcpu, pc_pti_rsp0));
 ASSYM(PC_IBPB_SET, offsetof(struct pcpu, pc_ibpb_set));
- 
+
 ASSYM(LA_EOI, LAPIC_EOI * LAPIC_MEM_MUL);
 ASSYM(LA_ISR, LAPIC_ISR0 * LAPIC_MEM_MUL);
 

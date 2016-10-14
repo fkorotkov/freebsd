@@ -275,7 +275,7 @@ int
 freebsd32_setcontext(struct thread *td, struct freebsd32_setcontext_args *uap)
 {
 	struct ia32_ucontext uc;
-	int ret;	
+	int ret;
 
 	if (uap->ucp == NULL)
 		ret = EINVAL;
@@ -296,7 +296,7 @@ int
 freebsd32_swapcontext(struct thread *td, struct freebsd32_swapcontext_args *uap)
 {
 	struct ia32_ucontext uc;
-	int ret;	
+	int ret;
 
 	if (uap->oucp == NULL || uap->ucp == NULL)
 		ret = EINVAL;

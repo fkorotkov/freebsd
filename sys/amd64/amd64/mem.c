@@ -186,14 +186,14 @@ memmmap(struct cdev *dev, vm_ooffset_t offset, vm_paddr_t *paddr,
  * and mem_range_attr_set.
  */
 /* ARGSUSED */
-int 
+int
 memioctl(struct cdev *dev __unused, u_long cmd, caddr_t data, int flags,
     struct thread *td)
 {
 	int nd, error = 0;
 	struct mem_range_op *mo = (struct mem_range_op *)data;
 	struct mem_range_desc *md;
-	
+
 	/* is this for us? */
 	if ((cmd != MEMRANGE_GET) &&
 	    (cmd != MEMRANGE_SET))
@@ -216,7 +216,7 @@ memioctl(struct cdev *dev __unused, u_long cmd, caddr_t data, int flags,
 				       M_MEMDESC, M_WAITOK);
 			error = mem_range_attr_get(md, &nd);
 			if (!error)
-				error = copyout(md, mo->mo_desc, 
+				error = copyout(md, mo->mo_desc,
 					nd * sizeof(struct mem_range_desc));
 			free(md, M_MEMDESC);
 		}
@@ -224,7 +224,7 @@ memioctl(struct cdev *dev __unused, u_long cmd, caddr_t data, int flags,
 			nd = mem_range_softc.mr_ndesc;
 		mo->mo_arg[0] = nd;
 		break;
-		
+
 	case MEMRANGE_SET:
 		md = (struct mem_range_desc *)malloc(sizeof(struct mem_range_desc),
 						    M_MEMDESC, M_WAITOK);

@@ -283,7 +283,7 @@ enum {
 	IOCNUM_PPTDEV_MSIX = 44,
 
 	/* statistics */
-	IOCNUM_VM_STATS = 50, 
+	IOCNUM_VM_STATS = 50,
 	IOCNUM_VM_STAT_DESC = 51,
 
 	/* kernel device state */

@@ -392,7 +392,7 @@ END(savectx)
 /*
  * resumectx(pcb)
  * Resuming processor state from pcb.
- */     
+ */
 ENTRY(resumectx)
 	/* Switch to KPML4phys. */
 	movq	KPML4phys,%rax
