@@ -9,7 +9,7 @@ PACKAGE=	lld
 PROG_CXX=	ld.lld
 MAN=
 .if ${MK_LLD_AS_LD} != "no"
-SYMLINKS=	${PROG_CXX} ${BINDIR}/ld
+SYMLINKS=	/tank/emaste/src/llvm/build-debug/bin/lld ${BINDIR}/ld
 .endif
 
 CFLAGS+=	-I${LLD_SRCS}/include
