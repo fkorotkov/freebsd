@@ -90,9 +90,6 @@ CWARNFLAGS.clang+=	-Wno-parentheses
 .if defined(NO_WARRAY_BOUNDS)
 CWARNFLAGS.clang+=	-Wno-array-bounds
 .endif # NO_WARRAY_BOUNDS
-.if ${MK_REPRODUCIBLE_BUILD} != no
-CWARNFLAGS.clang+=	-Wdate-time
-.endif # MK_REPRODUCIBLE_BUILD
 .endif # WARNS
 
 .if defined(FORMAT_AUDIT)
