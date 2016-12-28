@@ -1717,11 +1717,12 @@ _pkgbootstrap: .PHONY
 packages: .PHONY
 	${_+_}${MAKE} -C ${.CURDIR} PKG_VERSION=${PKG_VERSION} real-packages
 
+PKG_ENV=	SRCDIR=${.CURDIR} PORTSDIR=${PORTSDIR} REVISION=${_REVISION} \
+		PKG_CMD=${PKG_CMD} PKG_VERSION=${PKG_VERSION} \
+		REPODIR=${REPODIR} WSTAGEDIR=${WSTAGEDIR}
 package-pkg: .PHONY
 	rm -rf /tmp/ports.${TARGET} || :
-	env ${WMAKEENV:Q} SRCDIR=${.CURDIR} PORTSDIR=${PORTSDIR} REVISION=${_REVISION} \
-		PKG_CMD=${PKG_CMD} PKG_VERSION=${PKG_VERSION} REPODIR=${REPODIR} \
-		WSTAGEDIR=${WSTAGEDIR} \
+	env ${WMAKEENV:Q} ${PKG_ENV} \
 		sh ${.CURDIR}/release/scripts/make-pkg-package.sh
 
 real-packages:	stage-packages create-packages sign-packages .PHONY
