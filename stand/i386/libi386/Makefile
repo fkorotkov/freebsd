@@ -52,6 +52,3 @@ CFLAGS+= ${FORMAT_EXTENSIONS}
 
 .include <bsd.lib.mk>
 
-# XXX: clang integrated-as doesn't grok .codeNN directives yet
-CFLAGS.amd64_tramp.S=	${CLANG_NO_IAS}
-CFLAGS.multiboot_tramp.S=	${CLANG_NO_IAS}
