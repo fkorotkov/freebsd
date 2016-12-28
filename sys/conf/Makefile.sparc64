@@ -31,7 +31,6 @@ S=	../../..
 .include "$S/conf/kern.pre.mk"
 
 MDOBJS=	exception.o interrupt.o
-
 %BEFORE_DEPEND
 
 %OBJS
