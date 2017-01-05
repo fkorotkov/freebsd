@@ -31,9 +31,9 @@ License Agreement applies to this software.
 #include <stdlib.h>
 #include "opie.h"
 
-static UINT4 extract __P((char *s, int start, int length));
-static VOIDRET insert __P((char *s, int x, int start, int length));
-static int wsrch __P((char *w, int low, int high));
+static UINT4 extract (char *s, int start, int length);
+static VOIDRET insert (char *s, int x, int start, int length);
+static int wsrch (char *w, int low, int high);
 
 /* Dictionary for integer-word translations */
 static char Wp[2048][4] =
