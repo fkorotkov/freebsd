@@ -83,9 +83,9 @@ __FBSDID("$FreeBSD$");
 #define CP_UNLOCK(_bd)		mtx_unlock (&(_bd)->cp_mtx)
 #define CP_LOCK_ASSERT(_bd)	mtx_assert (&(_bd)->cp_mtx, MA_OWNED)
 
-static	int cp_probe		__P((device_t));
-static	int cp_attach		__P((device_t));
-static	int cp_detach		__P((device_t));
+static	int cp_probe(device_t);
+static	int cp_attach(device_t);
+static	int cp_detach(device_t);
 
 static	device_method_t cp_methods[] = {
 	/* Device interface */

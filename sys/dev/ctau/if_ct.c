@@ -84,10 +84,10 @@ __FBSDID("$FreeBSD$");
 #define CT_UNLOCK(_bd)		mtx_unlock (&(_bd)->ct_mtx)
 #define CT_LOCK_ASSERT(_bd)	mtx_assert (&(_bd)->ct_mtx, MA_OWNED)
 
-static void ct_identify		__P((driver_t *, device_t));
-static int ct_probe		__P((device_t));
-static int ct_attach		__P((device_t));
-static int ct_detach		__P((device_t));
+static void ct_identify(driver_t *, device_t);
+static int ct_probe(device_t);
+static int ct_attach(device_t);
+static int ct_detach(device_t);
 
 static device_method_t ct_isa_methods [] = {
 	DEVMETHOD(device_identify,	ct_identify),

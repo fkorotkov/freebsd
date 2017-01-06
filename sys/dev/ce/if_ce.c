@@ -131,9 +131,9 @@ __FBSDID("$FreeBSD$");
 
 #define CDEV_MAJOR	185
 
-static	int ce_probe		__P((device_t));
-static	int ce_attach		__P((device_t));
-static	int ce_detach		__P((device_t));
+static	int ce_probe(device_t);
+static	int ce_attach(device_t);
+static	int ce_detach(device_t);
 
 static	device_method_t ce_methods[] = {
 	/* Device interface */

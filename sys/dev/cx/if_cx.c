@@ -101,10 +101,10 @@ typedef struct _async_q {
 #define AQ_POP(q,c)	{c = *((q)->buf + (q)->beg);\
 			(q)->beg = ((q)->beg + 1)%BF_SZ;}
 
-static void cx_identify		__P((driver_t *, device_t));
-static int cx_probe		__P((device_t));
-static int cx_attach		__P((device_t));
-static int cx_detach		__P((device_t));
+static void cx_identif(driver_t *, device_t);
+static int cx_probe(device_t);
+static int cx_attach(device_t);
+static int cx_detach(device_t);
 static t_open_t			cx_topen;
 static t_modem_t		cx_tmodem;
 static t_close_t		cx_tclose;
