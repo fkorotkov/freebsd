@@ -35,11 +35,11 @@
 extern char	**search_dirs;
 extern int	n_search_dirs;
 
-void	add_search_dir __P((const char *));
-void	add_search_path __P((char *));
-void	std_search_path __P((void));
-int	getdewey __P((int[], char *));
-int	cmpndewey __P((int[], int, int[], int));
-char	*findshlib __P((char *, int *, int *, int));
-char	*find_lib_file __P((const char *));
-char	*search_lib_dir __P((char *, char *, int *, int *, int));
+void	add_search_dir(const char *);
+void	add_search_path(char *);
+void	std_search_path(void);
+int	getdewey(int[], char *);
+int	cmpndewey(int[], int, int[], int);
+char	*findshlib(char *, int *, int *, int);
+char	*find_lib_file(const char *);
+char	*search_lib_dir(char *, char *, int *, int *, int);

@@ -32,6 +32,6 @@
  * prototypes for support.c.  Big deal.
  */
 
-void	*xmalloc __P((size_t));
-void	*xrealloc __P((void *, size_t));
-char	*concat __P((const char *, const char *, const char *));
+void	*xmalloc(size_t);
+void	*xrealloc(void *, size_t);
+char	*concat(const char *, const char *, const char *);
