@@ -118,14 +118,14 @@ struct sm_file
 	int		f_ival;
 
 	/* operations */
-	int		(*f_close) __P((SM_FILE_T *));
-	ssize_t		(*f_read)  __P((SM_FILE_T *, char *, size_t));
-	off_t		(*f_seek)  __P((SM_FILE_T *, off_t, int));
-	ssize_t		(*f_write) __P((SM_FILE_T *, const char *, size_t));
-	int		(*f_open) __P((SM_FILE_T *, const void *, int,
-					const void *));
-	int		(*f_setinfo) __P((SM_FILE_T *, int , void *));
-	int		(*f_getinfo) __P((SM_FILE_T *, int , void *));
+	int		(*f_close) (SM_FILE_T *);
+	ssize_t		(*f_read)  (SM_FILE_T *, char *, size_t);
+	off_t		(*f_seek)  (SM_FILE_T *, off_t, int);
+	ssize_t		(*f_write) (SM_FILE_T *, const char *, size_t);
+	int		(*f_open) (SM_FILE_T *, const void *, int,
+					const void *);
+	int		(*f_setinfo) (SM_FILE_T *, int , void *);
+	int		(*f_getinfo) (SM_FILE_T *, int , void *);
 	int		f_timeout;
 	int		f_timeoutstate;   /* either blocking or non-blocking */
 	char		*f_type;	/* for by-type lookups */
@@ -262,76 +262,76 @@ __END_DECLS
 
 /* Functions defined in ANSI C standard.  */
 __BEGIN_DECLS
-SM_FILE_T *sm_io_autoflush __P((SM_FILE_T *, SM_FILE_T *));
-void	 sm_io_automode __P((SM_FILE_T *, SM_FILE_T *));
-void	 sm_io_clearerr __P((SM_FILE_T *));
-int	 sm_io_close __P((SM_FILE_T *, int SM_NONVOLATILE));
-SM_FILE_T *sm_io_dup __P((SM_FILE_T *));
-int	 sm_io_eof __P((SM_FILE_T *));
-int	 sm_io_error __P((SM_FILE_T *));
-int	 sm_io_fgets __P((SM_FILE_T *, int, char *, int));
-int	 sm_io_flush __P((SM_FILE_T *, int SM_NONVOLATILE));
+SM_FILE_T *sm_io_autoflush (SM_FILE_T *, SM_FILE_T *);
+void	 sm_io_automode (SM_FILE_T *, SM_FILE_T *);
+void	 sm_io_clearerr (SM_FILE_T *);
+int	 sm_io_close (SM_FILE_T *, int SM_NONVOLATILE);
+SM_FILE_T *sm_io_dup (SM_FILE_T *);
+int	 sm_io_eof (SM_FILE_T *);
+int	 sm_io_error (SM_FILE_T *);
+int	 sm_io_fgets (SM_FILE_T *, int, char *, int);
+int	 sm_io_flush (SM_FILE_T *, int SM_NONVOLATILE);
 
 int PRINTFLIKE(3, 4)
-sm_io_fprintf __P((SM_FILE_T *, int, const char *, ...));
+sm_io_fprintf (SM_FILE_T *, int, const char *, ...);
 
-int	 sm_io_fputs __P((SM_FILE_T *, int, const char *));
+int	 sm_io_fputs (SM_FILE_T *, int, const char *);
 
 int SCANFLIKE(3, 4)
-sm_io_fscanf __P((SM_FILE_T *, int, const char *, ...));
+sm_io_fscanf (SM_FILE_T *, int, const char *, ...);
 
-int	 sm_io_getc __P((SM_FILE_T *, int));
-int	 sm_io_getinfo __P((SM_FILE_T *, int, void *));
-SM_FILE_T *sm_io_open __P((const SM_FILE_T *, int SM_NONVOLATILE, const void *,
-			   int, const void *));
-int	 sm_io_purge __P((SM_FILE_T *));
-int	 sm_io_putc __P((SM_FILE_T *, int, int));
-size_t	 sm_io_read __P((SM_FILE_T *, int, void *, size_t));
-SM_FILE_T *sm_io_reopen __P((const SM_FILE_T *, int SM_NONVOLATILE,
-			     const void *, int, const void *, SM_FILE_T *));
-void	 sm_io_rewind __P((SM_FILE_T *, int));
-int	 sm_io_seek __P((SM_FILE_T *, int SM_NONVOLATILE, long SM_NONVOLATILE,
-			 int SM_NONVOLATILE));
-int	 sm_io_setinfo __P((SM_FILE_T *, int, void *));
-int	 sm_io_setvbuf __P((SM_FILE_T *, int, char *, int, size_t));
+int	 sm_io_getc (SM_FILE_T *, int);
+int	 sm_io_getinfo (SM_FILE_T *, int, void *);
+SM_FILE_T *sm_io_open (const SM_FILE_T *, int SM_NONVOLATILE, const void *,
+			   int, const void *);
+int	 sm_io_purge (SM_FILE_T *);
+int	 sm_io_putc (SM_FILE_T *, int, int);
+size_t	 sm_io_read (SM_FILE_T *, int, void *, size_t);
+SM_FILE_T *sm_io_reopen (const SM_FILE_T *, int SM_NONVOLATILE,
+			     const void *, int, const void *, SM_FILE_T *);
+void	 sm_io_rewind (SM_FILE_T *, int);
+int	 sm_io_seek (SM_FILE_T *, int SM_NONVOLATILE, long SM_NONVOLATILE,
+			 int SM_NONVOLATILE);
+int	 sm_io_setinfo (SM_FILE_T *, int, void *);
+int	 sm_io_setvbuf (SM_FILE_T *, int, char *, int, size_t);
 
 int SCANFLIKE(2, 3)
-sm_io_sscanf __P((const char *, char const *, ...));
+sm_io_sscanf (const char *, char const *, ...);
 
-long	 sm_io_tell __P((SM_FILE_T *, int SM_NONVOLATILE));
-int	 sm_io_ungetc __P((SM_FILE_T *, int, int));
-int	 sm_io_vfprintf __P((SM_FILE_T *, int, const char *, va_list));
-size_t	 sm_io_write __P((SM_FILE_T *, int, const void *, size_t));
+long	 sm_io_tell (SM_FILE_T *, int SM_NONVOLATILE);
+int	 sm_io_ungetc (SM_FILE_T *, int, int);
+int	 sm_io_vfprintf (SM_FILE_T *, int, const char *, va_list);
+size_t	 sm_io_write (SM_FILE_T *, int, const void *, size_t);
 
-void	 sm_strio_init __P((SM_FILE_T *, char *, size_t));
+void	 sm_strio_init (SM_FILE_T *, char *, size_t);
 
 extern SM_FILE_T *
-sm_io_fopen __P((
+sm_io_fopen (
 	char *_pathname,
 	int _flags,
-	...));
+	...);
 
 extern SM_FILE_T *
-sm_io_stdioopen __P((
+sm_io_stdioopen (
 	FILE *_stream,
-	char *_mode));
+	char *_mode);
 
 extern int
-sm_vasprintf __P((
+sm_vasprintf (
 	char **_str,
 	const char *_fmt,
-	va_list _ap));
+	va_list _ap);
 
 extern int
-sm_vsnprintf __P((
+sm_vsnprintf (
 	char *,
 	size_t,
 	const char *,
-	va_list));
+	va_list);
 
 extern void
-sm_perror __P((
-	const char *));
+sm_perror (
+	const char *);
 
 __END_DECLS
 
@@ -340,10 +340,10 @@ __END_DECLS
 */
 
 __BEGIN_DECLS
-int	sm_rget __P((SM_FILE_T *, int));
-int	sm_vfscanf __P((SM_FILE_T *, int SM_NONVOLATILE, const char *,
-			va_list SM_NONVOLATILE));
-int	sm_wbuf __P((SM_FILE_T *, int, int));
+int	sm_rget (SM_FILE_T *, int);
+int	sm_vfscanf (SM_FILE_T *, int SM_NONVOLATILE, const char *,
+			va_list SM_NONVOLATILE);
+int	sm_wbuf (SM_FILE_T *, int, int);
 __END_DECLS
 
 /*
