@@ -108,7 +108,7 @@ extern int	mcount_lock;
 
 #ifdef GUPROF
 struct gmonparam;
-void	stopguprof __P((struct gmonparam *p));
+void	stopguprof(struct gmonparam *p);
 #else
 #define	stopguprof(p)
 #endif /* GUPROF */
