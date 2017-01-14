@@ -43,7 +43,7 @@ CFLAGS+=	-fPIC
 .else
 CFLAGS+=	-fpic
 .endif
-CFLAGS+=	-DPIC $(DEBUG)
+CFLAGS+=	-DPIC -DDEBUG
 .if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 CFLAGS+=	-fvisibility=hidden
 .endif
