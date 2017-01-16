@@ -295,6 +295,29 @@ is 8 bytes on all supported architectures except i386.
 .Fx 11.0 ,
 armv6 used the softfp ABI even though it supported only processors
 with a floating point unit.
+.Ss Relocation Type
+.Bl -column -offset indent "Sy Architecture" "Sy Relocation Type"
+.It Sy Architecture Ta Sy Relocation Type
+.It amd64       Ta rela
+.It arm         Ta
+.It armeb       Ta
+.It armv6       Ta
+.It arm64       Ta rela
+.It i386        Ta rel
+.It mips        Ta
+.It mipsel      Ta
+.It mipselhf    Ta
+.It mipshf      Ta
+.It mipsn32     Ta
+.It mips64      Ta
+.It mips64el    Ta
+.It mips64elhf  Ta
+.It mips64hf    Ta
+.It powerpc     Ta
+.It powerpc64   Ta
+.It riscv       Ta
+.It sparc64     Ta
+.El
 .Ss Predefined Macros
 The compiler provides a number of predefined macros.
 Some of these provide architecture-specific details and are explained below.
