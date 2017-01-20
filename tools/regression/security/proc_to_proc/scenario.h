@@ -28,7 +28,7 @@
 #ifndef _SCENARIO_H
 #define _SCENARIO_H
 
-int	setugid __P((int flag));
-int	enact_scenarios __P((void));
+int	setugid(int flag);
+int	enact_scenarios(void);
 
 #endif /* !_SCENARIO_H */
