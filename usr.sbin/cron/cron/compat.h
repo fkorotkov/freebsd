@@ -19,15 +19,6 @@
  * $FreeBSD$
  */
 
-#ifndef __P
-# ifdef __STDC__
-#  define __P(x) x
-# else
-#  define __P(x) ()
-#  define const
-# endif
-#endif
-
 #if defined(UNIXPC) || defined(unixpc)
 # define UNIXPC 1
 # define ATT 1
