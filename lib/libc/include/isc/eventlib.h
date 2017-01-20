@@ -33,15 +33,6 @@
 
 #include <isc/platform.h>
 
-#ifndef __P
-# define __EVENTLIB_P_DEFINED
-# ifdef __STDC__
-#  define __P(x) x
-# else
-#  define __P(x) ()
-# endif
-#endif
-
 /* In the absence of branded types... */
 typedef struct { void *opaque; } evConnID;
 typedef struct { void *opaque; } evFileID;
@@ -54,13 +45,13 @@ typedef struct { void *opaque; } evEvent;
 #define	evInitID(id) ((id)->opaque = NULL)
 #define	evTestID(id) ((id).opaque != NULL)
 
-typedef void (*evConnFunc)__P((evContext, void *, int, const void *, int,
-			       const void *, int));
-typedef void (*evFileFunc)__P((evContext, void *, int, int));
-typedef	void (*evStreamFunc)__P((evContext, void *, int, int));
-typedef void (*evTimerFunc)__P((evContext, void *,
-				struct timespec, struct timespec));
-typedef	void (*evWaitFunc)__P((evContext, void *, const void *));
+typedef void(*evConnFunc)(evContext, void *, int, const void *, int,
+			  const void *, int);
+typedef void(*evFileFunc)(evContext, void *, int, int);
+typedef	void(*evStreamFunc)(evContext, void *, int, int);
+typedef void(*evTimerFunc)(evContext, void *, struct timespec,
+			   struct timespec);
+typedef	void(*evWaitFunc)(evContext, void *, const void *);
 
 typedef	struct { unsigned char mask[256/8]; } evByteMask;
 #define	EV_BYTEMASK_BYTE(b) ((b) / 8)
@@ -94,16 +85,16 @@ typedef	struct { unsigned char mask[256/8]; } evByteMask;
 #define evGetOption	__evGetOption
 #define evSetOption	__evSetOption
 
-int  evCreate __P((evContext *));
-void evSetDebug __P((evContext, int, FILE *));
-int  evDestroy __P((evContext));
-int  evGetNext __P((evContext, evEvent *, int));
-int  evDispatch __P((evContext, evEvent));
-void evDrop __P((evContext, evEvent));
-int  evMainLoop __P((evContext));
-int  evHighestFD __P((evContext));
-int  evGetOption __P((evContext *, const char *, int *));
-int  evSetOption __P((evContext *, const char *, int));
+int  evCreate(evContext *);
+void evSetDebug(evContext, int, FILE *);
+int  evDestroy(evContext);
+int  evGetNext(evContext, evEvent *, int);
+int  evDispatch(evContext, evEvent);
+void evDrop(evContext, evEvent);
+int  evMainLoop(evContext);
+int  evHighestFD(evContext);
+int  evGetOption(evContext *, const char *, int *);
+int  evSetOption(evContext *, const char *, int);
 
 /* ev_connects.c */
 #define evListen	__evListen
@@ -113,20 +104,20 @@ int  evSetOption __P((evContext *, const char *, int));
 #define evUnhold	__evUnhold
 #define evTryAccept	__evTryAccept
 
-int evListen __P((evContext, int, int, evConnFunc, void *, evConnID *));
-int evConnect __P((evContext, int, const void *, int,
-		   evConnFunc, void *, evConnID *));
-int evCancelConn __P((evContext, evConnID));
-int evHold __P((evContext, evConnID));
-int evUnhold __P((evContext, evConnID));
-int evTryAccept __P((evContext, evConnID, int *));
+int evListen(evContext, int, int, evConnFunc, void *, evConnID *);
+int evConnect(evContext, int, const void *, int, evConnFunc, void *,
+	      evConnID *);
+int evCancelConn(evContext, evConnID);
+int evHold(evContext, evConnID);
+int evUnhold(evContext, evConnID);
+int evTryAccept(evContext, evConnID, int *);
 
 /* ev_files.c */
 #define evSelectFD	__evSelectFD
 #define evDeselectFD	__evDeselectFD
 
-int evSelectFD __P((evContext, int, int, evFileFunc, void *, evFileID *));
-int evDeselectFD __P((evContext, evFileID));
+int evSelectFD(evContext, int, int, evFileFunc, void *, evFileID *);
+int evDeselectFD(evContext, evFileID);
 
 /* ev_streams.c */
 #define evConsIovec	__evConsIovec
@@ -136,14 +127,14 @@ int evDeselectFD __P((evContext, evFileID));
 #define evUntimeRW	__evUntimeRW
 #define	evCancelRW	__evCancelRW
 
-struct iovec evConsIovec __P((void *, size_t));
-int evWrite __P((evContext, int, const struct iovec *, int,
-		 evStreamFunc func, void *, evStreamID *));
-int evRead __P((evContext, int, const struct iovec *, int,
-		evStreamFunc func, void *, evStreamID *));
-int evTimeRW __P((evContext, evStreamID, evTimerID timer));
-int evUntimeRW __P((evContext, evStreamID));
-int evCancelRW __P((evContext, evStreamID));
+struct iovec evConsIovec(void *, size_t);
+int evWrite(evContext, int, const struct iovec *, int, evStreamFunc func,
+	    void *, evStreamID *);
+int evRead(evContext, int, const struct iovec *, int, evStreamFunc func,
+	   void *, evStreamID *);
+int evTimeRW(evContext, evStreamID, evTimerID timer);
+int evUntimeRW(evContext, evStreamID);
+int evCancelRW(evContext, evStreamID);
 
 /* ev_timers.c */
 #define evConsTime	__evConsTime
@@ -165,28 +156,27 @@ int evCancelRW __P((evContext, evStreamID));
 #define evResetIdleTimer	__evResetIdleTimer
 #define evTouchIdleTimer	__evTouchIdleTimer
 
-struct timespec evConsTime __P((time_t sec, long nsec));
-struct timespec evAddTime __P((struct timespec, struct timespec));
-struct timespec evSubTime __P((struct timespec, struct timespec));
-struct timespec evNowTime __P((void));
-struct timespec evUTCTime __P((void));
-struct timespec evLastEventTime __P((evContext));
-struct timespec evTimeSpec __P((struct timeval));
-struct timeval evTimeVal __P((struct timespec));
-int evCmpTime __P((struct timespec, struct timespec));
-int evSetTimer __P((evContext, evTimerFunc, void *, struct timespec,
-		    struct timespec, evTimerID *));
-int evClearTimer __P((evContext, evTimerID));
-int evConfigTimer __P((evContext, evTimerID, const char *param,
-		      int value));
-int evResetTimer __P((evContext, evTimerID, evTimerFunc, void *,
-		      struct timespec, struct timespec));
-int evSetIdleTimer __P((evContext, evTimerFunc, void *, struct timespec,
-			evTimerID *));
-int evClearIdleTimer __P((evContext, evTimerID));
-int evResetIdleTimer __P((evContext, evTimerID, evTimerFunc, void *,
-			  struct timespec));
-int evTouchIdleTimer __P((evContext, evTimerID));
+struct timespec evConsTime(time_t sec, long nsec);
+struct timespec evAddTime(struct timespec, struct timespec);
+struct timespec evSubTime(struct timespec, struct timespec);
+struct timespec evNowTime(void);
+struct timespec evUTCTime(void);
+struct timespec evLastEventTime(evContext);
+struct timespec evTimeSpec(struct timeval);
+struct timeval evTimeVal(struct timespec);
+int evCmpTime(struct timespec, struct timespec);
+int evSetTimer(evContext, evTimerFunc, void *, struct timespec,
+	       struct timespec, evTimerID *);
+int evClearTimer(evContext, evTimerID);
+int evConfigTimer(evContext, evTimerID, const char *param, int value);
+int evResetTimer(evContext, evTimerID, evTimerFunc, void *, struct timespec,
+		 struct timespec);
+int evSetIdleTimer(evContext, evTimerFunc, void *, struct timespec,
+		   evTimerID *);
+int evClearIdleTimer(evContext, evTimerID);
+int evResetIdleTimer(evContext, evTimerID, evTimerFunc, void *,
+		     struct timespec);
+int evTouchIdleTimer(evContext, evTimerID);
 
 /* ev_waits.c */
 #define evWaitFor	__evWaitFor
@@ -194,14 +184,10 @@ int evTouchIdleTimer __P((evContext, evTimerID));
 #define evUnwait	__evUnwait
 #define evDefer		__evDefer
 
-int evWaitFor __P((evContext, const void *, evWaitFunc, void *, evWaitID *));
-int evDo __P((evContext, const void *));
-int evUnwait __P((evContext, evWaitID));
-int evDefer __P((evContext, evWaitFunc, void *));
-
-#ifdef __EVENTLIB_P_DEFINED
-# undef __P
-#endif
+int evWaitFor(evContext, const void *, evWaitFunc, void *, evWaitID *);
+int evDo(evContext, const void *);
+int evUnwait(evContext, evWaitID);
+int evDefer(evContext, evWaitFunc, void *);
 
 #endif /*_EVENTLIB_H*/
 
