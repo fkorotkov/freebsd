@@ -375,6 +375,12 @@ vfs_mergeopts(struct vfsoptlist *toopts, struct vfsoptlist *oldopts)
 
 /*
  * Mount a filesystem.
+ *
+ *	struct nmount_args {
+ *		struct iovec *iovp;
+ *		unsigned int iovcnt;
+ *		int flags;
+ *	};
  */
 #ifndef _SYS_SYSPROTO_H_
 struct nmount_args {
