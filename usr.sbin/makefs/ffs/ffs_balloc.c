@@ -90,8 +90,8 @@ ffs_balloc_ufs1(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 	int32_t *allocib;
 	const int needswap = UFS_FSNEEDSWAP(fs);
 
-	lbn = lblkno(fs, offset);
-	size = blkoff(fs, offset) + bufsize;
+	lbn = ffs_lblkno(fs, offset);
+	size = ffs_blkoff(fs, offset) + bufsize;
 	if (bpp != NULL) {
 		*bpp = NULL;
 	}
@@ -106,10 +106,10 @@ ffs_balloc_ufs1(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 	 * this fragment has to be extended to be a full block.
 	 */
 
-	lastlbn = lblkno(fs, ip->i_ffs1_size);
+	lastlbn = ffs_lblkno(fs, ip->i_ffs1_size);
 	if (lastlbn < UFS_NDADDR && lastlbn < lbn) {
 		nb = lastlbn;
-		osize = blksize(fs, ip, nb);
+		osize = ffs_blksize(fs, ip, nb);
 		if (osize < fs->fs_bsize && osize > 0) {
 			warnx("need to ffs_realloccg; not supported!");
 			abort();
@@ -122,7 +122,7 @@ ffs_balloc_ufs1(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 
 	if (lbn < UFS_NDADDR) {
 		nb = ufs_rw32(ip->i_ffs1_db[lbn], needswap);
-		if (nb != 0 && ip->i_ffs1_size >=
+		if (nb != 0 && ip->i_ffs1_size >= ffs_lblktosize(fs, lbn + 1)) {
 		    (uint64_t)lblktosize(fs, lbn + 1)) {
 
 			/*
@@ -148,8 +148,8 @@ ffs_balloc_ufs1(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 			 * Consider need to reallocate a fragment.
 			 */
 
-			osize = fragroundup(fs, blkoff(fs, ip->i_ffs1_size));
-			nsize = fragroundup(fs, size);
+			osize = ffs_fragroundup(fs, ffs_blkoff(fs, ip->i_ffs1_size));
+			nsize = ffs_fragroundup(fs, size);
 			if (nsize <= osize) {
 
 				/*
@@ -178,8 +178,8 @@ ffs_balloc_ufs1(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 			 * allocate a new block or fragment.
 			 */
 
-			if (ip->i_ffs1_size < (uint64_t)lblktosize(fs, lbn + 1))
-				nsize = fragroundup(fs, size);
+			if (ip->i_ffs1_size < ffs_lblktosize(fs, lbn + 1))
+				nsize = ffs_fragroundup(fs, size);
 			else
 				nsize = fs->fs_bsize;
 			error = ffs_alloc(ip, lbn,
@@ -341,8 +341,8 @@ ffs_balloc_ufs2(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 	int64_t *allocib;
 	const int needswap = UFS_FSNEEDSWAP(fs);
 
-	lbn = lblkno(fs, offset);
-	size = blkoff(fs, offset) + bufsize;
+	lbn = ffs_lblkno(fs, offset);
+	size = ffs_blkoff(fs, offset) + bufsize;
 	if (bpp != NULL) {
 		*bpp = NULL;
 	}
@@ -357,10 +357,10 @@ ffs_balloc_ufs2(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 	 * this fragment has to be extended to be a full block.
 	 */
 
-	lastlbn = lblkno(fs, ip->i_ffs2_size);
+	lastlbn = ffs_lblkno(fs, ip->i_ffs2_size);
 	if (lastlbn < UFS_NDADDR && lastlbn < lbn) {
 		nb = lastlbn;
-		osize = blksize(fs, ip, nb);
+		osize = ffs_blksize(fs, ip, nb);
 		if (osize < fs->fs_bsize && osize > 0) {
 			warnx("need to ffs_realloccg; not supported!");
 			abort();
@@ -373,7 +373,7 @@ ffs_balloc_ufs2(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 
 	if (lbn < UFS_NDADDR) {
 		nb = ufs_rw64(ip->i_ffs2_db[lbn], needswap);
-		if (nb != 0 && ip->i_ffs2_size >=
+		if (nb != 0 && ip->i_ffs2_size >= ffs_lblktosize(fs, lbn + 1)) {
 		    (uint64_t)lblktosize(fs, lbn + 1)) {
 
 			/*
@@ -399,8 +399,8 @@ ffs_balloc_ufs2(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 			 * Consider need to reallocate a fragment.
 			 */
 
-			osize = fragroundup(fs, blkoff(fs, ip->i_ffs2_size));
-			nsize = fragroundup(fs, size);
+			osize = ffs_fragroundup(fs, ffs_blkoff(fs, ip->i_ffs2_size));
+			nsize = ffs_fragroundup(fs, size);
 			if (nsize <= osize) {
 
 				/*
@@ -429,8 +429,8 @@ ffs_balloc_ufs2(struct inode *ip, off_t offset, int bufsize, struct buf **bpp)
 			 * allocate a new block or fragment.
 			 */
 
-			if (ip->i_ffs2_size < (uint64_t)lblktosize(fs, lbn + 1))
-				nsize = fragroundup(fs, size);
+			if (ip->i_ffs2_size < ffs_lblktosize(fs, lbn + 1))
+				nsize = ffs_fragroundup(fs, size);
 			else
 				nsize = fs->fs_bsize;
 			error = ffs_alloc(ip, lbn,
