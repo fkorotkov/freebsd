@@ -246,6 +246,7 @@ ffs_hashalloc(struct inode *ip, u_int cg, daddr_t pref, int size,
 	struct fs *fs;
 	daddr_t result;
 	u_int i, icg = cg;
+	int icg = cg;
 
 	fs = ip->i_fs;
 	/*
