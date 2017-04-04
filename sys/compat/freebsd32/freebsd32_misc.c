@@ -3205,6 +3205,7 @@ freebsd32_procctl(struct thread *td, struct freebsd32_procctl_args *uap)
 	int error, error1, flags;
 
 	switch (uap->com) {
+	case PROC_ASLR_CTL:
 	case PROC_SPROTECT:
 	case PROC_TRACE_CTL:
 	case PROC_TRAPCAP_CTL:
@@ -3236,6 +3237,7 @@ freebsd32_procctl(struct thread *td, struct freebsd32_procctl_args *uap)
 			return (error);
 		data = &x.rk;
 		break;
+	case PROC_ASLR_STATUS:
 	case PROC_TRACE_STATUS:
 	case PROC_TRAPCAP_STATUS:
 		data = &flags;
@@ -3255,6 +3257,7 @@ freebsd32_procctl(struct thread *td, struct freebsd32_procctl_args *uap)
 		if (error == 0)
 			error = error1;
 		break;
+	case PROC_ASLR_STATUS:
 	case PROC_TRACE_STATUS:
 	case PROC_TRAPCAP_STATUS:
 		if (error == 0)
