@@ -247,9 +247,9 @@ BROKEN_OPTIONS+=TESTS   # "undefined reference to `_Unwind_Resume'"
 BROKEN_OPTIONS+=CXX     # "libcxxrt.so: undefined reference to `_Unwind_Resume_or_Rethrow'"
 .endif
 .if ${__T} == "aarch64"
-__DEFAULT_YES_OPTIONS+=LLD_IS_LD
+__DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .else
-__DEFAULT_NO_OPTIONS+=LLD_IS_LD
+__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .endif
 .if ${__T} == "aarch64" || ${__T} == "amd64"
 __DEFAULT_YES_OPTIONS+=LLDB
