@@ -1099,6 +1099,7 @@ exec_new_vmspace(struct image_params *imgp, struct sysentvec *sv)
 		vmspace = p->p_vmspace;
 		map = &vmspace->vm_map;
 	}
+	map->flags |= imgp->map_flags;
 
 	/* Map a shared page */
 	obj = sv->sv_shared_page_obj;
