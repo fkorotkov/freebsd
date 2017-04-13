@@ -62,6 +62,7 @@ __DEFAULT_YES_OPTIONS = \
     BOOTPARAMD \
     BOOTPD \
     BSD_CPIO \
+    BSD_GREP \
     BSD_GREP_FASTMATCH \
     BSDINSTALL \
     BSNMP \
@@ -97,9 +98,6 @@ __DEFAULT_YES_OPTIONS = \
     FTP \
     GAMES \
     GCOV \
-    GDB \
-    GNU_DIFF \
-    GNU_GREP \
     GPIO \
     HAST \
     HTML \
@@ -146,6 +144,7 @@ __DEFAULT_YES_OPTIONS = \
     RADIUS_SUPPORT \
     RCMDS \
     RBOOTD \
+    REPRODUCIBLE_BUILD \
     RESCUE \
     ROUTED \
     SENDMAIL \
@@ -158,7 +157,6 @@ __DEFAULT_YES_OPTIONS = \
     SYSCONS \
     SYSTEM_COMPILER \
     TALK \
-    TCP_WRAPPERS \
     TCSH \
     TELNET \
     TESTS \
@@ -176,20 +174,23 @@ __DEFAULT_YES_OPTIONS = \
     ZONEINFO
 
 __DEFAULT_NO_OPTIONS = \
-    BSD_GREP \
     CLANG_EXTRAS \
     DTRACE_TESTS \
+    GDB \
+    GNU_DIFF \
+    GNU_GREP \
     GNU_GREP_COMPAT \
+    GROFF \
     HESIOD \
     LIBSOFT \
     NAND \
     OFED \
     OPENLDAP \
-    REPRODUCIBLE_BUILD \
     RPCBIND_WARMSTART_SUPPORT \
     SHARED_TOOLCHAIN \
     SORT_THREADS \
     SVN \
+    TCP_WRAPPERS \
 
 
 #
@@ -248,7 +249,7 @@ __DEFAULT_YES_OPTIONS+=LLVM_LIBUNWIND
 .else
 __DEFAULT_NO_OPTIONS+=LLVM_LIBUNWIND
 .endif
-.if ${__T} == "aarch64"
+.if ${__T} == "aarch64" || ${__T} == "amd64"
 __DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .else
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
