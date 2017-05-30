@@ -533,6 +533,9 @@ OLD_FILES+=usr/lib/libifc.a
 OLD_FILES+=usr/lib/libifc_p.a
 OLD_FILES+=usr/lib/libifconfig.a
 OLD_FILES+=usr/lib/libifconfig_p.a
+# 20170530: objdump disconnected
+OLD_FILES+=usr/bin/objdump
+OLD_FILES+=usr/share/man/man1/objdump.1.gz
 # 20170529: mount.conf(8) -> mount.conf(5)
 OLD_FILES+=usr/share/man/man8/mount.conf.8.gz
 # 20170525: remove misleading template
