@@ -38,6 +38,10 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 2017xxxx: objdump disconnected
+OLD_FILES+=usr/bin/objdump
+OLD_FILES+=usr/share/man/man1/objdump.1.gz
+
 # 20170610: chown-f_test replaced by chown_test
 OLD_FILES+=usr/tests/usr.sbin/chown/chown-f_test
 # 20170609: drop obsolete manpage link (if_rtwn.ko -> rtwn.ko)
