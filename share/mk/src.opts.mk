@@ -235,8 +235,9 @@ __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC LLD
 __DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
 .endif
-# In-tree binutils/gcc are older versions without modern architecture support.
-.if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
+# XXX for testing mark the GNU toolchain as broken. Leave it enabled for amd64
+# for now to provide as, needed for sys/crypto/skein/amd64/skein_block_asm.s
+.if ${__T} != "amd64" && ${__T} != "i386"
 BROKEN_OPTIONS+=BINUTILS BINUTILS_BOOTSTRAP GCC GCC_BOOTSTRAP GDB
 .endif
 .if ${__T:Mriscv*} != ""
