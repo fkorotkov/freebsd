@@ -514,11 +514,13 @@ RetryFault:;
 	result = vm_map_lookup(&fs.map, vaddr, fault_type, &fs.entry,
 	    &fs.first_object, &fs.first_pindex, &prot, &wired);
 	if (result != KERN_SUCCESS) {
-		if (growstack && result == KERN_INVALID_ADDRESS &&
+		if (growstack && result == KERN_PROTECTION_FAILURE &&
 		    map != kernel_map) {
 			result = vm_map_growstack(curproc, vaddr);
-			if (result != KERN_SUCCESS)
+			if (result != KERN_SUCCESS) {
+				unlock_vp(&fs);
 				return (KERN_FAILURE);
+			}
 			growstack = false;
 			goto RetryFault;
 		}
@@ -545,6 +547,12 @@ RetryFault:;
 		} else
 			vm_map_unlock(fs.map);
 		goto RetryFault;
+	}
+
+	if ((fs.entry->eflags & MAP_ENTRY_HOLE) != 0) {
+		unlock_vp(&fs);
+		vm_map_unlock_read(fs.map);
+		return (KERN_FAILURE);
 	}
 
 	if (wired)

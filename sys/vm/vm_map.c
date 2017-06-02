@@ -1212,6 +1212,10 @@ vm_map_insert(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 	if (prev_entry->next != &map->header && prev_entry->next->start < end)
 		return (KERN_NO_SPACE);
 
+	if ((cow & MAP_CREATE_HOLE) != 0 && ((cow & MAP_INHERIT_SHARE) != 0 ||
+	    object != NULL))
+		return (KERN_INVALID_ARGUMENT);
+
 	protoeflags = 0;
 	if (cow & MAP_COPY_ON_WRITE)
 		protoeflags |= MAP_ENTRY_COW | MAP_ENTRY_NEEDS_COPY;
@@ -1227,13 +1231,19 @@ vm_map_insert(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 		protoeflags |= MAP_ENTRY_GROWS_UP;
 	if (cow & MAP_VN_WRITECOUNT)
 		protoeflags |= MAP_ENTRY_VN_WRITECNT;
+	if ((cow & MAP_CREATE_HOLE) != 0)
+		protoeflags |= MAP_ENTRY_HOLE;
+	if ((cow & MAP_CREATE_STACK_GAP_DN) != 0)
+		protoeflags |= MAP_ENTRY_STACK_GAP_DN;
+	if ((cow & MAP_CREATE_STACK_GAP_UP) != 0)
+		protoeflags |= MAP_ENTRY_STACK_GAP_UP;
 	if (cow & MAP_INHERIT_SHARE)
 		inheritance = VM_INHERIT_SHARE;
 	else
 		inheritance = VM_INHERIT_DEFAULT;
 
 	cred = NULL;
-	if (cow & (MAP_ACC_NO_CHARGE | MAP_NOFAULT))
+	if ((cow & (MAP_ACC_NO_CHARGE | MAP_NOFAULT | MAP_CREATE_HOLE)) != 0)
 		goto charged;
 	if ((cow & MAP_ACC_CHARGED) || ((prot & VM_PROT_WRITE) &&
 	    ((protoeflags & MAP_ENTRY_NEEDS_COPY) || object == NULL))) {
@@ -1282,7 +1292,8 @@ charged:
 		if (prev_entry->inheritance == inheritance &&
 		    prev_entry->protection == prot &&
 		    prev_entry->max_protection == max) {
-			map->size += end - prev_entry->end;
+			if ((prev_entry->eflags & MAP_ENTRY_HOLE) == 0)
+				map->size += end - prev_entry->end;
 			prev_entry->end = end;
 			vm_map_entry_resize_free(map, prev_entry);
 			vm_map_simplify_entry(map, prev_entry);
@@ -1319,7 +1330,6 @@ charged:
 	new_entry->eflags = protoeflags;
 	new_entry->object.vm_object = object;
 	new_entry->offset = offset;
-	new_entry->avail_ssize = 0;
 
 	new_entry->inheritance = inheritance;
 	new_entry->protection = prot;
@@ -1337,7 +1347,8 @@ charged:
 	 * Insert the new entry into the list
 	 */
 	vm_map_entry_link(map, prev_entry, new_entry);
-	map->size += new_entry->end - new_entry->start;
+	if ((new_entry->eflags & MAP_ENTRY_HOLE) == 0)
+		map->size += new_entry->end - new_entry->start;
 
 	/*
 	 * Try to coalesce the new entry with both the previous and next
@@ -1672,7 +1683,8 @@ _vm_map_clip_start(vm_map_t map, vm_map_entry_t entry, vm_offset_t start)
 	 * map.  This is a bit of a hack, but is also about the best place to
 	 * put this improvement.
 	 */
-	if (entry->object.vm_object == NULL && !map->system_map) {
+	if (entry->object.vm_object == NULL && !map->system_map &&
+	    (entry->eflags & MAP_ENTRY_HOLE) == 0) {
 		vm_object_t object;
 		object = vm_object_allocate(OBJT_DEFAULT,
 				atop(entry->end - entry->start));
@@ -1706,7 +1718,7 @@ _vm_map_clip_start(vm_map_t map, vm_map_entry_t entry, vm_offset_t start)
 
 	vm_map_entry_link(map, entry->prev, new_entry);
 
-	if ((entry->eflags & MAP_ENTRY_IS_SUB_MAP) == 0) {
+	if ((entry->eflags & (MAP_ENTRY_HOLE | MAP_ENTRY_IS_SUB_MAP)) == 0) {
 		vm_object_reference(new_entry->object.vm_object);
 		/*
 		 * The object->un_pager.vnp.writemappings for the
@@ -1751,7 +1763,8 @@ _vm_map_clip_end(vm_map_t map, vm_map_entry_t entry, vm_offset_t end)
 	 * map.  This is a bit of a hack, but is also about the best place to
 	 * put this improvement.
 	 */
-	if (entry->object.vm_object == NULL && !map->system_map) {
+	if (entry->object.vm_object == NULL && !map->system_map &&
+	    (entry->eflags & MAP_ENTRY_HOLE) == 0) {
 		vm_object_t object;
 		object = vm_object_allocate(OBJT_DEFAULT,
 				atop(entry->end - entry->start));
@@ -1787,7 +1800,7 @@ _vm_map_clip_end(vm_map_t map, vm_map_entry_t entry, vm_offset_t end)
 
 	vm_map_entry_link(map, entry, new_entry);
 
-	if ((entry->eflags & MAP_ENTRY_IS_SUB_MAP) == 0) {
+	if ((entry->eflags & (MAP_ENTRY_HOLE | MAP_ENTRY_IS_SUB_MAP)) == 0) {
 		vm_object_reference(new_entry->object.vm_object);
 	}
 }
@@ -1990,7 +2003,8 @@ vm_map_protect(vm_map_t map, vm_offset_t start, vm_offset_t end,
 			vm_map_unlock(map);
 			return (KERN_INVALID_ARGUMENT);
 		}
-		if ((new_prot & current->max_protection) != new_prot) {
+		if ((current->eflags & MAP_ENTRY_HOLE) == 0 &&
+		    (new_prot & current->max_protection) != new_prot) {
 			vm_map_unlock(map);
 			return (KERN_PROTECTION_FAILURE);
 		}
@@ -2008,7 +2022,8 @@ vm_map_protect(vm_map_t map, vm_offset_t start, vm_offset_t end,
 
 		if (set_max ||
 		    ((new_prot & ~(current->protection)) & VM_PROT_WRITE) == 0 ||
-		    ENTRY_CHARGED(current)) {
+		    ENTRY_CHARGED(current) ||
+		    (current->eflags & MAP_ENTRY_HOLE) != 0) {
 			continue;
 		}
 
@@ -2057,6 +2072,9 @@ vm_map_protect(vm_map_t map, vm_offset_t start, vm_offset_t end,
 	 */
 	for (current = entry; current != &map->header && current->start < end;
 	    current = current->next) {
+		if ((current->eflags & MAP_ENTRY_HOLE) != 0)
+			continue;
+
 		old_prot = current->protection;
 
 		if (set_max)
@@ -2310,7 +2328,9 @@ vm_map_inherit(vm_map_t map, vm_offset_t start, vm_offset_t end,
 		entry = temp_entry->next;
 	while ((entry != &map->header) && (entry->start < end)) {
 		vm_map_clip_end(map, entry, end);
-		entry->inheritance = new_inheritance;
+		if ((entry->eflags & MAP_ENTRY_HOLE) == 0 ||
+		    new_inheritance != VM_INHERIT_SHARE)
+			entry->inheritance = new_inheritance;
 		vm_map_simplify_entry(map, entry);
 		entry = entry->next;
 	}
@@ -2611,6 +2631,10 @@ vm_map_wire(vm_map_t map, vm_offset_t start, vm_offset_t end,
 		    ("owned map entry %p", entry));
 		entry->eflags |= MAP_ENTRY_IN_TRANSITION;
 		entry->wiring_thread = curthread;
+		if ((entry->eflags & MAP_ENTRY_HOLE) != 0) {
+			entry->eflags |= MAP_ENTRY_WIRE_SKIPPED;
+			goto next_entry;
+		}
 		if ((entry->protection & (VM_PROT_READ | VM_PROT_EXECUTE)) == 0
 		    || (entry->protection & prot) != prot) {
 			entry->eflags |= MAP_ENTRY_WIRE_SKIPPED;
@@ -2916,6 +2940,15 @@ vm_map_entry_delete(vm_map_t map, vm_map_entry_t entry)
 
 	vm_map_entry_unlink(map, entry);
 	object = entry->object.vm_object;
+
+	if ((entry->eflags & MAP_ENTRY_HOLE) != 0) {
+		MPASS(entry->cred == NULL);
+		MPASS((entry->eflags & MAP_ENTRY_IS_SUB_MAP) == 0);
+		MPASS(object == NULL);
+		vm_map_entry_deallocate(entry, FALSE);
+		return;
+	}
+
 	size = entry->end - entry->start;
 	map->size -= size;
 
@@ -3273,6 +3306,8 @@ vmspace_map_entry_forked(const struct vmspace *vm1, struct vmspace *vm2,
 	vm_size_t entrysize;
 	vm_offset_t newend;
 
+	if ((entry->eflags & MAP_ENTRY_HOLE) != 0)
+		return;
 	entrysize = entry->end - entry->start;
 	vm2->vm_map.size += entrysize;
 	if (entry->eflags & (MAP_ENTRY_GROWS_DOWN | MAP_ENTRY_GROWS_UP)) {
@@ -3464,7 +3499,6 @@ vmspace_fork(struct vmspace *vm1, vm_ooffset_t *fork_charge)
 
 			new_entry->start = old_entry->start;
 			new_entry->end = old_entry->end;
-			new_entry->avail_ssize = old_entry->avail_ssize;
 			new_entry->eflags = old_entry->eflags &
 			    ~(MAP_ENTRY_USER_WIRED | MAP_ENTRY_IN_TRANSITION |
 			    MAP_ENTRY_VN_WRITECNT);
@@ -3532,7 +3566,7 @@ vm_map_stack_locked(vm_map_t map, vm_offset_t addrbos, vm_size_t max_ssize,
     vm_size_t growsize, vm_prot_t prot, vm_prot_t max, int cow)
 {
 	vm_map_entry_t new_entry, prev_entry;
-	vm_offset_t bot, top;
+	vm_offset_t bot, top, gap_bot, gap_top;
 	vm_size_t init_ssize;
 	int orient, rv;
 
@@ -3540,10 +3574,11 @@ vm_map_stack_locked(vm_map_t map, vm_offset_t addrbos, vm_size_t max_ssize,
 	 * The stack orientation is piggybacked with the cow argument.
 	 * Extract it into orient and mask the cow argument so that we
 	 * don't pass it around further.
-	 * NOTE: We explicitly allow bi-directional stacks.
 	 */
-	orient = cow & (MAP_STACK_GROWS_DOWN|MAP_STACK_GROWS_UP);
+	orient = cow & (MAP_STACK_GROWS_DOWN | MAP_STACK_GROWS_UP);
 	KASSERT(orient != 0, ("No stack grow direction"));
+	KASSERT(orient != (MAP_STACK_GROWS_DOWN | MAP_STACK_GROWS_UP),
+	    ("bi-dir stack"));
 
 	if (addrbos < vm_map_min(map) ||
 	    addrbos > vm_map_max(map) ||
@@ -3579,30 +3614,35 @@ vm_map_stack_locked(vm_map_t map, vm_offset_t addrbos, vm_size_t max_ssize,
 	 * and cow to be 0.  Possibly we should eliminate these as input
 	 * parameters, and just pass these values here in the insert call.
 	 */
-	if (orient == MAP_STACK_GROWS_DOWN)
+	if (orient == MAP_STACK_GROWS_DOWN) {
 		bot = addrbos + max_ssize - init_ssize;
-	else if (orient == MAP_STACK_GROWS_UP)
+		top = bot + init_ssize;
+		gap_bot = addrbos;
+		gap_top = bot;
+	} else if (orient == MAP_STACK_GROWS_UP) {
 		bot = addrbos;
-	else
-		bot = round_page(addrbos + max_ssize/2 - init_ssize/2);
-	top = bot + init_ssize;
+		top = bot + init_ssize;
+		gap_bot = top;
+		gap_top = addrbos + max_ssize;
+	} else
+		panic("bi-dir stack");
 	rv = vm_map_insert(map, NULL, 0, bot, top, prot, max, cow);
-
-	/* Now set the avail_ssize amount. */
-	if (rv == KERN_SUCCESS) {
-		new_entry = prev_entry->next;
-		if (new_entry->end != top || new_entry->start != bot)
-			panic("Bad entry start/end for new stack entry");
-
-		new_entry->avail_ssize = max_ssize - init_ssize;
-		KASSERT((orient & MAP_STACK_GROWS_DOWN) == 0 ||
-		    (new_entry->eflags & MAP_ENTRY_GROWS_DOWN) != 0,
-		    ("new entry lacks MAP_ENTRY_GROWS_DOWN"));
-		KASSERT((orient & MAP_STACK_GROWS_UP) == 0 ||
-		    (new_entry->eflags & MAP_ENTRY_GROWS_UP) != 0,
-		    ("new entry lacks MAP_ENTRY_GROWS_UP"));
-	}
-
+	if (rv != KERN_SUCCESS)
+		return (rv);
+	new_entry = prev_entry->next;
+	KASSERT(new_entry->end == top || new_entry->start == bot,
+	    ("Bad entry start/end for new stack entry"));
+	KASSERT((orient & MAP_STACK_GROWS_DOWN) == 0 ||
+	    (new_entry->eflags & MAP_ENTRY_GROWS_DOWN) != 0,
+	    ("new entry lacks MAP_ENTRY_GROWS_DOWN"));
+	KASSERT((orient & MAP_STACK_GROWS_UP) == 0 ||
+	    (new_entry->eflags & MAP_ENTRY_GROWS_UP) != 0,
+	    ("new entry lacks MAP_ENTRY_GROWS_UP"));
+	rv = vm_map_insert(map, NULL, 0, gap_bot, gap_top, VM_PROT_NONE,
+	    VM_PROT_NONE, MAP_CREATE_HOLE | (orient == MAP_STACK_GROWS_DOWN ?
+	    MAP_CREATE_STACK_GAP_DN : MAP_CREATE_STACK_GAP_UP));
+	if (rv != KERN_SUCCESS)
+		(void) vm_map_delete(map, bot, top);
 	return (rv);
 }
 
@@ -3620,15 +3660,13 @@ SYSCTL_INT(_security_bsd, OID_AUTO, stack_guard_page, CTLFLAG_RWTUN,
 int
 vm_map_growstack(struct proc *p, vm_offset_t addr)
 {
-	vm_map_entry_t next_entry, prev_entry;
-	vm_map_entry_t new_entry, stack_entry;
-	struct vmspace *vm = p->p_vmspace;
-	vm_map_t map = &vm->vm_map;
-	vm_offset_t end;
-	vm_size_t growsize;
+	vm_map_entry_t gap_entry, stack_entry;
+	struct vmspace *vm;
+	vm_map_t map;
+	vm_offset_t grow_start, gap_start, gap_end;
 	size_t grow_amount, max_grow;
 	rlim_t lmemlim, stacklim, vmemlim;
-	int is_procstack, rv;
+	int is_procstack, rv, rv1;
 	struct ucred *cred;
 #ifdef notyet
 	uint64_t limit;
@@ -3636,6 +3674,10 @@ vm_map_growstack(struct proc *p, vm_offset_t addr)
 #ifdef RACCT
 	int error;
 #endif
+	bool gap_deleted, grow_down;
+
+	vm = p->p_vmspace;
+	map = &vm->vm_map;
 
 	lmemlim = lim_cur(curthread, RLIMIT_MEMLOCK);
 	stacklim = lim_cur(curthread, RLIMIT_STACK);
@@ -3644,96 +3686,54 @@ Retry:
 
 	vm_map_lock_read(map);
 
-	/* If addr is already in the entry range, no need to grow.*/
-	if (vm_map_lookup_entry(map, addr, &prev_entry)) {
+	/* If addr is not in a hole for a stack grow area, no need to grow. */
+	if (!vm_map_lookup_entry(map, addr, &gap_entry)) {
+		vm_map_unlock_read(map);
+		return (KERN_FAILURE);
+	}
+	if ((gap_entry->eflags & MAP_ENTRY_HOLE) == 0) {
 		vm_map_unlock_read(map);
 		return (KERN_SUCCESS);
 	}
-
-	next_entry = prev_entry->next;
-	if (!(prev_entry->eflags & MAP_ENTRY_GROWS_UP)) {
-		/*
-		 * This entry does not grow upwards. Since the address lies
-		 * beyond this entry, the next entry (if one exists) has to
-		 * be a downward growable entry. The entry list header is
-		 * never a growable entry, so it suffices to check the flags.
-		 */
-		if (!(next_entry->eflags & MAP_ENTRY_GROWS_DOWN)) {
+	if ((gap_entry->eflags & MAP_ENTRY_STACK_GAP_DN) != 0) {
+		stack_entry = gap_entry->next;
+		if ((stack_entry->eflags & MAP_ENTRY_GROWS_DOWN) == 0 ||
+		    stack_entry->start != gap_entry->end) {
 			vm_map_unlock_read(map);
-			return (KERN_SUCCESS);
+			return (KERN_FAILURE);
 		}
-		stack_entry = next_entry;
+		grow_amount = round_page(stack_entry->start - addr);
+		grow_down = true;
+	} else if ((gap_entry->eflags & MAP_ENTRY_STACK_GAP_UP) != 0) {
+		stack_entry = gap_entry->prev;
+		if ((stack_entry->eflags & MAP_ENTRY_GROWS_UP) == 0 ||
+		    stack_entry->end != gap_entry->start) {
+			vm_map_unlock_read(map);
+			return (KERN_FAILURE);
+		}
+		grow_amount = round_page(addr + 1 - stack_entry->end);
+		grow_down = false;
 	} else {
-		/*
-		 * This entry grows upward. If the next entry does not at
-		 * least grow downwards, this is the entry we need to grow.
-		 * otherwise we have two possible choices and we have to
-		 * select one.
-		 */
-		if (next_entry->eflags & MAP_ENTRY_GROWS_DOWN) {
-			/*
-			 * We have two choices; grow the entry closest to
-			 * the address to minimize the amount of growth.
-			 */
-			if (addr - prev_entry->end <= next_entry->start - addr)
-				stack_entry = prev_entry;
-			else
-				stack_entry = next_entry;
-		} else
-			stack_entry = prev_entry;
+		vm_map_unlock_read(map);
+		return (KERN_FAILURE);
 	}
-
-	if (stack_entry == next_entry) {
-		KASSERT(stack_entry->eflags & MAP_ENTRY_GROWS_DOWN, ("foo"));
-		KASSERT(addr < stack_entry->start, ("foo"));
-		end = (prev_entry != &map->header) ? prev_entry->end :
-		    stack_entry->start - stack_entry->avail_ssize;
-		grow_amount = roundup(stack_entry->start - addr, PAGE_SIZE);
-		max_grow = stack_entry->start - end;
-	} else {
-		KASSERT(stack_entry->eflags & MAP_ENTRY_GROWS_UP, ("foo"));
-		KASSERT(addr >= stack_entry->end, ("foo"));
-		end = (next_entry != &map->header) ? next_entry->start :
-		    stack_entry->end + stack_entry->avail_ssize;
-		grow_amount = roundup(addr + 1 - stack_entry->end, PAGE_SIZE);
-		max_grow = end - stack_entry->end;
-	}
-
-	if (grow_amount > stack_entry->avail_ssize) {
+	max_grow = gap_entry->end - gap_entry->start;
+	if (grow_amount + (stack_guard_page ? PAGE_SIZE : 0) > max_grow) {
 		vm_map_unlock_read(map);
 		return (KERN_NO_SPACE);
 	}
-
-	/*
-	 * If there is no longer enough space between the entries nogo, and
-	 * adjust the available space.  Note: this  should only happen if the
-	 * user has mapped into the stack area after the stack was created,
-	 * and is probably an error.
-	 *
-	 * This also effectively destroys any guard page the user might have
-	 * intended by limiting the stack size.
-	 */
-	if (grow_amount + (stack_guard_page ? PAGE_SIZE : 0) > max_grow) {
-		if (vm_map_lock_upgrade(map))
-			goto Retry;
-
-		stack_entry->avail_ssize = max_grow;
-
-		vm_map_unlock(map);
-		return (KERN_NO_SPACE);
-	}
-
-	is_procstack = (addr >= (vm_offset_t)vm->vm_maxsaddr &&
-	    addr < (vm_offset_t)p->p_sysent->sv_usrstack) ? 1 : 0;
 
 	/*
 	 * If this is the main process stack, see if we're over the stack
 	 * limit.
 	 */
+	is_procstack = (addr >= (vm_offset_t)vm->vm_maxsaddr &&
+	    addr < (vm_offset_t)p->p_sysent->sv_usrstack) ? 1 : 0;
 	if (is_procstack && (ctob(vm->vm_ssize) + grow_amount > stacklim)) {
 		vm_map_unlock_read(map);
 		return (KERN_NO_SPACE);
 	}
+
 #ifdef RACCT
 	if (racct_enable) {
 		PROC_LOCK(p);
@@ -3747,15 +3747,14 @@ Retry:
 	}
 #endif
 
-	/* Round up the grow amount modulo sgrowsiz */
-	growsize = sgrowsiz;
-	grow_amount = roundup(grow_amount, growsize);
-	if (grow_amount > stack_entry->avail_ssize)
-		grow_amount = stack_entry->avail_ssize;
+	grow_amount = roundup(grow_amount, sgrowsiz);
+	if (grow_amount > max_grow)
+		grow_amount = max_grow;
 	if (is_procstack && (ctob(vm->vm_ssize) + grow_amount > stacklim)) {
 		grow_amount = trunc_page((vm_size_t)stacklim) -
 		    ctob(vm->vm_ssize);
 	}
+
 #ifdef notyet
 	PROC_LOCK(p);
 	limit = racct_get_available(p, RACCT_STACK);
@@ -3763,7 +3762,8 @@ Retry:
 	if (is_procstack && (ctob(vm->vm_ssize) + grow_amount > limit))
 		grow_amount = limit - ctob(vm->vm_ssize);
 #endif
-	if (!old_mlock && map->flags & MAP_WIREFUTURE) {
+
+	if (!old_mlock && (map->flags & MAP_WIREFUTURE) != 0) {
 		if (ptoa(pmap_wired_count(map->pmap)) + grow_amount > lmemlim) {
 			vm_map_unlock_read(map);
 			rv = KERN_NO_SPACE;
@@ -3783,6 +3783,7 @@ Retry:
 		}
 #endif
 	}
+
 	/* If we would blow our VMEM resource limit, no go */
 	if (map->size + grow_amount > vmemlim) {
 		vm_map_unlock_read(map);
@@ -3805,59 +3806,35 @@ Retry:
 	if (vm_map_lock_upgrade(map))
 		goto Retry;
 
-	if (stack_entry == next_entry) {
-		/*
-		 * Growing downward.
-		 */
-		/* Get the preliminary new entry start value */
-		addr = stack_entry->start - grow_amount;
-
-		/*
-		 * If this puts us into the previous entry, cut back our
-		 * growth to the available space. Also, see the note above.
-		 */
-		if (addr < end) {
-			stack_entry->avail_ssize = max_grow;
-			addr = end;
-			if (stack_guard_page)
-				addr += PAGE_SIZE;
+	if (grow_down) {
+		grow_start = gap_entry->end - grow_amount;
+		if (gap_entry->start + grow_amount == gap_entry->end) {
+			gap_start = gap_entry->start;
+			gap_end = gap_entry->end;
+			vm_map_entry_delete(map, gap_entry);
+			gap_deleted = true;
+		} else {
+			gap_entry->end -= grow_amount;
+			vm_map_entry_resize_free(map, gap_entry);
+			gap_deleted = false;
 		}
-
-		rv = vm_map_insert(map, NULL, 0, addr, stack_entry->start,
-		    next_entry->protection, next_entry->max_protection,
+		rv = vm_map_insert(map, NULL, 0, grow_start,
+		    grow_start + grow_amount,
+		    stack_entry->protection, stack_entry->max_protection,
 		    MAP_STACK_GROWS_DOWN);
-
-		/* Adjust the available stack space by the amount we grew. */
-		if (rv == KERN_SUCCESS) {
-			new_entry = prev_entry->next;
-			KASSERT(new_entry == stack_entry->prev, ("foo"));
-			KASSERT(new_entry->end == stack_entry->start, ("foo"));
-			KASSERT(new_entry->start == addr, ("foo"));
-			KASSERT((new_entry->eflags & MAP_ENTRY_GROWS_DOWN) !=
-			    0, ("new entry lacks MAP_ENTRY_GROWS_DOWN"));
-			grow_amount = new_entry->end - new_entry->start;
-			new_entry->avail_ssize = stack_entry->avail_ssize -
-			    grow_amount;
-			stack_entry->eflags &= ~MAP_ENTRY_GROWS_DOWN;
+		if (rv != KERN_SUCCESS) {
+			if (gap_deleted) {
+				rv1 = vm_map_insert(map, NULL, 0, gap_start,
+				    gap_end, VM_PROT_NONE, VM_PROT_NONE,
+				    MAP_CREATE_HOLE | MAP_CREATE_STACK_GAP_DN);
+				MPASS(rv1 == KERN_SUCCESS);
+			} else {
+				gap_entry->end += grow_amount;
+				vm_map_entry_resize_free(map, gap_entry);
+			}
 		}
 	} else {
-		/*
-		 * Growing upward.
-		 */
-		addr = stack_entry->end + grow_amount;
-
-		/*
-		 * If this puts us into the next entry, cut back our growth
-		 * to the available space. Also, see the note above.
-		 */
-		if (addr > end) {
-			stack_entry->avail_ssize = end - stack_entry->end;
-			addr = end;
-			if (stack_guard_page)
-				addr -= PAGE_SIZE;
-		}
-
-		grow_amount = addr - stack_entry->end;
+		grow_start = stack_entry->end;
 		cred = stack_entry->cred;
 		if (cred == NULL && stack_entry->object.vm_object != NULL)
 			cred = stack_entry->object.vm_object->cred;
@@ -3869,31 +3846,34 @@ Retry:
 		    stack_entry->offset,
 		    (vm_size_t)(stack_entry->end - stack_entry->start),
 		    (vm_size_t)grow_amount, cred != NULL)) {
-			map->size += (addr - stack_entry->end);
-			/* Update the current entry. */
-			stack_entry->end = addr;
-			stack_entry->avail_ssize -= grow_amount;
+			if (gap_entry->start + grow_amount == gap_entry->end) {
+				stack_entry->adj_free = gap_entry->adj_free;
+				(void) vm_map_entry_delete(map, gap_entry);
+			} else {
+				gap_entry->start += grow_amount;
+			}
+			stack_entry->end += grow_amount;
+			map->size += grow_amount;
 			vm_map_entry_resize_free(map, stack_entry);
 			rv = KERN_SUCCESS;
 		} else
 			rv = KERN_FAILURE;
 	}
-
-	if (rv == KERN_SUCCESS && is_procstack)
-		vm->vm_ssize += btoc(grow_amount);
-
+	if (rv == KERN_SUCCESS) {
+		if (gap_entry->start == gap_entry->end)
+			vm_map_entry_delete(map, gap_entry);
+		if (is_procstack)
+			vm->vm_ssize += btoc(grow_amount);
+	}
 	vm_map_unlock(map);
 
 	/*
 	 * Heed the MAP_WIREFUTURE flag if it was set for this process.
 	 */
-	if (rv == KERN_SUCCESS && (map->flags & MAP_WIREFUTURE)) {
-		vm_map_wire(map,
-		    (stack_entry == next_entry) ? addr : addr - grow_amount,
-		    (stack_entry == next_entry) ? stack_entry->start : addr,
-		    (p->p_flag & P_SYSTEM)
-		    ? VM_MAP_WIRE_SYSTEM|VM_MAP_WIRE_NOHOLES
-		    : VM_MAP_WIRE_USER|VM_MAP_WIRE_NOHOLES);
+	if (rv == KERN_SUCCESS && (map->flags & MAP_WIREFUTURE) != 0) {
+		vm_map_wire(map, grow_start, grow_start + grow_amount,
+		    ((p->p_flag & P_SYSTEM) != 0 ? VM_MAP_WIRE_SYSTEM :
+		    VM_MAP_WIRE_USER) | VM_MAP_WIRE_NOHOLES);
 	}
 
 out:
@@ -4140,7 +4120,7 @@ RetryLookup:;
 	 * Create an object if necessary.
 	 */
 	if (entry->object.vm_object == NULL &&
-	    !map->system_map) {
+	    !map->system_map && (entry->eflags & MAP_ENTRY_HOLE) == 0) {
 		if (vm_map_lock_upgrade(map))
 			goto RetryLookup;
 		entry->object.vm_object = vm_object_allocate(OBJT_DEFAULT,
@@ -4281,8 +4261,9 @@ vm_map_print(vm_map_t map)
 	db_indent += 2;
 	for (entry = map->header.next; entry != &map->header;
 	    entry = entry->next) {
-		db_iprintf("map entry %p: start=%p, end=%p\n",
-		    (void *)entry, (void *)entry->start, (void *)entry->end);
+		db_iprintf("map entry %p: start=%p, end=%p, eflags=%#x, \n",
+		    (void *)entry, (void *)entry->start, (void *)entry->end,
+		    entry->eflags);
 		{
 			static char *inheritance_name[4] =
 			{"share", "copy", "none", "donate_copy"};
