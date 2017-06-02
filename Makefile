@@ -430,14 +430,16 @@ TARGET_ARCHES_${target}?= ${target}
 
 MAKE_PARAMS_riscv?=	CROSS_TOOLCHAIN=riscv64-gcc
 
-# XXX Remove riscv from universe if the required toolchain package is missing.
-.if !exists(/usr/local/share/toolchains/riscv64-gcc.mk) && ${TARGETS:Mriscv}
-_UNIVERSE_TARGETS:= ${_UNIVERSE_TARGETS:Nriscv}
-universe: universe_riscv_skip .PHONY
-universe_epilogue: universe_riscv_skip .PHONY
-universe_riscv_skip: universe_prologue .PHONY
-	@echo ">> riscv skipped - install riscv64-xtoolchain-gcc port or package to build"
+.for arch in mips powerpc riscv sparc64
+# XXX Remove ${arch} from universe if the required toolchain package is missing.
+.if !exists(/usr/local/share/toolchains/${arch}-gcc.mk) && ${TARGETS:M${arch}}
+_UNIVERSE_TARGETS:= ${_UNIVERSE_TARGETS:N${arch}}
+universe: universe_${arch}_skip .PHONY
+universe_epilogue: universe_${arch}_skip .PHONY
+universe_${arch}_skip: universe_prologue .PHONY
+	@echo ">> ${arch} skipped - install ${arch} xtoolchain port or package to build"
 .endif
+.endfor
 
 .if defined(UNIVERSE_TARGET)
 MAKE_JUST_WORLDS=	YES
