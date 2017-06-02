@@ -1155,6 +1155,8 @@ OLD_FILES+=usr/bin/llvm-pdbdump
 OLD_FILES+=usr/tests/usr.sbin/chown/chown-f_test
 # 20170609: drop obsolete manpage link (if_rtwn.ko -> rtwn.ko)
 OLD_FILES+=usr/share/man/man4/if_rtwn.4.gz
+# 20170602: remove GNU ld
+OLD_FILES+=usr/bin/ld.bfd
 # 20170531: removal of groff
 OLD_FILES+=usr/bin/addftinfo
 OLD_FILES+=usr/bin/afmtodit
