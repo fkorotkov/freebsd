@@ -114,7 +114,11 @@ typedef	__int32_t	__register_t;
 typedef	__int32_t	__segsz_t;
 typedef	__uint32_t	__size_t;
 typedef	__int32_t	__ssize_t;
+#if 1 // def __TIME_T_IS_64_BITS
+typedef	__int64_t	__time_t;
+#else
 typedef	__int32_t	__time_t;
+#endif
 typedef	__uint32_t	__uintfptr_t;
 typedef	__uint32_t	__uintptr_t;
 #endif
