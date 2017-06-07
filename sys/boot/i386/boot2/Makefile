@@ -103,6 +103,3 @@ machine: ${.CURDIR}/../../../i386/include .NOMETA
 .endif
 
 .include <bsd.prog.mk>
-
-# XXX: clang integrated-as doesn't grok .codeNN directives yet
-CFLAGS.boot1.S=		${CLANG_NO_IAS}
