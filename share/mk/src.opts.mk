@@ -222,7 +222,7 @@ __TT=${MACHINE}
     ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386")
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
-__DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
+__DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD LLVM_AR_IS_AR
 __DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
 .elif ${COMPILER_FEATURES:Mc++11} && ${__T} != "riscv64" && ${__T} != "sparc64"
 # If an external compiler that supports C++11 is used as ${CC} and Clang
@@ -230,12 +230,12 @@ __DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
 # default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL GCC GCC_BOOTSTRAP GNUCXX
 __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC GPL_DTC LLD
-__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
+__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD LLVM_AR_IS_AR
 .else
 # Everything else disables Clang, and uses GCC instead.
 __DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
-__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
+__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD LLVM_AR_IS_AR
 .endif
 # XXX for testing mark the GNU toolchain as broken. Leave it enabled for amd64
 # for now to provide as, needed for sys/crypto/skein/amd64/skein_block_asm.s

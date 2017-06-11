@@ -2,7 +2,11 @@
 
 .include <src.opts.mk>
 
+.if ${MK_LLVM_AR_IS_AR} == "no"
 PROG=	ar
+.else
+PROG=	bsdar
+.endif
 SRCS=	ar.c acplex.l acpyacc.y read.c util.c write.c y.tab.h
 
 LIBADD=	archive elf

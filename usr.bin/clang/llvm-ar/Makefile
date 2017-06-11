@@ -1,6 +1,11 @@
 # $FreeBSD$
 
+.include <src.opts.mk>
+.if ${MK_LLVM_AR_IS_AR} != "no"
+PROG_CXX=	ar
+.else
 PROG_CXX=	llvm-ar
+.endif
 
 SRCDIR=		tools/llvm-ar
 SRCS+=		llvm-ar.cpp

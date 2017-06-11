@@ -9,12 +9,15 @@ SUBDIR+=	llvm-tblgen
 .if !defined(TOOLS_PREFIX)
 SUBDIR+=	llvm-objdump
 
+.if ${MK_CLANG_EXTRAS} != "no" || ${MK_LLVM_AR_IS_AR} != "no"
+SUBDIR+=	llvm-ar
+.endif
+
 .if ${MK_CLANG_EXTRAS} != "no"
 SUBDIR+=	bugpoint
 SUBDIR+=	clang-format
 SUBDIR+=	llc
 SUBDIR+=	lli
-SUBDIR+=	llvm-ar
 SUBDIR+=	llvm-as
 SUBDIR+=	llvm-bcanalyzer
 SUBDIR+=	llvm-cov
