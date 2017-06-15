@@ -224,6 +224,8 @@ struct msdosfs_fileno {
 #define	MSDOSFS_ASSERT_MP_LOCKED(pmp) \
 	lockmgr_assert(&(pmp)->pm_fatlock, KA_XLOCKED)
 
+#endif /* _KERNEL || MAKEFS */
+#ifndef MAKEFS
 /*
  *  Arguments to mount MSDOS filesystems.
  */
