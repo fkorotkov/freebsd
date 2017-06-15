@@ -28,20 +28,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#if HAVE_NBTOOL_CONFIG_H
-#include "nbtool_config.h"
-#endif
-
 #include <sys/cdefs.h>
-#if defined(__RCSID) && !defined(__lint)
-__RCSID("$NetBSD: msdos.c,v 1.20 2017/04/14 15:40:35 christos Exp $");
-#endif	/* !__lint */
+__FBSDID("$FreeBSD$");
 
 #include <sys/param.h>
-
-#if !HAVE_NBTOOL_CONFIG_H
 #include <sys/mount.h>
-#endif
 
 #include <assert.h>
 #include <errno.h>
@@ -50,14 +41,17 @@ __RCSID("$NetBSD: msdos.c,v 1.20 2017/04/14 15:40:35 christos Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <util.h>
 
-#include <ffs/buf.h>
 #include <fs/msdosfs/bpb.h>
 #include <fs/msdosfs/denode.h>
 #include <fs/msdosfs/msdosfsmount.h>
+
+#include "ffs/buf.h"
+#include "msdos/msdosfs_extern.h"
 #include "makefs.h"
 #include "msdos.h"
 #include "mkfs_msdos.h"
@@ -65,16 +59,11 @@ __RCSID("$NetBSD: msdos.c,v 1.20 2017/04/14 15:40:35 christos Exp $");
 static int msdos_populate_dir(const char *, struct denode *, fsnode *,
     fsnode *, fsinfo_t *);
 
-struct msdos_options_ex {
-	struct msdos_options options;
-	bool utf8;
-};
-
 void
 msdos_prep_opts(fsinfo_t *fsopts)
 {
-	struct msdos_options_ex *msdos_opt = ecalloc(1, sizeof(*msdos_opt));
-	const option_t msdos_options[] = {
+	struct msdos_options *msdos_spec = ecalloc(1, sizeof(*msdos_spec));
+	const option_t msdos_opts[] = {
 #define AOPT(_opt, _type, _name, _min, _desc) { 			\
 	.letter = _opt,							\
 	.name = # _name,						\
@@ -83,22 +72,20 @@ msdos_prep_opts(fsinfo_t *fsopts)
 	    (sizeof(_type) == 1 ? OPT_INT8 :				\
 	    (sizeof(_type) == 2 ? OPT_INT16 :				\
 	    (sizeof(_type) == 4 ? OPT_INT32 : OPT_INT64)))),		\
-	.value = &msdos_opt->options._name,				\
+	.value = &msdos_spec->_name,					\
 	.minimum = _min,						\
-	.maximum = sizeof(_type) == 1 ? 0xff :				\
-	    (sizeof(_type) == 2 ? 0xffff :				\
-	    (sizeof(_type) == 4 ? 0xffffffff : 0xffffffffffffffffLL)),	\
-	.desc = _desc,						\
+	.maximum = sizeof(_type) == 1 ? UINT8_MAX :			\
+	    (sizeof(_type) == 2 ? UINT16_MAX :				\
+	    (sizeof(_type) == 4 ? UINT32_MAX : INT64_MAX)),		\
+	.desc = _desc,							\
 },
 ALLOPTS
-#undef AOPT	
-		{ 'U', "utf8", &msdos_opt->utf8, OPT_BOOL,
-		  0, 1, "Use UTF8 names" },
+#undef AOPT
 		{ .name = NULL }
 	};
 
-	fsopts->fs_specific = msdos_opt;
-	fsopts->fs_options = copy_opts(msdos_options);
+	fsopts->fs_specific = msdos_spec;
+	fsopts->fs_options = copy_opts(msdos_opts);
 }
 
 void
@@ -111,32 +98,31 @@ msdos_cleanup_opts(fsinfo_t *fsopts)
 int
 msdos_parse_opts(const char *option, fsinfo_t *fsopts)
 {
-	struct msdos_options *msdos_opt = fsopts->fs_specific;
-	option_t *msdos_options = fsopts->fs_options;
-
+	struct msdos_options *msdos_spec = fsopts->fs_specific;
+	option_t *msdos_opts = fsopts->fs_options;
 	int rv;
 
 	assert(option != NULL);
 	assert(fsopts != NULL);
-	assert(msdos_opt != NULL);
+	assert(msdos_spec != NULL);
 
 	if (debug & DEBUG_FS_PARSE_OPTS)
-		printf("msdos_parse_opts: got `%s'\n", option);
+		printf("msdos_parse_opts: got '%s'\n", option);
 
-	rv = set_option(msdos_options, option, NULL, 0);
+	rv = set_option(msdos_opts, option, NULL, 0);
 	if (rv == -1)
 		return rv;
 
-	if (strcmp(msdos_options[rv].name, "volume_id") == 0)
-		msdos_opt->volume_id_set = 1;
-	else if (strcmp(msdos_options[rv].name, "media_descriptor") == 0)
-		msdos_opt->media_descriptor_set = 1;
-	else if (strcmp(msdos_options[rv].name, "hidden_sectors") == 0)
-		msdos_opt->hidden_sectors_set = 1;
+	if (strcmp(msdos_opts[rv].name, "volume_id") == 0)
+		msdos_spec->volume_id_set = 1;
+	else if (strcmp(msdos_opts[rv].name, "media_descriptor") == 0)
+		msdos_spec->media_descriptor_set = 1;
+	else if (strcmp(msdos_opts[rv].name, "hidden_sectors") == 0)
+		msdos_spec->hidden_sectors_set = 1;
 
 	if (stampst.st_ino) {
-		msdos_opt->timestamp_set = 1;
-		msdos_opt->timestamp = stampst.st_mtime;
+		msdos_spec->timestamp_set = 1;
+		msdos_spec->timestamp = stampst.st_mtime;
 	}
 
 	return 1;
@@ -146,9 +132,9 @@ msdos_parse_opts(const char *option, fsinfo_t *fsopts)
 void
 msdos_makefs(const char *image, const char *dir, fsnode *root, fsinfo_t *fsopts)
 {
-	struct msdos_options_ex *msdos_opt = fsopts->fs_specific;
+	struct msdos_options *msdos_spec = fsopts->fs_specific;
 	struct vnode vp, rootvp;
-	struct timeval	start;
+	struct timeval start;
 	struct msdosfsmount *pmp;
 	uint32_t flags;
 
@@ -158,25 +144,26 @@ msdos_makefs(const char *image, const char *dir, fsnode *root, fsinfo_t *fsopts)
 	assert(fsopts != NULL);
 
 	fsopts->size = fsopts->maxsize;
-	msdos_opt->options.create_size = MAX(msdos_opt->options.create_size,
+	msdos_spec->create_size = MAX(msdos_spec->create_size,
 	    fsopts->offset + fsopts->size);
-	msdos_opt->options.offset = fsopts->offset;
-	if (msdos_opt->options.bytes_per_sector == 0) {
+	if (fsopts->offset > 0)
+		msdos_spec->offset = fsopts->offset;
+	if (msdos_spec->bytes_per_sector == 0) {
 		if (fsopts->sectorsize == -1)
 			fsopts->sectorsize = 512;
-		msdos_opt->options.bytes_per_sector = fsopts->sectorsize;
+		msdos_spec->bytes_per_sector = fsopts->sectorsize;
 	} else if (fsopts->sectorsize == -1) {
-		fsopts->sectorsize = msdos_opt->options.bytes_per_sector;
-	} else if (fsopts->sectorsize != msdos_opt->options.bytes_per_sector) {
+		fsopts->sectorsize = msdos_spec->bytes_per_sector;
+	} else if (fsopts->sectorsize != msdos_spec->bytes_per_sector) {
 		err(1, "inconsistent sectorsize -S %u"
-		    "!= -o bytes_per_sector %u", 
-		    fsopts->sectorsize, msdos_opt->options.bytes_per_sector);
+		    "!= -o bytes_per_sector %u",
+		    fsopts->sectorsize, msdos_spec->bytes_per_sector);
 	}
 
-		/* create image */
-	printf("Creating `%s'\n", image);
+	/* create image */
+	printf("Creating '%s'\n", image);
 	TIMER_START(start);
-	if (mkfs_msdos(image, NULL, &msdos_opt->options) == -1)
+	if (mkfs_msdos(image, NULL, msdos_spec) == -1)
 		return;
 	TIMER_RESULTS(start, "mkfs_msdos");
 
@@ -184,10 +171,7 @@ msdos_makefs(const char *image, const char *dir, fsnode *root, fsinfo_t *fsopts)
 	vp.fs = fsopts;
 
 	flags = 0;
-	if (msdos_opt->utf8)
-		flags |= MSDOSFSMNT_UTF8;
-
-	if ((pmp = msdosfs_mount(&vp, flags)) == NULL)
+	if ((pmp = msdosfs_mount(&vp)) == NULL)
 		err(1, "msdosfs_mount");
 
 	if (msdosfs_root(pmp, &rootvp) != 0)
@@ -197,21 +181,22 @@ msdos_makefs(const char *image, const char *dir, fsnode *root, fsinfo_t *fsopts)
 		printf("msdos_makefs: image %s directory %s root %p\n",
 		    image, dir, root);
 
-		/* populate image */
-	printf("Populating `%s'\n", image);
+	/* populate image */
+	printf("Populating '%s'\n", image);
 	TIMER_START(start);
-	if (msdos_populate_dir(dir, VTODE(&rootvp), root, root, fsopts) == -1)
-		errx(1, "Image file `%s' not created.", image);
+	if (msdos_populate_dir(dir, VTODE(&rootvp), root,
+	    root, fsopts) == -1)
+		errx(1, "Image file '%s' not created.", image);
 	TIMER_RESULTS(start, "msdos_populate_dir");
 
 	if (debug & DEBUG_FS_MAKEFS)
 		putchar('\n');
 
-		/* ensure no outstanding buffers remain */
+	/* ensure no outstanding buffers remain */
 	if (debug & DEBUG_FS_MAKEFS)
 		bcleanup();
 
-	printf("Image `%s' complete\n", image);
+	printf("Image '%s' complete\n", image);
 }
 
 static int
@@ -223,8 +208,8 @@ msdos_populate_dir(const char *path, struct denode *dir, fsnode *root,
 
 	assert(dir != NULL);
 	assert(root != NULL);
-	assert(fsopts != NULL);	
-	
+	assert(fsopts != NULL);
+
 	for (cur = root->next; cur != NULL; cur = cur->next) {
 		if ((size_t)snprintf(pbuf, sizeof(pbuf), "%s/%s", path,
 		    cur->name) >= sizeof(pbuf)) {

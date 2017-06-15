@@ -29,16 +29,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _MAKEFS_MSDOS_H
-#define _MAKEFS_MSDOS_H
+#ifndef _MAKEFS_MSDOSFS_EXTERN_H
+#define _MAKEFS_MSDOSFS_EXTERN_H
 
-struct vnode;
-struct denode;
+/* Maximum size of a file on a FAT filesystem */
+#define MSDOSFS_FILESIZE_MAX	0xFFFFFFFFLL
 
-struct msdosfsmount *msdosfs_mount(struct vnode *);
-int msdosfs_root(struct msdosfsmount *, struct vnode *);
+#define NOCRED		NULL
+#define	B_MODIFY	0
+#define DOINGASYNC(vp)	0
+#define min(a, b) MIN(a, b)
+#define MSDOSFS_DPRINTF(args) do {	\
+	if (debug & DEBUG_MSDOSFS)	\
+		printf args;		\
+} while (0);
 
-struct denode *msdosfs_mkfile(const char *, struct denode *, fsnode *);
-struct denode *msdosfs_mkdire(const char *, struct denode *, fsnode *);
+#define vput(vp)
+#define KASSERT(s, m)
+#define ASSERT_VOP_LOCKED(vp, m)
+#define ASSERT_VOP_ELOCKED(vp, m)
+#define MSDOSFS_LOCK_MP(pmp)
+#define MSDOSFS_UNLOCK_MP(pmp)
+#define MSDOSFS_ASSERT_MP_LOCKED(pmp)
+
+struct winentry;
+struct msdosfsmount;
+
+struct componentname {
+	char *cn_nameptr;
+	size_t cn_namelen;
+};
+
+uint8_t winChksum(uint8_t *name);
+int winSlotCnt(const u_char *un, size_t unlen);
+int unix2dosfn(const u_char *un, u_char dn[12], size_t unlen, u_int gen,
+    struct msdosfsmount *pmp __unused);
+int winChkName(const u_char *un, size_t unlen, struct winentry *wep,
+    int chksum);
+int unix2winfn(const u_char *un, size_t unlen, struct winentry *wep, int cnt,
+    int chksum, struct msdosfsmount *pmp __unused);
 
 #endif

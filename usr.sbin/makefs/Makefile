@@ -8,7 +8,7 @@ PROG=	makefs
 
 CFLAGS+=-I${SRCDIR}
 
-SRCS=	cd9660.c ffs.c \
+SRCS=	cd9660.c ffs.c msdos.c \
 	makefs.c \
 	mtree.c \
 	walk.c
@@ -18,6 +18,7 @@ WARNS?=	2
 
 .include "${SRCDIR}/cd9660/Makefile.inc"
 .include "${SRCDIR}/ffs/Makefile.inc"
+.include "${SRCDIR}/msdos/Makefile.inc"
 
 CFLAGS+=-DHAVE_STRUCT_STAT_ST_FLAGS=1
 
