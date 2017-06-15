@@ -20,9 +20,9 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/Twine.h"
 #include "llvm/ExecutionEngine/JITSymbol.h"
-#include "llvm/ExecutionEngine/RuntimeDyld.h"
 #include "llvm/ExecutionEngine/Orc/IndirectionUtils.h"
 #include "llvm/ExecutionEngine/Orc/LambdaResolver.h"
+#include "llvm/ExecutionEngine/RuntimeDyld.h"
 #include "llvm/IR/Attributes.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
@@ -172,6 +172,11 @@ private:
       return nullptr;
     }
 
+    void removeModulesFromBaseLayer(BaseLayerT &BaseLayer) {
+      for (auto &BLH : BaseLayerHandles)
+        BaseLayer.removeModuleSet(BLH);
+    }
+
     std::unique_ptr<JITSymbolResolver> ExternalSymbolResolver;
     std::unique_ptr<ResourceOwner<RuntimeDyld::MemoryManager>> MemMgr;
     std::unique_ptr<IndirectStubsMgrT> StubsMgr;
@@ -204,6 +209,11 @@ public:
         CreateIndirectStubsManager(std::move(CreateIndirectStubsManager)),
         CloneStubsIntoPartitions(CloneStubsIntoPartitions) {}
 
+  ~CompileOnDemandLayer() {
+    while (!LogicalDylibs.empty())
+      removeModuleSet(LogicalDylibs.begin());
+  }
+  
   /// @brief Add a module to the compile-on-demand layer.
   template <typename ModuleSetT, typename MemoryManagerPtrT,
             typename SymbolResolverPtrT>
@@ -239,6 +249,7 @@ public:
   ///   This will remove all modules in the layers below that were derived from
   /// the module represented by H.
   void removeModuleSet(ModuleSetHandleT H) {
+    H->removeModulesFromBaseLayer(BaseLayer);
     LogicalDylibs.erase(H);
   }
 
@@ -376,7 +387,7 @@ private:
     // Initializers may refer to functions declared (but not defined) in this
     // module. Build a materializer to clone decls on demand.
     auto Materializer = createLambdaMaterializer(
-      [this, &LD, &GVsM](Value *V) -> Value* {
+      [&LD, &GVsM](Value *V) -> Value* {
         if (auto *F = dyn_cast<Function>(V)) {
           // Decls in the original module just get cloned.
           if (F->isDeclaration())
@@ -419,7 +430,7 @@ private:
 
     // Build a resolver for the globals module and add it to the base layer.
     auto GVsResolver = createLambdaResolver(
-        [this, &LD, LMId](const std::string &Name) {
+        [this, &LD](const std::string &Name) {
           if (auto Sym = LD.StubsMgr->findStub(Name, false))
             return Sym;
           if (auto Sym = LD.findSymbol(BaseLayer, Name, false))
@@ -478,6 +489,8 @@ private:
         return 0;
     }
 
+    LD.BaseLayerHandles.push_back(PartH);
+
     return CalledAddr;
   }
 
@@ -499,8 +512,8 @@ private:
     M->setDataLayout(SrcM.getDataLayout());
     ValueToValueMapTy VMap;
 
-    auto Materializer = createLambdaMaterializer([this, &LD, &LMId, &M,
-                                                  &VMap](Value *V) -> Value * {
+    auto Materializer = createLambdaMaterializer([&LD, &LMId,
+                                                  &M](Value *V) -> Value * {
       if (auto *GV = dyn_cast<GlobalVariable>(V))
         return cloneGlobalVariableDecl(*M, *GV);
 
@@ -546,12 +559,12 @@ private:
 
     // Create memory manager and symbol resolver.
     auto Resolver = createLambdaResolver(
-        [this, &LD, LMId](const std::string &Name) {
+        [this, &LD](const std::string &Name) {
           if (auto Sym = LD.findSymbol(BaseLayer, Name, false))
             return Sym;
           return LD.ExternalSymbolResolver->findSymbolInLogicalDylib(Name);
         },
-        [this, &LD](const std::string &Name) {
+        [&LD](const std::string &Name) {
           return LD.ExternalSymbolResolver->findSymbol(Name);
         });
 

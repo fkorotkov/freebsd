@@ -7,13 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-// C Includes
-#include <string.h>
-
-// C++ Includes
-// Other libraries and framework includes
-// Project includes
 #include "Utility/StringExtractorGDBRemote.h"
+
+#include <ctype.h> // for isxdigit
+#include <string.h>
 
 StringExtractorGDBRemote::ResponseType
 StringExtractorGDBRemote::GetResponseType() const {
@@ -90,6 +87,10 @@ StringExtractorGDBRemote::GetServerPacketType() const {
       if (PACKET_STARTS_WITH("QEnvironmentHexEncoded:"))
         return eServerPacketType_QEnvironmentHexEncoded;
       break;
+
+    case 'P':
+      if (PACKET_STARTS_WITH("QPassSignals:"))
+        return eServerPacketType_QPassSignals;
 
     case 'S':
       if (PACKET_MATCHES("QStartNoAckMode"))
@@ -285,6 +286,16 @@ StringExtractorGDBRemote::GetServerPacketType() const {
       return eServerPacketType_jSignalsInfo;
     if (PACKET_MATCHES("jThreadsInfo"))
       return eServerPacketType_jThreadsInfo;
+    if (PACKET_STARTS_WITH("jTraceBufferRead:"))
+      return eServerPacketType_jTraceBufferRead;
+    if (PACKET_STARTS_WITH("jTraceConfigRead:"))
+      return eServerPacketType_jTraceConfigRead;
+    if (PACKET_STARTS_WITH("jTraceMetaRead:"))
+      return eServerPacketType_jTraceMetaRead;
+    if (PACKET_STARTS_WITH("jTraceStart:"))
+      return eServerPacketType_jTraceStart;
+    if (PACKET_STARTS_WITH("jTraceStop:"))
+      return eServerPacketType_jTraceStop;
     break;
 
   case 'v':

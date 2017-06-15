@@ -10,11 +10,11 @@
 #ifndef LLD_COFF_INPUT_FILES_H
 #define LLD_COFF_INPUT_FILES_H
 
+#include "Config.h"
 #include "lld/Core/LLVM.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseSet.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/LTO/legacy/LTOModule.h"
+#include "llvm/LTO/LTO.h"
 #include "llvm/Object/Archive.h"
 #include "llvm/Object/COFF.h"
 #include "llvm/Support/StringSaver.h"
@@ -25,7 +25,6 @@
 namespace lld {
 namespace coff {
 
-using llvm::LTOModule;
 using llvm::COFF::IMAGE_FILE_MACHINE_UNKNOWN;
 using llvm::COFF::MachineTypes;
 using llvm::object::Archive;
@@ -60,6 +59,8 @@ public:
   // Returns the CPU type this file was compiled to.
   virtual MachineTypes getMachineType() { return IMAGE_FILE_MACHINE_UNKNOWN; }
 
+  MemoryBufferRef MB;
+
   // An archive file name if this file is created from an archive.
   StringRef ParentName;
 
@@ -69,7 +70,6 @@ public:
 protected:
   InputFile(Kind K, MemoryBufferRef M) : MB(M), FileKind(K) {}
 
-  MemoryBufferRef MB;
   std::string Directives;
 
 private:
@@ -131,7 +131,6 @@ private:
   SymbolBody *createUndefined(COFFSymbolRef Sym);
 
   std::unique_ptr<COFFObjectFile> COFFObj;
-  llvm::BumpPtrAllocator Alloc;
   const coff_section *SXData = nullptr;
 
   // List of all chunks defined by this file. This includes both section
@@ -164,24 +163,30 @@ private:
 class ImportFile : public InputFile {
 public:
   explicit ImportFile(MemoryBufferRef M)
-      : InputFile(ImportKind, M), StringAlloc(StringAllocAux) {}
+      : InputFile(ImportKind, M), Live(!Config->DoGC) {}
+
   static bool classof(const InputFile *F) { return F->kind() == ImportKind; }
 
   DefinedImportData *ImpSym = nullptr;
+  DefinedImportData *ConstSym = nullptr;
   DefinedImportThunk *ThunkSym = nullptr;
   std::string DLLName;
 
 private:
   void parse() override;
 
-  llvm::BumpPtrAllocator Alloc;
-  llvm::BumpPtrAllocator StringAllocAux;
-  llvm::StringSaver StringAlloc;
-
 public:
   StringRef ExternalName;
   const coff_import_header *Hdr;
   Chunk *Location = nullptr;
+
+  // We want to eliminate dllimported symbols if no one actually refers them.
+  // This "Live" bit is used to keep track of which import library members
+  // are actually in use.
+  //
+  // If the Live bit is turned off by MarkLive, Writer will ignore dllimported
+  // symbols provided by this import library member.
+  bool Live;
 };
 
 // Used for LTO.
@@ -191,16 +196,12 @@ public:
   static bool classof(const InputFile *F) { return F->kind() == BitcodeKind; }
   std::vector<SymbolBody *> &getSymbols() { return SymbolBodies; }
   MachineTypes getMachineType() override;
-  std::unique_ptr<LTOModule> takeModule() { return std::move(M); }
-
-  static llvm::LLVMContext Context;
+  std::unique_ptr<llvm::lto::InputFile> Obj;
 
 private:
   void parse() override;
 
   std::vector<SymbolBody *> SymbolBodies;
-  llvm::BumpPtrAllocator Alloc;
-  std::unique_ptr<LTOModule> M;
 };
 } // namespace coff
 

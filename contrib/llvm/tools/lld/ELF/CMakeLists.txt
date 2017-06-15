@@ -11,16 +11,19 @@ add_lld_library(lldELF
   DriverUtils.cpp
   EhFrame.cpp
   Error.cpp
+  Filesystem.cpp
   GdbIndex.cpp
   ICF.cpp
   InputFiles.cpp
   InputSection.cpp
   LTO.cpp
   LinkerScript.cpp
+  MapFile.cpp
   MarkLive.cpp
   Mips.cpp
   OutputSections.cpp
   Relocations.cpp
+  ScriptLexer.cpp
   ScriptParser.cpp
   Strings.cpp
   SymbolTable.cpp
@@ -33,6 +36,7 @@ add_lld_library(lldELF
   LINK_COMPONENTS
   ${LLVM_TARGETS_TO_BUILD}
   Analysis
+  BinaryFormat
   BitReader
   BitWriter
   Codegen
@@ -53,7 +57,7 @@ add_lld_library(lldELF
   LINK_LIBS
   lldConfig
   lldCore
-  ${PTHREAD_LIB}
+  ${LLVM_PTHREAD_LIB}
 
   DEPENDS
   ELFOptionsTableGen

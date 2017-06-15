@@ -152,6 +152,84 @@ namespace llvm {
     }
   };
 
+  /// This is the common base class for constrained floating point intrinsics.
+  class ConstrainedFPIntrinsic : public IntrinsicInst {
+  public:
+    enum RoundingMode {
+      rmInvalid,
+      rmDynamic,
+      rmToNearest,
+      rmDownward,
+      rmUpward,
+      rmTowardZero
+    };
+
+    enum ExceptionBehavior {
+      ebInvalid,
+      ebIgnore,
+      ebMayTrap,
+      ebStrict
+    };
+
+    bool isUnaryOp() const;
+    RoundingMode getRoundingMode() const;
+    ExceptionBehavior getExceptionBehavior() const;
+
+    // Methods for support type inquiry through isa, cast, and dyn_cast:
+    static inline bool classof(const IntrinsicInst *I) {
+      switch (I->getIntrinsicID()) {
+      case Intrinsic::experimental_constrained_fadd:
+      case Intrinsic::experimental_constrained_fsub:
+      case Intrinsic::experimental_constrained_fmul:
+      case Intrinsic::experimental_constrained_fdiv:
+      case Intrinsic::experimental_constrained_frem:
+      case Intrinsic::experimental_constrained_sqrt:
+      case Intrinsic::experimental_constrained_pow:
+      case Intrinsic::experimental_constrained_powi:
+      case Intrinsic::experimental_constrained_sin:
+      case Intrinsic::experimental_constrained_cos:
+      case Intrinsic::experimental_constrained_exp:
+      case Intrinsic::experimental_constrained_exp2:
+      case Intrinsic::experimental_constrained_log:
+      case Intrinsic::experimental_constrained_log10:
+      case Intrinsic::experimental_constrained_log2:
+      case Intrinsic::experimental_constrained_rint:
+      case Intrinsic::experimental_constrained_nearbyint:
+        return true;
+      default: return false;
+      }
+    }
+    static inline bool classof(const Value *V) {
+      return isa<IntrinsicInst>(V) && classof(cast<IntrinsicInst>(V));
+    }
+  };
+
+  /// This class represents atomic memcpy intrinsic
+  /// TODO: Integrate this class into MemIntrinsic hierarchy.
+  class ElementAtomicMemCpyInst : public IntrinsicInst {
+  public:
+    Value *getRawDest() const { return getArgOperand(0); }
+    Value *getRawSource() const { return getArgOperand(1); }
+
+    Value *getNumElements() const { return getArgOperand(2); }
+    void setNumElements(Value *V) { setArgOperand(2, V); }
+
+    uint64_t getSrcAlignment() const { return getParamAlignment(0); }
+    uint64_t getDstAlignment() const { return getParamAlignment(1); }
+
+    uint64_t getElementSizeInBytes() const {
+      Value *Arg = getArgOperand(3);
+      return cast<ConstantInt>(Arg)->getZExtValue();
+    }
+
+    static inline bool classof(const IntrinsicInst *I) {
+      return I->getIntrinsicID() == Intrinsic::memcpy_element_atomic;
+    }
+    static inline bool classof(const Value *V) {
+      return isa<IntrinsicInst>(V) && classof(cast<IntrinsicInst>(V));
+    }
+  };
+
   /// This is the common base class for memset/memcpy/memmove.
   class MemIntrinsic : public IntrinsicInst {
   public:

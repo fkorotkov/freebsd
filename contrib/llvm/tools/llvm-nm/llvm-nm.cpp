@@ -17,6 +17,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/ADT/StringSwitch.h"
+#include "llvm/BinaryFormat/COFF.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalAlias.h"
 #include "llvm/IR/GlobalVariable.h"
@@ -24,12 +25,13 @@
 #include "llvm/IR/Module.h"
 #include "llvm/Object/Archive.h"
 #include "llvm/Object/COFF.h"
+#include "llvm/Object/COFFImportFile.h"
 #include "llvm/Object/ELFObjectFile.h"
 #include "llvm/Object/IRObjectFile.h"
 #include "llvm/Object/MachO.h"
 #include "llvm/Object/MachOUniversal.h"
 #include "llvm/Object/ObjectFile.h"
-#include "llvm/Support/COFF.h"
+#include "llvm/Object/Wasm.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Format.h"
@@ -129,6 +131,7 @@ cl::opt<bool> PrintSize("print-size",
                         cl::desc("Show symbol size instead of address"));
 cl::alias PrintSizeS("S", cl::desc("Alias for --print-size"),
                      cl::aliasopt(PrintSize), cl::Grouping);
+bool MachOPrintSizeWarning = false;
 
 cl::opt<bool> SizeSort("size-sort", cl::desc("Sort symbols by size"));
 
@@ -267,7 +270,9 @@ static bool compareSymbolName(const NMSymbol &A, const NMSymbol &B) {
 static char isSymbolList64Bit(SymbolicFile &Obj) {
   if (auto *IRObj = dyn_cast<IRObjectFile>(&Obj))
     return Triple(IRObj->getTargetTriple()).isArch64Bit();
-  if (isa<COFFObjectFile>(Obj))
+  if (isa<COFFObjectFile>(Obj) || isa<COFFImportFile>(Obj))
+    return false;
+  if (isa<WasmObjectFile>(Obj))
     return false;
   if (MachOObjectFile *MachO = dyn_cast<MachOObjectFile>(&Obj))
     return MachO->is64Bit();
@@ -845,6 +850,18 @@ static char getSymbolNMTypeChar(COFFObjectFile &Obj, symbol_iterator I) {
   return '?';
 }
 
+static char getSymbolNMTypeChar(COFFImportFile &Obj) {
+  switch (Obj.getCOFFImportHeader()->getType()) {
+  case COFF::IMPORT_CODE:
+    return 't';
+  case COFF::IMPORT_DATA:
+    return 'd';
+  case COFF::IMPORT_CONST:
+    return 'r';
+  }
+  return '?';
+}
+
 static char getSymbolNMTypeChar(MachOObjectFile &Obj, basic_symbol_iterator I) {
   DataRefImpl Symb = I->getRawDataRefImpl();
   uint8_t NType = Obj.is64Bit() ? Obj.getSymbol64TableEntry(Symb).n_type
@@ -880,6 +897,13 @@ static char getSymbolNMTypeChar(MachOObjectFile &Obj, basic_symbol_iterator I) {
   }
 
   return '?';
+}
+
+static char getSymbolNMTypeChar(WasmObjectFile &Obj, basic_symbol_iterator I) {
+  uint32_t Flags = I->getFlags();
+  if (Flags & SymbolRef::SF_Executable)
+    return 't';
+  return 'd';
 }
 
 static char getSymbolNMTypeChar(IRObjectFile &Obj, basic_symbol_iterator I) {
@@ -921,8 +945,12 @@ static char getNMTypeChar(SymbolicFile &Obj, basic_symbol_iterator I) {
     Ret = getSymbolNMTypeChar(*IR, I);
   else if (COFFObjectFile *COFF = dyn_cast<COFFObjectFile>(&Obj))
     Ret = getSymbolNMTypeChar(*COFF, I);
+  else if (COFFImportFile *COFFImport = dyn_cast<COFFImportFile>(&Obj))
+    Ret = getSymbolNMTypeChar(*COFFImport);
   else if (MachOObjectFile *MachO = dyn_cast<MachOObjectFile>(&Obj))
     Ret = getSymbolNMTypeChar(*MachO, I);
+  else if (WasmObjectFile *Wasm = dyn_cast<WasmObjectFile>(&Obj))
+    Ret = getSymbolNMTypeChar(*Wasm, I);
   else
     Ret = getSymbolNMTypeChar(cast<ELFObjectFileBase>(Obj), I);
 
@@ -1057,15 +1085,19 @@ static bool checkMachOAndArchFlags(SymbolicFile *O, std::string &Filename) {
   MachO::mach_header H;
   MachO::mach_header_64 H_64;
   Triple T;
+  const char *McpuDefault, *ArchFlag;
   if (MachO->is64Bit()) {
     H_64 = MachO->MachOObjectFile::getHeader64();
-    T = MachOObjectFile::getArchTriple(H_64.cputype, H_64.cpusubtype);
+    T = MachOObjectFile::getArchTriple(H_64.cputype, H_64.cpusubtype,
+                                       &McpuDefault, &ArchFlag);
   } else {
     H = MachO->MachOObjectFile::getHeader();
-    T = MachOObjectFile::getArchTriple(H.cputype, H.cpusubtype);
+    T = MachOObjectFile::getArchTriple(H.cputype, H.cpusubtype,
+                                       &McpuDefault, &ArchFlag);
   }
+  const std::string ArchFlagName(ArchFlag);
   if (none_of(ArchFlags, [&](const std::string &Name) {
-        return Name == T.getArchName();
+        return Name == ArchFlagName;
       })) {
     error("No architecture specified", Filename);
     return false;
@@ -1120,6 +1152,11 @@ static void dumpSymbolNamesFromFile(std::string &Filename) {
           continue;
         }
         if (SymbolicFile *O = dyn_cast<SymbolicFile>(&*ChildOrErr.get())) {
+          if (!MachOPrintSizeWarning && PrintSize &&  isa<MachOObjectFile>(O)) {
+            errs() << ToolName << ": warning sizes with -print-size for Mach-O "
+                      "files are always zero.\n";
+            MachOPrintSizeWarning = true;
+          }
           if (!checkMachOAndArchFlags(O, Filename))
             return;
           if (!PrintFileName) {
@@ -1357,6 +1394,11 @@ static void dumpSymbolNamesFromFile(std::string &Filename) {
     return;
   }
   if (SymbolicFile *O = dyn_cast<SymbolicFile>(&Bin)) {
+    if (!MachOPrintSizeWarning && PrintSize &&  isa<MachOObjectFile>(O)) {
+      errs() << ToolName << ": warning sizes with -print-size for Mach-O files "
+                "are always zero.\n";
+      MachOPrintSizeWarning = true;
+    }
     if (!checkMachOAndArchFlags(O, Filename))
       return;
     dumpSymbolNamesFromObject(*O, true);

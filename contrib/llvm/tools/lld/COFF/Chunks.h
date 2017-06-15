@@ -187,10 +187,10 @@ public:
 
   const coff_section *Header;
 
-private:
-  // A file this chunk was created from.
+  // The file that this chunk was created from.
   ObjectFile *File;
 
+private:
   StringRef SectionName;
   std::vector<SectionChunk *> AssocChildren;
   llvm::iterator_range<const coff_relocation *> Relocs;
@@ -201,7 +201,7 @@ private:
 
   // Used for ICF (Identical COMDAT Folding)
   void replace(SectionChunk *Other);
-  uint32_t Color[2] = {0, 0};
+  uint32_t Class[2] = {0, 0};
 
   // Sym points to a section symbol if this is a COMDAT chunk.
   DefinedRegular *Sym = nullptr;

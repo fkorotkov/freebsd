@@ -40,8 +40,8 @@ bool testCPUFeature(CPUFeature feature);
 // The state (128 bits) will be stored in thread local storage.
 struct Xorshift128Plus {
  public:
-  Xorshift128Plus();
-  u64 Next() {
+  void initFromURandom();
+  u64 getNext() {
     u64 x = State[0];
     const u64 y = State[1];
     State[0] = y;
@@ -52,9 +52,6 @@ struct Xorshift128Plus {
  private:
   u64 State[2];
 };
-
-// Software CRC32 functions, to be used when hardware support is not detected.
-u32 computeSoftwareCRC32(u32 Crc, uptr Data);
 
 }  // namespace __scudo
 

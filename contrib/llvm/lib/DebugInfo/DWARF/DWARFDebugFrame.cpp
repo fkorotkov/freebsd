@@ -1,4 +1,4 @@
-//===-- DWARFDebugFrame.h - Parsing of .debug_frame -------------*- C++ -*-===//
+//===- DWARFDebugFrame.h - Parsing of .debug_frame ------------------------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -8,17 +8,18 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/DebugInfo/DWARF/DWARFDebugFrame.h"
+
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/Optional.h"
-#include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/STLExtras.h"
+#include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/StringRef.h"
+#include "llvm/BinaryFormat/Dwarf.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/DataExtractor.h"
-#include "llvm/Support/Dwarf.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/Format.h"
 #include "llvm/Support/raw_ostream.h"
@@ -465,8 +466,7 @@ void FrameEntry::dumpInstructions(raw_ostream &OS) const {
   }
 }
 
-DWARFDebugFrame::DWARFDebugFrame(bool IsEH) : IsEH(IsEH) {
-}
+DWARFDebugFrame::DWARFDebugFrame(bool IsEH) : IsEH(IsEH) {}
 
 DWARFDebugFrame::~DWARFDebugFrame() = default;
 
@@ -485,17 +485,17 @@ static unsigned getSizeForEncoding(const DataExtractor &Data,
   unsigned format = symbolEncoding & 0x0f;
   switch (format) {
     default: llvm_unreachable("Unknown Encoding");
-    case dwarf::DW_EH_PE_absptr:
-    case dwarf::DW_EH_PE_signed:
+    case DW_EH_PE_absptr:
+    case DW_EH_PE_signed:
       return Data.getAddressSize();
-    case dwarf::DW_EH_PE_udata2:
-    case dwarf::DW_EH_PE_sdata2:
+    case DW_EH_PE_udata2:
+    case DW_EH_PE_sdata2:
       return 2;
-    case dwarf::DW_EH_PE_udata4:
-    case dwarf::DW_EH_PE_sdata4:
+    case DW_EH_PE_udata4:
+    case DW_EH_PE_sdata4:
       return 4;
-    case dwarf::DW_EH_PE_udata8:
-    case dwarf::DW_EH_PE_sdata8:
+    case DW_EH_PE_udata8:
+    case DW_EH_PE_sdata8:
       return 8;
   }
 }
@@ -585,6 +585,7 @@ void DWARFDebugFrame::parse(DataExtractor Data) {
           switch (AugmentationString[i]) {
             default:
               ReportError("Unknown augmentation character in entry at %lx");
+              llvm_unreachable("ReportError should not return.");
             case 'L':
               LSDAPointerEncoding = Data.getU8(&Offset);
               break;

@@ -14,8 +14,6 @@
 #include "lldb/Core/Module.h"
 #include "lldb/Core/PluginInterface.h"
 #include "lldb/Core/PluginManager.h"
-#include "lldb/Core/RegularExpression.h"
-#include "lldb/Core/Stream.h"
 #include "lldb/Core/StreamFile.h"
 #include "lldb/Core/ValueObject.h"
 #include "lldb/Expression/UserExpression.h"
@@ -25,6 +23,8 @@
 #include "lldb/Target/StopInfo.h"
 #include "lldb/Target/Target.h"
 #include "lldb/Target/Thread.h"
+#include "lldb/Utility/RegularExpression.h"
+#include "lldb/Utility/Stream.h"
 
 #include "llvm/ADT/StringSwitch.h"
 
@@ -134,7 +134,7 @@ StructuredData::ObjectSP AddressSanitizerRuntime::RetrieveReportData() {
 
   ValueObjectSP return_value_sp;
   ExecutionContext exe_ctx;
-  Error eval_error;
+  Status eval_error;
   frame_sp->CalculateExecutionContext(exe_ctx);
   ExpressionResults result = UserExpression::Evaluate(
       exe_ctx, options, address_sanitizer_retrieve_report_data_command, "",
@@ -171,7 +171,7 @@ StructuredData::ObjectSP AddressSanitizerRuntime::RetrieveReportData() {
       return_value_sp->GetValueForExpressionPath(".description")
           ->GetValueAsUnsigned(0);
   std::string description;
-  Error error;
+  Status error;
   process_sp->ReadCStringFromMemory(description_ptr, description, error);
 
   StructuredData::Dictionary *dict = new StructuredData::Dictionary();
