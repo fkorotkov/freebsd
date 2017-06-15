@@ -213,8 +213,6 @@ struct msdosfs_fileno {
 	 ? roottobn((pmp), (dirofs)) \
 	 : cntobn((pmp), (dirclu)))
 
-#endif /* _KERNEL || MAKEFS */
-
 #ifdef _KERNEL
 
 #define	MSDOSFS_LOCK_MP(pmp) \
@@ -224,7 +222,9 @@ struct msdosfs_fileno {
 #define	MSDOSFS_ASSERT_MP_LOCKED(pmp) \
 	lockmgr_assert(&(pmp)->pm_fatlock, KA_XLOCKED)
 
+#endif
 #endif /* _KERNEL || MAKEFS */
+
 #ifndef MAKEFS
 /*
  *  Arguments to mount MSDOS filesystems.
@@ -243,7 +243,7 @@ struct msdosfs_args {
 	char	*cs_local;	/* Local Charset */
 	mode_t	dirmask;	/* dir  mask to be applied for msdosfs perms */
 };
-#endif /* _KERNEL */
+#endif /* !MAKEFS */
 
 /*
  * Msdosfs mount options:
