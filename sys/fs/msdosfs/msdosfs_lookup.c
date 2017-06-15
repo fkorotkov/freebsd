@@ -49,11 +49,18 @@
  */
 
 #include <sys/param.h>
+#include <sys/errno.h>
+#ifndef MAKEFS
 #include <sys/systm.h>
 #include <sys/buf.h>
 #include <sys/mount.h>
 #include <sys/namei.h>
 #include <sys/vnode.h>
+#else
+#include <string.h>
+#include "ffs/buf.h"
+#include "msdos/msdosfs_extern.h"
+#endif
 
 #include <fs/msdosfs/bpb.h>
 #include <fs/msdosfs/direntry.h>
@@ -61,6 +68,7 @@
 #include <fs/msdosfs/fat.h>
 #include <fs/msdosfs/msdosfsmount.h>
 
+#ifndef MAKEFS
 static int msdosfs_lookup_(struct vnode *vdp, struct vnode **vpp,
     struct componentname *cnp, uint64_t *inum);
 
@@ -584,6 +592,8 @@ foundroot:
 	return (0);
 }
 
+#endif /* !MAKEFS */
+
 /*
  * dep  - directory entry to copy into the directory
  * ddep - directory to add to
@@ -749,7 +759,7 @@ dosdirempty(struct denode *dep)
 			return (0);
 		}
 		for (dentp = (struct direntry *)bp->b_data;
-		     (char *)dentp < bp->b_data + blsize;
+		     (char *)dentp < (char *)bp->b_data + blsize;
 		     dentp++) {
 			if (dentp->deName[0] != SLOT_DELETED &&
 			    (dentp->deAttributes & ATTR_VOLUME) == 0) {
@@ -1039,7 +1049,7 @@ uniqdosname(struct denode *dep, struct componentname *cnp, u_char *cp)
 				return error;
 			}
 			for (dentp = (struct direntry *)bp->b_data;
-			     (char *)dentp < bp->b_data + blsize;
+			     (char *)dentp < (char *)bp->b_data + blsize;
 			     dentp++) {
 				if (dentp->deName[0] == SLOT_EMPTY) {
 					/*

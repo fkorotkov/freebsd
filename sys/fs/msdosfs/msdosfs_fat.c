@@ -49,10 +49,20 @@
  */
 
 #include <sys/param.h>
+#include <sys/errno.h>
+#ifndef MAKEFS
 #include <sys/systm.h>
 #include <sys/buf.h>
 #include <sys/mount.h>
 #include <sys/vnode.h>
+#else
+#include <stdio.h>
+#include <strings.h>
+#include <string.h>
+
+#include "ffs/buf.h"
+#include "msdos/msdosfs_extern.h"
+#endif
 
 #include <fs/msdosfs/bpb.h>
 #include <fs/msdosfs/direntry.h>
@@ -60,7 +70,12 @@
 #include <fs/msdosfs/fat.h>
 #include <fs/msdosfs/msdosfsmount.h>
 
-#define	FULL_RUN	((u_int)0xffffffff)
+#define FULL_RUN		((u_int)0xffffffff)
+#ifndef MAKEFS
+#define SYNCHRONOUS_WRITES(pmp)	(pmp->pm_mountp->mnt_flag & MNT_SYNCHRONOUS)
+#else
+#define SYNCHRONOUS_WRITES(pmp)	1
+#endif
 
 static int	chainalloc(struct msdosfsmount *pmp, u_long start,
 		    u_long count, u_long fillwith, u_long *retcluster,
@@ -341,7 +356,7 @@ updatefats(struct msdosfsmount *pmp, struct buf *bp, u_long fatbn)
 				((uint8_t *)bpn->b_data)[3] |= 0x80;
 			else if (cleanfat == 32)
 				((uint8_t *)bpn->b_data)[7] |= 0x08;
-			if (pmp->pm_mountp->mnt_flag & MNT_SYNCHRONOUS)
+			if (SYNCHRONOUS_WRITES(pmp))
 				bwrite(bpn);
 			else
 				bdwrite(bpn);
@@ -351,7 +366,7 @@ updatefats(struct msdosfsmount *pmp, struct buf *bp, u_long fatbn)
 	/*
 	 * Write out the first (or current) FAT last.
 	 */
-	if (pmp->pm_mountp->mnt_flag & MNT_SYNCHRONOUS)
+	if (SYNCHRONOUS_WRITES(pmp))
 		bwrite(bp);
 	else
 		bdwrite(bp);
@@ -967,7 +982,6 @@ extendfile(struct denode *dep, u_long count, struct buf **bpp, u_long *ncp,
 	u_long cn, got;
 	struct msdosfsmount *pmp = dep->de_pmp;
 	struct buf *bp;
-	daddr_t blkno;
 
 	/*
 	 * Don't try to extend the root directory
@@ -1045,6 +1059,8 @@ extendfile(struct denode *dep, u_long count, struct buf **bpp, u_long *ncp,
 		 */
 		fc_setcache(dep, FC_LASTFC, frcn + got - 1, cn + got - 1);
 
+#ifndef MAKEFS
+		daddr_t blkno;
 		if (flags & DE_CLEAR) {
 			while (got-- > 0) {
 				/*
@@ -1078,6 +1094,23 @@ extendfile(struct denode *dep, u_long count, struct buf **bpp, u_long *ncp,
 					bdwrite(bp);
 			}
 		}
+#else
+		if ((flags & DE_CLEAR) &&
+		    (dep->de_Attributes & ATTR_DIRECTORY)) {
+			while (got-- > 0) {
+				bp = getblk(pmp->pm_devvp,
+				    cntobn(pmp, cn++),
+				    pmp->pm_bpcluster, 0, 0, 0);
+				clrbuf(bp);
+				if (bpp) {
+					*bpp = bp;
+					bpp = NULL;
+				} else {
+					bdwrite(bp);
+				}
+			}
+		}
+#endif
 	}
 
 	return (0);

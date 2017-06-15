@@ -214,6 +214,8 @@ struct denode {
 #define	VTODE(vp)	((struct denode *)(vp)->v_data)
 #define	DETOV(de)	((de)->de_vnode)
 
+#ifdef _KERNEL
+
 #define	DETIMES(dep, acc, mod, cre) do {				\
 	if ((dep)->de_flag & DE_UPDATE) {				\
 		(dep)->de_flag |= DE_MODIFIED;				\
@@ -262,9 +264,17 @@ int msdosfs_lookup(struct vop_cachedlookup_args *);
 int msdosfs_inactive(struct vop_inactive_args *);
 int msdosfs_reclaim(struct vop_reclaim_args *);
 
+#endif /* _KERNEL */
+
 /*
  * Internal service routine prototypes.
  */
+
+struct componentname;
+struct direntry;
+struct buf;
+struct ucred;
+
 int deget(struct msdosfsmount *, u_long, u_long, struct denode **);
 int uniqdosname(struct denode *, struct componentname *, u_char *);
 

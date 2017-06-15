@@ -51,7 +51,7 @@
 #ifndef _MSDOSFS_MSDOSFSMOUNT_H_
 #define	_MSDOSFS_MSDOSFSMOUNT_H_
 
-#ifdef _KERNEL
+#if defined(_KERNEL) || defined(MAKEFS)
 
 #include <sys/types.h>
 #include <sys/lock.h>
@@ -213,14 +213,16 @@ struct msdosfs_fileno {
 	 ? roottobn((pmp), (dirofs)) \
 	 : cntobn((pmp), (dirclu)))
 
+#endif /* _KERNEL || MAKEFS */
+
+#ifdef _KERNEL
+
 #define	MSDOSFS_LOCK_MP(pmp) \
 	lockmgr(&(pmp)->pm_fatlock, LK_EXCLUSIVE, NULL)
 #define	MSDOSFS_UNLOCK_MP(pmp) \
 	lockmgr(&(pmp)->pm_fatlock, LK_RELEASE, NULL)
 #define	MSDOSFS_ASSERT_MP_LOCKED(pmp) \
 	lockmgr_assert(&(pmp)->pm_fatlock, KA_XLOCKED)
-
-#endif /* _KERNEL */
 
 /*
  *  Arguments to mount MSDOS filesystems.
@@ -239,6 +241,7 @@ struct msdosfs_args {
 	char	*cs_local;	/* Local Charset */
 	mode_t	dirmask;	/* dir  mask to be applied for msdosfs perms */
 };
+#endif /* _KERNEL */
 
 /*
  * Msdosfs mount options:
