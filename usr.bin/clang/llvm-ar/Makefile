@@ -13,6 +13,6 @@ SRCS+=		llvm-ar.cpp
 
 LIBADD+=	z
 
-LINKS+=		${BINDIR}/llvm-ar ${BINDIR}/llvm-ranlib
+LINKS+=		${BINDIR}/${PROG_CXX} ${BINDIR}/llvm-ranlib
 
 .include "../llvm.prog.mk"

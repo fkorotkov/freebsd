@@ -19,7 +19,7 @@ CFLAGS+=-I. -I${.CURDIR}
 .if ${MK_SHARED_TOOLCHAIN} == "no"
 NO_SHARED?=	yes
 .endif
-LINKS=	${BINDIR}/ar ${BINDIR}/ranlib
+LINKS=	${BINDIR}/${PROG} ${BINDIR}/ranlib
 MLINKS= ar.1 ranlib.1
 
 .include <bsd.prog.mk>
