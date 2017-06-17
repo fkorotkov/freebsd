@@ -361,7 +361,7 @@ iso_mountfs(devvp, mp)
 	 * filehandle validation.
 	 */
 	isomp->volume_space_size += ssector;
-	bcopy (rootp, isomp->root, sizeof isomp->root);
+	memcpy(isomp->root, rootp, sizeof isomp->root);
 	isomp->root_extent = isonum_733 (rootp->extent);
 	isomp->root_size = isonum_733 (rootp->size);
 
@@ -463,7 +463,7 @@ iso_mountfs(devvp, mp)
 			    joliet_level);
 		rootp = (struct iso_directory_record *)
 			sup->root_directory_record;
-		bcopy (rootp, isomp->root, sizeof isomp->root);
+		memcpy(isomp->root, rootp, sizeof isomp->root);
 		isomp->root_extent = isonum_733 (rootp->extent);
 		isomp->root_size = isonum_733 (rootp->size);
 		isomp->joliet_level = joliet_level;
