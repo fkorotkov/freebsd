@@ -482,7 +482,8 @@ msdosfs_wfile(const char *path, struct denode *dep, fsnode *node)
 		u_long on = offs & pmp->pm_crbomask;
 
 		if ((error = pcbmap(dep, cn++, &bn, NULL, &blsize)) != 0) {
-			MSDOSFS_DPRINTF(("%s: pcbmap %lu", __func__, bn));
+			MSDOSFS_DPRINTF(("%s: pcbmap %lld", __func__,
+			    (long long)bn));
 			goto out;
 		}
 
