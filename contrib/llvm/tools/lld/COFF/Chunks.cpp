@@ -11,8 +11,9 @@
 #include "Error.h"
 #include "InputFiles.h"
 #include "Symbols.h"
+#include "llvm/ADT/Twine.h"
+#include "llvm/BinaryFormat/COFF.h"
 #include "llvm/Object/COFF.h"
-#include "llvm/Support/COFF.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/Endian.h"
 #include "llvm/Support/raw_ostream.h"
@@ -36,14 +37,29 @@ SectionChunk::SectionChunk(ObjectFile *F, const coff_section *H)
 
   Align = Header->getAlignment();
 
-  // Only COMDAT sections are subject of dead-stripping.
-  Live = !isCOMDAT();
+  // Chunks may be discarded during comdat merging.
+  Discarded = false;
+
+  // If linker GC is disabled, every chunk starts out alive.  If linker GC is
+  // enabled, treat non-comdat sections as roots. Generally optimized object
+  // files will be built with -ffunction-sections or /Gy, so most things worth
+  // stripping will be in a comdat.
+  Live = !Config->DoGC || !isCOMDAT();
 }
 
 static void add16(uint8_t *P, int16_t V) { write16le(P, read16le(P) + V); }
 static void add32(uint8_t *P, int32_t V) { write32le(P, read32le(P) + V); }
 static void add64(uint8_t *P, int64_t V) { write64le(P, read64le(P) + V); }
 static void or16(uint8_t *P, uint16_t V) { write16le(P, read16le(P) | V); }
+
+static void applySecRel(const SectionChunk *Sec, uint8_t *Off, Defined *Sym) {
+  // Don't apply section relative relocations to absolute symbols in codeview
+  // debug info sections. MSVC does not treat such relocations as fatal errors,
+  // and they can be found in the standard library for linker-provided symbols
+  // like __guard_fids_table and __safe_se_handler_table.
+  if (!(isa<DefinedAbsolute>(Sym) && Sec->isCodeView()))
+    add32(Off, Sym->getSecrel());
+}
 
 void SectionChunk::applyRelX64(uint8_t *Off, uint16_t Type, Defined *Sym,
                                uint64_t P) const {
@@ -59,9 +75,9 @@ void SectionChunk::applyRelX64(uint8_t *Off, uint16_t Type, Defined *Sym,
   case IMAGE_REL_AMD64_REL32_4:  add32(Off, S - P - 8); break;
   case IMAGE_REL_AMD64_REL32_5:  add32(Off, S - P - 9); break;
   case IMAGE_REL_AMD64_SECTION:  add16(Off, Sym->getSectionIndex()); break;
-  case IMAGE_REL_AMD64_SECREL:   add32(Off, Sym->getSecrel()); break;
+  case IMAGE_REL_AMD64_SECREL:   applySecRel(this, Off, Sym); break;
   default:
-    fatal("unsupported relocation type");
+    fatal("unsupported relocation type 0x" + Twine::utohexstr(Type));
   }
 }
 
@@ -74,9 +90,9 @@ void SectionChunk::applyRelX86(uint8_t *Off, uint16_t Type, Defined *Sym,
   case IMAGE_REL_I386_DIR32NB:  add32(Off, S); break;
   case IMAGE_REL_I386_REL32:    add32(Off, S - P - 4); break;
   case IMAGE_REL_I386_SECTION:  add16(Off, Sym->getSectionIndex()); break;
-  case IMAGE_REL_I386_SECREL:   add32(Off, Sym->getSecrel()); break;
+  case IMAGE_REL_I386_SECREL:   applySecRel(this, Off, Sym); break;
   default:
-    fatal("unsupported relocation type");
+    fatal("unsupported relocation type 0x" + Twine::utohexstr(Type));
   }
 }
 
@@ -134,9 +150,9 @@ void SectionChunk::applyRelARM(uint8_t *Off, uint16_t Type, Defined *Sym,
   case IMAGE_REL_ARM_BRANCH20T: applyBranch20T(Off, S - P - 4); break;
   case IMAGE_REL_ARM_BRANCH24T: applyBranch24T(Off, S - P - 4); break;
   case IMAGE_REL_ARM_BLX23T:    applyBranch24T(Off, S - P - 4); break;
-  case IMAGE_REL_ARM_SECREL:    add32(Off, Sym->getSecrel()); break;
+  case IMAGE_REL_ARM_SECREL:    applySecRel(this, Off, Sym); break;
   default:
-    fatal("unsupported relocation type");
+    fatal("unsupported relocation type 0x" + Twine::utohexstr(Type));
   }
 }
 
@@ -225,8 +241,12 @@ bool SectionChunk::isCOMDAT() const {
 void SectionChunk::printDiscardedMessage() const {
   // Removed by dead-stripping. If it's removed by ICF, ICF already
   // printed out the name, so don't repeat that here.
-  if (Sym && this == Repl)
-    outs() << "Discarded " << Sym->getName() << "\n";
+  if (Sym && this == Repl) {
+    if (Discarded)
+      message("Discarded comdat symbol " + Sym->getName());
+    else if (!Live)
+      message("Discarded " + Sym->getName());
+  }
 }
 
 StringRef SectionChunk::getDebugName() {
@@ -318,8 +338,45 @@ void SEHTableChunk::writeTo(uint8_t *Buf) const {
   std::sort(Begin, Begin + Cnt);
 }
 
-// Windows-specific.
-// This class represents a block in .reloc section.
+// Windows-specific. This class represents a block in .reloc section.
+// The format is described here.
+//
+// On Windows, each DLL is linked against a fixed base address and
+// usually loaded to that address. However, if there's already another
+// DLL that overlaps, the loader has to relocate it. To do that, DLLs
+// contain .reloc sections which contain offsets that need to be fixed
+// up at runtime. If the loader finds that a DLL cannot be loaded to its
+// desired base address, it loads it to somewhere else, and add <actual
+// base address> - <desired base address> to each offset that is
+// specified by the .reloc section. In ELF terms, .reloc sections
+// contain relative relocations in REL format (as opposed to RELA.)
+//
+// This already significantly reduces the size of relocations compared
+// to ELF .rel.dyn, but Windows does more to reduce it (probably because
+// it was invented for PCs in the late '80s or early '90s.)  Offsets in
+// .reloc are grouped by page where the page size is 12 bits, and
+// offsets sharing the same page address are stored consecutively to
+// represent them with less space. This is very similar to the page
+// table which is grouped by (multiple stages of) pages.
+//
+// For example, let's say we have 0x00030, 0x00500, 0x00700, 0x00A00,
+// 0x20004, and 0x20008 in a .reloc section for x64. The uppermost 4
+// bits have a type IMAGE_REL_BASED_DIR64 or 0xA. In the section, they
+// are represented like this:
+//
+//   0x00000  -- page address (4 bytes)
+//   16       -- size of this block (4 bytes)
+//     0xA030 -- entries (2 bytes each)
+//     0xA500
+//     0xA700
+//     0xAA00
+//   0x20000  -- page address (4 bytes)
+//   12       -- size of this block (4 bytes)
+//     0xA004 -- entries (2 bytes each)
+//     0xA008
+//
+// Usually we have a lot of relocations for each page, so the number of
+// bytes for one .reloc entry is close to 2 bytes on average.
 BaserelChunk::BaserelChunk(uint32_t Page, Baserel *Begin, Baserel *End) {
   // Block header consists of 4 byte page RVA and 4 byte block size.
   // Each entry is 2 byte. Last entry may be padding.

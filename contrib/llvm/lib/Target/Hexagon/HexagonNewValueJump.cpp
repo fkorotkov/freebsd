@@ -130,6 +130,8 @@ static bool canBeFeederToNewValueJump(const HexagonInstrInfo *QII,
   if (II->getOpcode() == TargetOpcode::KILL)
     return false;
 
+  if (II->isImplicitDef())
+    return false;
 
   // Make sure there there is no 'def' or 'use' of any of the uses of
   // feeder insn between it's definition, this MI and jump, jmpInst
@@ -627,7 +629,7 @@ bool HexagonNewValueJump::runOnMachineFunction(MachineFunction &MF) {
             if (MO.isReg() && MO.isUse()) {
               unsigned feederReg = MO.getReg();
               for (MachineBasicBlock::iterator localII = feederPos,
-                   end = jmpPos; localII != end; localII++) {
+                   end = cmpInstr->getIterator(); localII != end; localII++) {
                 MachineInstr &localMI = *localII;
                 for (unsigned j = 0; j < localMI.getNumOperands(); j++) {
                   MachineOperand &localMO = localMI.getOperand(j);

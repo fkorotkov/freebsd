@@ -27,7 +27,8 @@ public:
     : MCAsmBackend(), IsLittleEndian(IsLittleEndian) {}
   ~BPFAsmBackend() override = default;
 
-  void applyFixup(const MCFixup &Fixup, char *Data, unsigned DataSize,
+  void applyFixup(const MCAssembler &Asm, const MCFixup &Fixup,
+                  const MCValue &Target, MutableArrayRef<char> Data,
                   uint64_t Value, bool IsPCRel) const override;
 
   MCObjectWriter *createObjectWriter(raw_pwrite_stream &OS) const override;
@@ -61,8 +62,9 @@ bool BPFAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
   return true;
 }
 
-void BPFAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
-                               unsigned DataSize, uint64_t Value,
+void BPFAsmBackend::applyFixup(const MCAssembler &Asm, const MCFixup &Fixup,
+                               const MCValue &Target,
+                               MutableArrayRef<char> Data, uint64_t Value,
                                bool IsPCRel) const {
   if (Fixup.getKind() == FK_SecRel_4 || Fixup.getKind() == FK_SecRel_8) {
     assert(Value == 0);
@@ -70,7 +72,7 @@ void BPFAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
     unsigned Size = Fixup.getKind() == FK_Data_4 ? 4 : 8;
 
     for (unsigned i = 0; i != Size; ++i) {
-      unsigned Idx = IsLittleEndian ? i : Size - i;
+      unsigned Idx = IsLittleEndian ? i : Size - i - 1;
       Data[Fixup.getOffset() + Idx] = uint8_t(Value >> (i * 8));
     }
   } else {

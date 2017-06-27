@@ -160,7 +160,7 @@ struct QuarantineCallback {
   }
 
   void *Allocate(uptr size) {
-    return get_allocator().Allocate(cache_, size, 1, false);
+    return get_allocator().Allocate(cache_, size, 1);
   }
 
   void Deallocate(void *p) {
@@ -235,6 +235,8 @@ struct Allocator {
   AllocatorCache fallback_allocator_cache;
   QuarantineCache fallback_quarantine_cache;
 
+  atomic_uint8_t rss_limit_exceeded;
+
   // ------------------- Options --------------------------
   atomic_uint16_t min_redzone;
   atomic_uint16_t max_redzone;
@@ -264,8 +266,17 @@ struct Allocator {
   }
 
   void Initialize(const AllocatorOptions &options) {
-    allocator.Init(options.may_return_null, options.release_to_os_interval_ms);
+    SetAllocatorMayReturnNull(options.may_return_null);
+    allocator.Init(options.release_to_os_interval_ms);
     SharedInitCode(options);
+  }
+
+  bool RssLimitExceeded() {
+    return atomic_load(&rss_limit_exceeded, memory_order_relaxed);
+  }
+
+  void SetRssLimitExceeded(bool limit_exceeded) {
+    atomic_store(&rss_limit_exceeded, limit_exceeded, memory_order_relaxed);
   }
 
   void RePoisonChunk(uptr chunk) {
@@ -292,7 +303,7 @@ struct Allocator {
   }
 
   void ReInitialize(const AllocatorOptions &options) {
-    allocator.SetMayReturnNull(options.may_return_null);
+    SetAllocatorMayReturnNull(options.may_return_null);
     allocator.SetReleaseToOSIntervalMs(options.release_to_os_interval_ms);
     SharedInitCode(options);
 
@@ -313,7 +324,7 @@ struct Allocator {
     options->thread_local_quarantine_size_kb = quarantine.GetCacheSize() >> 10;
     options->min_redzone = atomic_load(&min_redzone, memory_order_acquire);
     options->max_redzone = atomic_load(&max_redzone, memory_order_acquire);
-    options->may_return_null = allocator.MayReturnNull();
+    options->may_return_null = AllocatorMayReturnNull();
     options->alloc_dealloc_mismatch =
         atomic_load(&alloc_dealloc_mismatch, memory_order_acquire);
     options->release_to_os_interval_ms = allocator.ReleaseToOSIntervalMs();
@@ -363,6 +374,8 @@ struct Allocator {
                  AllocType alloc_type, bool can_fill) {
     if (UNLIKELY(!asan_inited))
       AsanInitFromRtl();
+    if (RssLimitExceeded())
+      return AsanAllocator::FailureHandler::OnOOM();
     Flags &fl = *flags();
     CHECK(stack);
     const uptr min_alignment = SHADOW_GRANULARITY;
@@ -395,24 +408,21 @@ struct Allocator {
     if (size > kMaxAllowedMallocSize || needed_size > kMaxAllowedMallocSize) {
       Report("WARNING: AddressSanitizer failed to allocate 0x%zx bytes\n",
              (void*)size);
-      return allocator.ReturnNullOrDieOnBadRequest();
+      return AsanAllocator::FailureHandler::OnBadRequest();
     }
 
     AsanThread *t = GetCurrentThread();
     void *allocated;
-    bool check_rss_limit = true;
     if (t) {
       AllocatorCache *cache = GetAllocatorCache(&t->malloc_storage());
-      allocated =
-          allocator.Allocate(cache, needed_size, 8, false, check_rss_limit);
+      allocated = allocator.Allocate(cache, needed_size, 8);
     } else {
       SpinMutexLock l(&fallback_mutex);
       AllocatorCache *cache = &fallback_allocator_cache;
-      allocated =
-          allocator.Allocate(cache, needed_size, 8, false, check_rss_limit);
+      allocated = allocator.Allocate(cache, needed_size, 8);
     }
-
-    if (!allocated) return allocator.ReturnNullOrDieOnOOM();
+    if (!allocated)
+      return nullptr;
 
     if (*(u8 *)MEM_TO_SHADOW((uptr)allocated) == 0 && CanPoisonMemory()) {
       // Heap poisoning is enabled, but the allocator provides an unpoisoned
@@ -523,6 +533,18 @@ struct Allocator {
     AsanThread *t = GetCurrentThread();
     m->free_tid = t ? t->tid() : 0;
     m->free_context_id = StackDepotPut(*stack);
+
+    Flags &fl = *flags();
+    if (fl.max_free_fill_size > 0) {
+      // We have to skip the chunk header, it contains free_context_id.
+      uptr scribble_start = (uptr)m + kChunkHeaderSize + kChunkHeader2Size;
+      if (m->UsedSize() >= kChunkHeader2Size) {  // Skip Header2 in user area.
+        uptr size_to_fill = m->UsedSize() - kChunkHeader2Size;
+        size_to_fill = Min(size_to_fill, (uptr)fl.max_free_fill_size);
+        REAL(memset)((void *)scribble_start, fl.free_fill_byte, size_to_fill);
+      }
+    }
+
     // Poison the region.
     PoisonShadow(m->Beg(),
                  RoundUpTo(m->UsedSize(), SHADOW_GRANULARITY),
@@ -554,7 +576,17 @@ struct Allocator {
     uptr chunk_beg = p - kChunkHeaderSize;
     AsanChunk *m = reinterpret_cast<AsanChunk *>(chunk_beg);
 
+    // On Windows, uninstrumented DLLs may allocate memory before ASan hooks
+    // malloc. Don't report an invalid free in this case.
+    if (SANITIZER_WINDOWS &&
+        !get_allocator().PointerIsMine(ptr)) {
+      if (!IsSystemHeapAddress(p))
+        ReportFreeNotMalloced(p, stack);
+      return;
+    }
+
     ASAN_FREE_HOOK(ptr);
+
     // Must mark the chunk as quarantined before any changes to its metadata.
     // Do not quarantine given chunk if we failed to set CHUNK_QUARANTINE flag.
     if (!AtomicallySetQuarantineFlagIfAllocated(m, ptr, stack)) return;
@@ -601,7 +633,7 @@ struct Allocator {
 
   void *Calloc(uptr nmemb, uptr size, BufferedStackTrace *stack) {
     if (CallocShouldReturnNullDueToOverflow(size, nmemb))
-      return allocator.ReturnNullOrDieOnBadRequest();
+      return AsanAllocator::FailureHandler::OnBadRequest();
     void *ptr = Allocate(nmemb * size, 8, stack, FROM_MALLOC, false);
     // If the memory comes from the secondary allocator no need to clear it
     // as it comes directly from mmap.
@@ -790,8 +822,12 @@ void *asan_realloc(void *p, uptr size, BufferedStackTrace *stack) {
   if (!p)
     return instance.Allocate(size, 8, stack, FROM_MALLOC, true);
   if (size == 0) {
-    instance.Deallocate(p, 0, stack, FROM_MALLOC);
-    return nullptr;
+    if (flags()->allocator_frees_and_returns_null_on_realloc_zero) {
+      instance.Deallocate(p, 0, stack, FROM_MALLOC);
+      return nullptr;
+    }
+    // Allocate a size of 1 if we shouldn't free() on Realloc to 0
+    size = 1;
   }
   return instance.Reallocate(p, size, stack);
 }
@@ -840,8 +876,8 @@ void asan_mz_force_unlock() {
   instance.ForceUnlock();
 }
 
-void AsanSoftRssLimitExceededCallback(bool exceeded) {
-  instance.allocator.SetRssLimitIsExceeded(exceeded);
+void AsanSoftRssLimitExceededCallback(bool limit_exceeded) {
+  instance.SetRssLimitExceeded(limit_exceeded);
 }
 
 } // namespace __asan
@@ -958,15 +994,13 @@ uptr __sanitizer_get_allocated_size(const void *p) {
 
 #if !SANITIZER_SUPPORTS_WEAK_HOOKS
 // Provide default (no-op) implementation of malloc hooks.
-extern "C" {
-SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE
-void __sanitizer_malloc_hook(void *ptr, uptr size) {
+SANITIZER_INTERFACE_WEAK_DEF(void, __sanitizer_malloc_hook,
+                             void *ptr, uptr size) {
   (void)ptr;
   (void)size;
 }
-SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE
-void __sanitizer_free_hook(void *ptr) {
+
+SANITIZER_INTERFACE_WEAK_DEF(void, __sanitizer_free_hook, void *ptr) {
   (void)ptr;
 }
-} // extern "C"
 #endif
