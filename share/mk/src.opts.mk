@@ -237,9 +237,15 @@ __DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .endif
+# Only program remaining from in-tree binutils (for bootstrap) is GNU as for
+# i386/amd64 - assume we will use LLD or external binutils linker and Clang IAS
+# everywhere else.
+.if ${__T} != "amd64" && ${__T} != "i386"
+BROKEN_OPTIONS+=BINUTILS_BOOTSTRAP
+.endif
 # In-tree binutils/gcc are older versions without modern architecture support.
 .if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
-BROKEN_OPTIONS+=BINUTILS BINUTILS_BOOTSTRAP GCC GCC_BOOTSTRAP GDB
+BROKEN_OPTIONS+=BINUTILS GCC GCC_BOOTSTRAP GDB
 .endif
 .if ${__T:Mriscv*} != ""
 BROKEN_OPTIONS+=PROFILE # "sorry, unimplemented: profiler support for RISC-V"
