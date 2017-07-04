@@ -152,3 +152,35 @@ GCC_4.3.0 {
 	__bswapdi2;
 	__bswapsi2;
 } GCC_4.2.0;
+
+GCC_4.4.0 {
+} GCC_4.3.0;
+
+GCC_4.5.0 {
+} GCC_4.4.0;
+
+# For other operating systems 128 bit long double support exists in the GCC_3.0 symbol
+# version but was not brought to FreeBSD until GCC 4.6.0.
+GCC_4.6.0 {
+	__addtf3;
+	__divtf3;
+	__eqtf2;
+	__extenddftf2;
+	__extendsftf2;
+	__fixtfdi;
+	__fixtfsi;
+	__fixtfti;
+	__fixunstfdi;
+	__fixunstfsi;
+	__fixunstfti;
+	__floatunsitf;
+	__getf2;
+	__gttf2;
+	__letf2;
+	__lttf2;
+	__multf3;
+	__netf2;
+	__subtf3;
+	__trunctfdf2;
+	__trunctfsf2;
+} GCC_4.5.0;
