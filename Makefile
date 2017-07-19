@@ -433,28 +433,21 @@ MAKE_PARAMS_riscv?=	CROSS_TOOLCHAIN=riscv64-gcc
 
 # XXX Remove architectures only supported by external toolchain from universe
 # if the required toolchain packages are missing.
-TOOLCHAIN_TARGET_mips=			mips
-TOOLCHAIN_TARGET_ARCHES_mips=		mipsel mips mipselhf mipshf
-TOOLCHAIN_TARGET_mips64=		mips
-TOOLCHAIN_TARGET_ARCHES_mips64=		mips64el mips64 mipsn32 mips64elhf mips64hf
-TOOLCHAIN_TARGET_powerpc=		powerpc
-TOOLCHAIN_TARGET_ARCHES_powerpc=	powerpc powerpcspe
-TOOLCHAIN_TARGET_powerpc64=		powerpc
-TOOLCHAIN_TARGET_ARCHES_powerpc64=	powerpc64
-TOOLCHAIN_TARGET_riscv64=		riscv
-TOOLCHAIN_TARGET_ARCHES_riscv64=	riscv64 riscv64sf
-TOOLCHAIN_TARGET_sparc64=		sparc64
-TOOLCHAIN_TARGET_ARCHES_sparc64=	sparc64
-.for toolchain in mips mips64 powerpc powerpc64 riscv64 sparc64
-.if !exists(/usr/local/share/toolchains/${toolchain}-gcc.mk) && \
-    ${TARGETS:M${TOOLCHAIN_TARGET_${toolchain}}}
-.for arch in ${TOOLCHAIN_TARGET_ARCHES_${toolchain}}
-TARGET_ARCHES_${TOOLCHAIN_TARGET_${toolchain}}:=${TARGET_ARCHES_${TOOLCHAIN_TARGET_${toolchain}}:N${arch}}
-.endfor
+TOOLCHAIN_mips=		mips mips64
+TOOLCHAIN_powerpc=	powerpc powerpc64
+TOOLCHAIN_riscv=	riscv64
+TOOLCHAIN_sparc64=	sparc64
+.for target in mips powerpc riscv sparc64
+.if ${_UNIVERSE_TARGETS:M${target}}
+.for toolchain in ${TOOLCHAIN_${target}}
+.if !exists(/usr/local/share/toolchains/${toolchain}-gcc.mk)
+_UNIVERSE_TARGETS:= ${_UNIVERSE_TARGETS:N${target}}
 universe: universe_${toolchain}_skip .PHONY
 universe_epilogue: universe_${toolchain}_skip .PHONY
 universe_${toolchain}_skip: universe_prologue .PHONY
-	@echo ">> ${TOOLCHAIN_TARGET_${toolchain}} skipped - install ${toolchain}-xtoolchain-gcc port or package to build"
+	@echo ">> ${target} skipped - install ${toolchain}-xtoolchain-gcc port or package to build"
+.endif
+.endfor
 .endif
 .endfor
 
