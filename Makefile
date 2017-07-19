@@ -431,14 +431,32 @@ TARGET_ARCHES_${target}?= ${target}
 
 MAKE_PARAMS_riscv?=	CROSS_TOOLCHAIN=riscv64-gcc
 
-# XXX Remove riscv from universe if the required toolchain package is missing.
-.if !exists(/usr/local/share/toolchains/riscv64-gcc.mk) && ${TARGETS:Mriscv}
-_UNIVERSE_TARGETS:= ${_UNIVERSE_TARGETS:Nriscv}
-universe: universe_riscv_skip .PHONY
-universe_epilogue: universe_riscv_skip .PHONY
-universe_riscv_skip: universe_prologue .PHONY
-	@echo ">> riscv skipped - install riscv64-xtoolchain-gcc port or package to build"
+# XXX Remove architectures only supported by external toolchain from universe
+# if the required toolchain packages are missing.
+TOOLCHAIN_TARGET_mips=			mips
+TOOLCHAIN_TARGET_ARCHES_mips=		mipsel mips mipselhf mipshf
+TOOLCHAIN_TARGET_mips64=		mips
+TOOLCHAIN_TARGET_ARCHES_mips64=		mips64el mips64 mipsn32 mips64elhf mips64hf
+TOOLCHAIN_TARGET_powerpc=		powerpc
+TOOLCHAIN_TARGET_ARCHES_powerpc=	powerpc powerpcspe
+TOOLCHAIN_TARGET_powerpc64=		powerpc
+TOOLCHAIN_TARGET_ARCHES_powerpc64=	powerpc64
+TOOLCHAIN_TARGET_riscv64=		riscv
+TOOLCHAIN_TARGET_ARCHES_riscv64=	riscv64 riscv64sf
+TOOLCHAIN_TARGET_sparc64=		sparc64
+TOOLCHAIN_TARGET_ARCHES_sparc64=	sparc64
+.for toolchain in mips mips64 powerpc powerpc64 riscv64 sparc64
+.if !exists(/usr/local/share/toolchains/${toolchain}-gcc.mk) && \
+    ${TARGETS:M${TOOLCHAIN_TARGET_${toolchain}}}
+.for arch in ${TOOLCHAIN_TARGET_ARCHES_${toolchain}}
+TARGET_ARCHES_${TOOLCHAIN_TARGET_${toolchain}}:=${TARGET_ARCHES_${TOOLCHAIN_TARGET_${toolchain}}:N${arch}}
+.endfor
+universe: universe_${toolchain}_skip .PHONY
+universe_epilogue: universe_${toolchain}_skip .PHONY
+universe_${toolchain}_skip: universe_prologue .PHONY
+	@echo ">> ${TOOLCHAIN_TARGET_${toolchain}} skipped - install ${toolchain}-xtoolchain-gcc port or package to build"
 .endif
+.endfor
 
 .if defined(UNIVERSE_TARGET)
 MAKE_JUST_WORLDS=	YES
