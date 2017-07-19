@@ -42,6 +42,12 @@
 extern void debug_printf(const char *, ...) __printflike(1, 2);
 extern int debug;
 
+// Binaries using lld-linked i386 libc crash on startup so compile debug in
+// by default there.
+#if !defined(DEBUG) && defined(__i386__)
+#define DEBUG
+#endif
+
 #ifdef DEBUG
 #define dbg(...)	debug_printf(__VA_ARGS__)
 #else
