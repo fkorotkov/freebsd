@@ -39,6 +39,7 @@ __DEFAULT_YES_OPTIONS = \
     KERNEL_SYMBOLS \
     NETGRAPH \
     PF \
+    REPRODUCIBLE_BUILD \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
     TESTS \
@@ -49,8 +50,7 @@ __DEFAULT_NO_OPTIONS = \
     EXTRA_TCP_STACKS \
     NAND \
     OFED \
-    RATELIMIT \
-    REPRODUCIBLE_BUILD
+    RATELIMIT
 
 # Some options are totally broken on some architectures. We disable
 # them. If you need to enable them on an experimental basis, you
