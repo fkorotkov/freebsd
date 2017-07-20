@@ -212,6 +212,8 @@ setthetime(const char *fmt, const char *p, int jflag, int nflag)
 	int century;
 
 	lt = localtime(&tval);
+	if (lt == NULL)
+		errx(1, "invalid time");
 	lt->tm_isdst = -1;		/* divine correct DST */
 
 	if (fmt != NULL) {
