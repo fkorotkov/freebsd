@@ -442,7 +442,7 @@ TARGET_ARCHES_${target}?= ${target}
 MAKE_PARAMS_riscv?=	CROSS_TOOLCHAIN=riscv64-gcc
 
 # XXX Remove architectures only supported by external toolchain from universe
-# if the required toolchain packages are missing.
+# if required toolchain packages are missing.
 TOOLCHAINS_mips=		mips mips64
 TOOLCHAINS_powerpc=	powerpc powerpc64
 TOOLCHAINS_riscv=	riscv64
