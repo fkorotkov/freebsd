@@ -125,23 +125,32 @@ struct mpr_ident {
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3324_2,
 	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3324_2" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3408,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3408" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3408" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3416,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3416" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3416" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3508,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3508" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3508" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3508_1,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3508_1" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3508_1" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3516,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3516" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3516" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3516_1,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3516_1" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3516_1" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3616,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3616" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3616" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3708,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3708" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3708" },
 	{ MPI2_MFGPAGE_VENDORID_LSI, MPI26_MFGPAGE_DEVID_SAS3716,
-	    0xffff, 0xffff, 0, "Avago Technologies (LSI) SAS3716" },
+	    0xffff, 0xffff, MPR_FLAGS_GEN35_IOC,
+	    "Avago Technologies (LSI) SAS3716" },
 	{ 0, 0, 0, 0, 0, NULL }
 };
 
@@ -197,19 +206,6 @@ mpr_pci_attach(device_t dev)
 	/* Twiddle basic PCI config bits for a sanity check */
 	pci_enable_busmaster(dev);
 
-	/* Set flag if this is a Gen3.5 IOC */
-	if ((m->device == MPI26_MFGPAGE_DEVID_SAS3508) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3508_1) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3408) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3516) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3516_1) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3416) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3716) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3616) ||
-	    (m->device == MPI26_MFGPAGE_DEVID_SAS3708)) {
-		sc->mpr_flags |= MPR_FLAGS_GEN35_IOC;
-	}
-
 	for (i = 0; i < PCI_MAXMAPS_0; i++) {
 		sc->mpr_regs_rid = PCIR_BAR(i);
 
@@ -264,6 +260,7 @@ mpr_pci_alloc_interrupts(struct mpr_softc *sc)
 
 	dev = sc->mpr_dev;
 	error = 0;
+	msgs = 0;
 
 	if ((sc->disable_msix == 0) &&
 	    ((msgs = pci_msix_count(dev)) >= MPR_MSI_COUNT))
@@ -271,7 +268,7 @@ mpr_pci_alloc_interrupts(struct mpr_softc *sc)
 	if ((error != 0) && (sc->disable_msi == 0) &&
 	    ((msgs = pci_msi_count(dev)) >= MPR_MSI_COUNT))
 		error = mpr_alloc_msi(sc, MPR_MSI_COUNT);
-	else
+	if (error != 0)
 		msgs = 0;
 
 	sc->msi_msgs = msgs;
