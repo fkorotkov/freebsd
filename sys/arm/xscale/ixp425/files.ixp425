@@ -31,7 +31,7 @@ ixp425_npe_fw.c				optional npe_fw			\
 #
 IxNpeMicrocode.fwo			optional npe_fw			\
 	dependency	"IxNpeMicrocode.dat"				\
-	compile-with	"${LD} -b binary -d -warn-common -r -d -o ${.TARGET} IxNpeMicrocode.dat" \
+	compile-with	"${LD} -m ${LD_EMULATION} -b binary -d -warn-common -r -d -o ${.TARGET} IxNpeMicrocode.dat" \
 	no-implicit-rule						\
 	clean		"IxNpeMicrocode.fwo"
 IxNpeMicrocode.dat			optional npe_fw			\
