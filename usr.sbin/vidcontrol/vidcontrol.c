@@ -1293,7 +1293,7 @@ set_history(char *opt)
 
 	size = atoi(opt);
 
-	if ((*opt == '\0') || size < 0) {
+	if ((*opt == '\0') || size <= 0) {
 		revert();
 		errx(1, "argument must be a positive number");
 	}
