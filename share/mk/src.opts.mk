@@ -157,7 +157,6 @@ __DEFAULT_YES_OPTIONS = \
     TALK \
     TCSH \
     TELNET \
-    TESTS \
     TEXTPROC \
     TFTP \
     TIMED \
