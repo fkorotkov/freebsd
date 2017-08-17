@@ -257,22 +257,24 @@ int
 fill_dbregs(struct thread *td, struct dbreg *regs)
 {
 
-	panic("ARM64TODO: fill_dbregs");
+	/* ARM64TODO */
+	return (EDOOFUS);
 }
 
 int
 set_dbregs(struct thread *td, struct dbreg *regs)
 {
 
-	panic("ARM64TODO: set_dbregs");
+	/* ARM64TODO */
+	return (EDOOFUS);
 }
 
 int
 ptrace_set_pc(struct thread *td, u_long addr)
 {
 
-	panic("ARM64TODO: ptrace_set_pc");
-	return (0);
+	/* ARM64TODO */
+	return (EDOOFUS);
 }
 
 int
