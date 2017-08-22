@@ -300,7 +300,7 @@ else
 	VERSTR="${VERINFO}\\n    ${u}@${h}:${d}\\n"
 fi
 
-cat << EOF > vers.c
+cat << EOF > vers.c.tmp
 $COPYRIGHT
 #define SCCSSTR "@(#)${VERINFO}"
 #define VERSTR "${VERSTR}"
@@ -314,5 +314,11 @@ char osrelease[sizeof(RELSTR) > 32 ? sizeof(RELSTR) : 32] = RELSTR;
 int osreldate = ${RELDATE};
 char kern_ident[] = "${i}";
 EOF
+
+if [ ! -f vers.c ] || ! cmp -s vers.c vers.c.tmp; then
+	mv vers.c.tmp vers.c
+else
+	rm vers.c.tmp
+fi
 
 echo $((v + 1)) > version
