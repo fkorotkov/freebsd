@@ -1,8 +1,11 @@
 .\" $FreeBSD$
 Enable building of the
 .Bx
-r-commands.
-This includes
+r-commands
+.Xr rcp 1 ,
 .Xr rlogin 1 ,
+and
 .Xr rsh 1 ,
-etc.
+.Xr rlogind 8 ,
+and
+.Xr rshd 8 .
