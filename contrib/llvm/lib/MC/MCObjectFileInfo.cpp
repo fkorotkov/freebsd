@@ -463,6 +463,13 @@ void MCObjectFileInfo::initELFMCObjectFileInfo(const Triple &T) {
   if (T.isOSSolaris() && T.getArch() != Triple::x86_64)
     EHSectionFlags |= ELF::SHF_WRITE;
 
+  // The Mips port of FreeBSD currently has difficulty with read only .eh_frame
+  // due to linker limitations. Work around this for now by making it writable.
+  if (T.isOSFreeBSD() &&
+      (T.getArch() == Triple::mips || T.getArch() == Triple::mipsel ||
+       T.getArch() == Triple::mips64 || T.getArch() == Triple::mips64el))
+    EHSectionFlags |= ELF::SHF_WRITE;
+
   // ELF
   BSSSection = Ctx->getELFSection(".bss", ELF::SHT_NOBITS,
                                   ELF::SHF_WRITE | ELF::SHF_ALLOC);
