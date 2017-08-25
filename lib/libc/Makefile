@@ -76,7 +76,9 @@ NOASM=
 .include "${LIBC_SRCTOP}/compat-43/Makefile.inc"
 .include "${LIBC_SRCTOP}/gdtoa/Makefile.inc"
 .include "${LIBC_SRCTOP}/gen/Makefile.inc"
+.if ${MACHINE_ARCH:Mmips64*} == ""
 .include "${LIBC_SRCTOP}/gmon/Makefile.inc"
+.endif
 .if ${MK_ICONV} != "no"
 .include "${LIBC_SRCTOP}/iconv/Makefile.inc"
 .endif
