@@ -283,17 +283,15 @@ BROKEN_OPTIONS+=LIBSOFT
 .endif
 .if ${__T:Mmips*}
 BROKEN_OPTIONS+=SSP
-.endif
-.if ${__T:Mmips*} || ${__T:Mpowerpc*} || ${__T:Msparc64} || ${__T:Mriscv*}
-BROKEN_OPTIONS+=EFI
-.endif
-.if ${__T:Mmips64*}
 # profiling won't work on MIPS64 because there is only assembly for o32
 BROKEN_OPTIONS+=PROFILE
 # binaries too large? "relocation R_MIPS_GOT_DISP out of range" errors
 BROKEN_OPTIONS+=CLANG RESCUE
 # error: ABI 'o32' is not supported on CPU 'mips3'
 BROKEN_OPTIONS+=LIB32
+.endif
+.if ${__T:Mmips*} || ${__T:Mpowerpc*} || ${__T:Msparc64} || ${__T:Mriscv*}
+BROKEN_OPTIONS+=EFI
 .endif
 .if ${__T} == "aarch64" || ${__T} == "amd64" || ${__T} == "i386" || \
     ${__T} == "powerpc64" || ${__T} == "sparc64"
