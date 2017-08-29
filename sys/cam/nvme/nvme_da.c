@@ -1010,17 +1010,18 @@ ndadone(struct cam_periph *periph, union ccb *done_ccb)
 			bp->bio_resid = bp->bio_bcount;
 			bp->bio_flags |= BIO_ERROR;
 		} else {
-			if (state == NDA_CCB_TRIM)
-				bp->bio_resid = 0;
-			else
-				bp->bio_resid = nvmeio->resid;
-			if (bp->bio_resid > 0)
-				bp->bio_flags |= BIO_ERROR;
+			bp->bio_resid = 0;
 		}
 		if (state == NDA_CCB_TRIM)
 			free(bp->bio_driver2, M_NVMEDA);
 		softc->outstanding_cmds--;
 
+		/*
+		 * We need to call cam_iosched before we call biodone so that we
+		 * don't measure any activity that happens in the completion
+		 * routine, which in the case of sendfile can be quite
+		 * extensive.
+		 */
 		cam_iosched_bio_complete(softc->cam_iosched, bp, done_ccb);
 		xpt_release_ccb(done_ccb);
 		if (state == NDA_CCB_TRIM) {
