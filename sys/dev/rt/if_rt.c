@@ -282,7 +282,7 @@ generate_mac(uint8_t *mac)
 static int
 ether_request_mac(device_t dev, uint8_t *mac)
 {
-	char *var;
+	const char *var;
 
 	/*
 	 * "ethaddr" is passed via envp on RedBoot platforms
