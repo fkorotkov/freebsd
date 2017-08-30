@@ -234,7 +234,7 @@ rt305x_pci_alloc_resource(device_t bus, device_t child, int type, int *rid,
 	if (type != SYS_RES_IRQ) {
 		if (type == SYS_RES_MEMORY) {
 			va = (vm_offset_t)pmap_mapdev(start, count);
-		} else if (type == SYS_RES_IOPORT){
+		} else { /* type == SYS_RES_IOPORT) */
 			va = (vm_offset_t)MIPS_PHYS_TO_KSEG1(start);
 		}
 		rman_set_bushandle(rv, va);
