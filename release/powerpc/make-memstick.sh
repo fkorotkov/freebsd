@@ -10,6 +10,7 @@
 # $FreeBSD$
 #
 
+set -e
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 export PATH
 

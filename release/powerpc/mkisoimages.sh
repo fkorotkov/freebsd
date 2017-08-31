@@ -23,6 +23,7 @@
 # extra-bits-dir, if provided, contains additional files to be merged
 # into base-bits-dir as part of making the image.
 
+set -e
 if [ "$1" = "-b" ]; then
 	# Apple boot code
 	uudecode -o /tmp/hfs-boot-block.bz2 "`dirname "$0"`/hfs-boot.bz2.uu"
