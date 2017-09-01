@@ -44,7 +44,10 @@ fi
 rm ${1}/etc/fstab
 rm ${1}/etc/rc.conf.local
 
-mkimg -s apm -p freebsd-boot:=${1}/boot/boot1.hfs -p freebsd-ufs/FreeBSD_Install:=${tempfile} -o ${2}
+mkimg -s apm \
+    -p freebsd-boot:=${1}/boot/boot1.hfs \
+    -p freebsd-ufs/FreeBSD_Install:=${tempfile} \
+    -o ${2}
 
 rm -f ${tempfile}
 
