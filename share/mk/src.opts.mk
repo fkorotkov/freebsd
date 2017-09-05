@@ -177,7 +177,6 @@ __DEFAULT_NO_OPTIONS = \
     GNU_DIFF \
     GNU_GREP \
     GNU_GREP_COMPAT \
-    GROFF \
     HESIOD \
     LIBSOFT \
     NAND \
