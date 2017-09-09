@@ -36,8 +36,7 @@
 .Dt FGETS 3
 .Os
 .Sh NAME
-.Nm fgets ,
-.Nm gets
+.Nm fgets
 .Nd get a line from a stream
 .Sh LIBRARY
 .Lb libc
@@ -45,8 +44,6 @@
 .In stdio.h
 .Ft char *
 .Fn fgets "char * restrict str" "int size" "FILE * restrict stream"
-.Ft char *
-.Fn gets "char *str"
 .Sh DESCRIPTION
 The
 .Fn fgets
@@ -67,38 +64,24 @@ character is appended to end the string.
 The
 .Fn gets
 function
-is equivalent to
-.Fn fgets
-with an infinite
-.Fa size
-and a
-.Fa stream
-of
-.Dv stdin ,
-except that the newline character (if any) is not stored in the string.
-It is the caller's responsibility to ensure that the input line,
-if any, is sufficiently short to fit in the string.
+was unsafe and is no longer available.
 .Sh RETURN VALUES
 Upon successful completion,
 .Fn fgets
-and
-.Fn gets
-return
+returns
 a pointer to the string.
 If end-of-file occurs before any characters are read,
-they return
+it returns
 .Dv NULL
 and the buffer contents remain unchanged.
 If an error occurs,
-they return
+it returns
 .Dv NULL
 and the buffer contents are indeterminate.
 The
 .Fn fgets
-and
-.Fn gets
-functions
-do not distinguish between end-of-file and error, and callers must use
+function
+does not distinguish between end-of-file and error, and callers must use
 .Xr feof 3
 and
 .Xr ferror 3
@@ -121,13 +104,6 @@ for any of the errors specified for the routines
 .Xr read 2 ,
 or
 .Xr malloc 3 .
-.Pp
-The function
-.Fn gets
-may also fail and set
-.Va errno
-for any of the errors specified for the routine
-.Xr getchar 3 .
 .Sh SEE ALSO
 .Xr feof 3 ,
 .Xr ferror 3 ,
@@ -135,22 +111,7 @@ for any of the errors specified for the routine
 .Xr fgetws 3 ,
 .Xr getline 3
 .Sh STANDARDS
-The functions
-.Fn fgets
-and
-.Fn gets
-conform to
-.St -isoC-99 .
-.Sh SECURITY CONSIDERATIONS
 The
-.Fn gets
-function cannot be used securely.
-Because of its lack of bounds checking,
-and the inability for the calling program
-to reliably determine the length of the next incoming line,
-the use of this function enables malicious users
-to arbitrarily change a running program's functionality through
-a buffer overflow attack.
-It is strongly suggested that the
 .Fn fgets
-function be used in all cases.
+function conforms to
+.St -isoC-99 .
