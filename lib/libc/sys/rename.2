@@ -252,6 +252,9 @@ The
 .Fa to
 argument
 is a directory and is not empty.
+.It Bq Er ECAPMODE
+.Fn rename
+was called and the process is in capability mode.
 .El
 .Pp
 In addition to the errors returned by the
@@ -288,6 +291,27 @@ argument is not an absolute path and
 is neither
 .Dv AT_FDCWD
 nor a file descriptor associated with a directory.
+.It Bq Er ECAPMODE
+.Dv AT_FDCWD
+is specified and the process is in capability mode.
+.It Bq Er ENOTCAPABLE
+.Fa path
+is an absolute path or contained a ".." component leading to a directory
+above the
+.Fa fromfd
+or
+.Fa tofd
+directory file descriptor.
+.It Bq Er ENOTCAPABLE
+The
+.Fa fromfd
+directory file descriptor lacks the
+.Dv CAP_RENAMEAT_SOURCE
+right, or the
+.Fa tofd
+descriptor lacks the
+.Dv CAP_RENAMEAT_TARGET
+right.
 .El
 .Sh SEE ALSO
 .Xr chflags 2 ,
