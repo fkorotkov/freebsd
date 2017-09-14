@@ -186,7 +186,6 @@ class MipsAsmParser : public MCTargetAsmParser {
   OperandMatchResultTy parseAnyRegister(OperandVector &Operands);
   OperandMatchResultTy parseImm(OperandVector &Operands);
   OperandMatchResultTy parseJumpTarget(OperandVector &Operands);
-  OperandMatchResultTy parseInvNum(OperandVector &Operands);
   OperandMatchResultTy parseRegisterPair(OperandVector &Operands);
   OperandMatchResultTy parseMovePRegPair(OperandVector &Operands);
   OperandMatchResultTy parseRegisterList(OperandVector &Operands);
@@ -1145,6 +1144,15 @@ public:
       return;
     }
     addConstantUImmOperands<Bits, 0, 0>(Inst, N);
+  }
+
+  template <unsigned Bits>
+  void addInvConstantSImmOperands(MCInst &Inst, unsigned N) const {
+    assert(N == 1 && "Invalid number of operands!");
+    int64_t Imm = getConstantImm();
+    Imm = SignExtend64<Bits>(Imm);
+    Imm = 0 - Imm;
+    Inst.addOperand(MCOperand::createImm(Imm));
   }
 
   template <unsigned Bits, int Offset = 0, int AdjustOffset = 0>
@@ -5786,25 +5794,6 @@ MipsAsmParser::parseJumpTarget(OperandVector &Operands) {
   }
   Operands.push_back(
       MipsOperand::CreateImm(Expr, S, getLexer().getLoc(), *this));
-  return MatchOperand_Success;
-}
-
-OperandMatchResultTy
-MipsAsmParser::parseInvNum(OperandVector &Operands) {
-  MCAsmParser &Parser = getParser();
-  const MCExpr *IdVal;
-  // If the first token is '$' we may have register operand.
-  if (Parser.getTok().is(AsmToken::Dollar))
-    return MatchOperand_NoMatch;
-  SMLoc S = Parser.getTok().getLoc();
-  if (getParser().parseExpression(IdVal))
-    return MatchOperand_ParseFail;
-  const MCConstantExpr *MCE = dyn_cast<MCConstantExpr>(IdVal);
-  assert(MCE && "Unexpected MCExpr type.");
-  int64_t Val = MCE->getValue();
-  SMLoc E = SMLoc::getFromPointer(Parser.getTok().getLoc().getPointer() - 1);
-  Operands.push_back(MipsOperand::CreateImm(
-      MCConstantExpr::create(0 - Val, getContext()), S, E, *this));
   return MatchOperand_Success;
 }
 
