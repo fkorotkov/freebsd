@@ -28,7 +28,7 @@
 .\"     @(#)rename.2	8.1 (Berkeley) 6/4/93
 .\" $FreeBSD$
 .\"
-.Dd April 10, 2008
+.Dd September 15, 2017
 .Dt RENAME 2
 .Os
 .Sh NAME
@@ -297,19 +297,18 @@ is specified and the process is in capability mode.
 .It Bq Er ENOTCAPABLE
 .Fa path
 is an absolute path or contained a ".." component leading to a directory
-above the
+outside of the directory hierarchy specified by
 .Fa fromfd
 or
-.Fa tofd
-directory file descriptor.
+.Fa tofd .
 .It Bq Er ENOTCAPABLE
 The
 .Fa fromfd
-directory file descriptor lacks the
+file descriptor lacks the
 .Dv CAP_RENAMEAT_SOURCE
 right, or the
 .Fa tofd
-descriptor lacks the
+file descriptor lacks the
 .Dv CAP_RENAMEAT_TARGET
 right.
 .El
