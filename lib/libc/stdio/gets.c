@@ -44,10 +44,8 @@ __FBSDID("$FreeBSD$");
 #include "libc_private.h"
 #include "local.h"
 
-__warn_references(gets, "warning: this program uses gets(), which is unsafe.");
-
 char *
-gets(char *buf)
+__gets_unsafe(char *buf)
 {
 	int c;
 	char *s, *ret;
@@ -77,3 +75,4 @@ end:
 	FUNLOCKFILE_CANCELSAFE();
 	return (ret);
 }
+__sym_compat(gets, __gets_unsafe, FBSD_1.0);
