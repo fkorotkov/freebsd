@@ -33,6 +33,22 @@ __RCSID("$NetBSD: h_gets.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $");
 
 #include <stdio.h>
 
+#ifdef __FreeBSD__
+/*
+ * We want to test the gets() implementation, but cannot simply link against
+ * the gets symbol because it is not in the default version. (We've made it
+ * unavailable by default on FreeBSD because it should not be used.)
+ *
+ * This is a workaround to access gets@FBSD_1.0.
+ */
+char *unsafe_gets(char *);
+char *gets(char *buf)
+{
+	return unsafe_gets(buf);
+}
+__sym_compat(gets, unsafe_gets, FBSD_1.0);
+#endif
+
 int
 main(int argc, char *argv[])
 {
