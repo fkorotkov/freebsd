@@ -174,7 +174,6 @@ __DEFAULT_NO_OPTIONS = \
     BSD_GREP_FASTMATCH \
     CLANG_EXTRAS \
     DTRACE_TESTS \
-    GDB \
     GNU_DIFF \
     GNU_GREP \
     GNU_GREP_COMPAT \
@@ -247,7 +246,7 @@ BROKEN_OPTIONS+=BINUTILS_BOOTSTRAP
 .endif
 # In-tree binutils/gcc are older versions without modern architecture support.
 .if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
-BROKEN_OPTIONS+=BINUTILS GCC GCC_BOOTSTRAP GDB
+BROKEN_OPTIONS+=BINUTILS GCC GCC_BOOTSTRAP
 .endif
 .if ${__T:Mriscv*} != ""
 BROKEN_OPTIONS+=PROFILE # "sorry, unimplemented: profiler support for RISC-V"
@@ -268,14 +267,6 @@ __DEFAULT_NO_OPTIONS+=LLDB
 # LLVM lacks support for FreeBSD 64-bit atomic operations for ARMv4/ARMv5
 .if ${__T} == "arm" || ${__T} == "armeb"
 BROKEN_OPTIONS+=LLDB
-.endif
-# GDB in base is generally less functional than GDB in ports.  Ports GDB
-# does not yet contain kernel support for arm, and sparc64 kernel support
-# has not been tested.
-.if ${__T:Marm*} != "" || ${__T} == "sparc64"
-__DEFAULT_NO_OPTIONS+=GDB_LIBEXEC
-.else
-__DEFAULT_YES_OPTIONS+=GDB_LIBEXEC
 .endif
 # Only doing soft float API stuff on armv6
 .if ${__T} != "armv6" && ${__T} != "armv7"
@@ -330,10 +321,6 @@ MK_${var}:=	no
 #
 .if !${COMPILER_FEATURES:Mc++11}
 MK_LLVM_LIBUNWIND:=	no
-.endif
-
-.if ${MK_BINUTILS} == "no"
-MK_GDB:=	no
 .endif
 
 .if ${MK_CAPSICUM} == "no"
@@ -419,7 +406,6 @@ MK_GCC_BOOTSTRAP:= no
 MK_BINUTILS:=	no
 MK_CLANG:=	no
 MK_GCC:=	no
-MK_GDB:=	no
 MK_INCLUDES:=	no
 MK_LLD:=	no
 MK_LLDB:=	no
