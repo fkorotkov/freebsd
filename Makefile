@@ -452,7 +452,7 @@ TOOLCHAINS_mips=		mips mips64
 TOOLCHAINS_powerpc=	powerpc powerpc64
 TOOLCHAINS_riscv=	riscv64
 TOOLCHAINS_sparc64=	sparc64
-.for target in powerpc riscv sparc64
+.for target in riscv sparc64
 .if ${_UNIVERSE_TARGETS:M${target}}
 .for toolchain in ${TOOLCHAINS_${target}}
 .if !exists(/usr/local/share/toolchains/${toolchain}-gcc.mk)
