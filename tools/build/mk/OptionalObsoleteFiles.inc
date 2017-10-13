@@ -2424,22 +2424,6 @@ OLD_FILES+=usr/share/man/man1/gperf.1.gz
 OLD_FILES+=usr/share/man/man1/gperf.7.gz
 .endif
 
-.if ${MK_GCOV} == no
-OLD_FILES+=usr/bin/gcov
-OLD_FILES+=usr/share/man/man1/gcov.1.gz
-.endif
-
-OLD_FILES+=usr/bin/gdb
-OLD_FILES+=usr/bin/gdbserver
-OLD_FILES+=usr/bin/gdbtui
-OLD_FILES+=usr/bin/kgdb
-OLD_FILES+=usr/share/man/man1/gdb.1.gz
-OLD_FILES+=usr/share/man/man1/gdbserver.1.gz
-OLD_FILES+=usr/share/man/man1/kgdb.1.gz
-
-OLD_FILES+=usr/libexec/gdb
-OLD_FILES+=usr/libexec/kgdb
-
 .if ${MK_GPIO} == no
 OLD_FILES+=usr/include/libgpio.h
 OLD_FILES+=usr/lib/libgpio.a

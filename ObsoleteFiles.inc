@@ -38,6 +38,9 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20171013: Remove gcov
+OLD_FILES+=usr/bin/gcov
+OLD_FILES+=usr/share/man/man1/gcov.1.gz
 # 20171013: Remove xlint
 OLD_FILES+=usr/bin/lint
 OLD_FILES+=usr/libdata/lint/llib-lposix.ln
@@ -46,6 +49,16 @@ OLD_DIRS+=usr/libdata/lint
 OLD_FILES+=usr/libexec/lint1
 OLD_FILES+=usr/libexec/lint2
 OLD_FILES+=usr/share/man/man1/lint.1.gz
+# 20171011: Remove gcc
+OLD_FILES+=usr/bin/gdb
+OLD_FILES+=usr/bin/gdbserver
+OLD_FILES+=usr/bin/gdbtui
+OLD_FILES+=usr/bin/kgdb
+OLD_FILES+=usr/share/man/man1/gdb.1.gz
+OLD_FILES+=usr/share/man/man1/gdbserver.1.gz
+OLD_FILES+=usr/share/man/man1/kgdb.1.gz
+OLD_FILES+=usr/libexec/gdb
+OLD_FILES+=usr/libexec/kgdb
 # 20161010: Remove libstand
 OLD_FILES+=usr/lib/libstand.a
 OLD_FILES+=usr/lib/libstand_p.a
