@@ -96,7 +96,6 @@ __DEFAULT_YES_OPTIONS = \
     FREEBSD_UPDATE \
     FTP \
     GAMES \
-    GCOV \
     GPIO \
     HAST \
     HTML \
