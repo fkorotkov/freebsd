@@ -1973,10 +1973,6 @@ _bt=		_bootstrap-tools
 _strfile=	usr.bin/fortune/strfile
 .endif
 
-.if ${MK_GCC} != "no" && ${MK_CXX} != "no"
-_gperf=		gnu/usr.bin/gperf
-.endif
-
 .if ${MK_VT} != "no"
 _vtfontcvt=	usr.bin/vtfontcvt
 .endif
@@ -2082,7 +2078,6 @@ bootstrap-tools: .PHONY
     ${_clang_tblgen} \
     ${_kerberos5_bootstrap_tools} \
     ${_strfile} \
-    ${_gperf} \
     ${_dtc} \
     ${_cat} \
     ${_kbdcontrol} \
@@ -3062,7 +3057,6 @@ _xb-worldtmp: .PHONY
 _xb-bootstrap-tools: .PHONY
 .for _tool in \
     ${_clang_tblgen} \
-    ${_gperf} \
     ${_yacc}
 	${_+_}@${ECHODIR} "===> ${_tool} (obj,all,install)"; \
 	cd ${.CURDIR}/${_tool}; \

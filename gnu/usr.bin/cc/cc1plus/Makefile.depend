@@ -8,7 +8,6 @@ DIRDEPS = \
 	gnu/usr.bin/cc/libcpp \
 	gnu/usr.bin/cc/libdecnumber \
 	gnu/usr.bin/cc/libiberty \
-	gnu/usr.bin/gperf.host \
 	include \
 	include/xlocale \
 	lib/${CSU_DIR} \
