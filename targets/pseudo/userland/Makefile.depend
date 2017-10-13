@@ -901,9 +901,7 @@ DIRDEPS+= \
 DIRDEPS+= usr.sbin/cxgbetool
 .endif
 
-.if ${MK_GPL_DTC} != "yes"
 DIRDEPS+= usr.bin/dtc
-.endif
 
 .if ${MK_OFED} != "no"
 DIRDEPS+= \
