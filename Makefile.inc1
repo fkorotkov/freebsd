@@ -1836,10 +1836,6 @@ _bt=		_bootstrap-tools
 _strfile=	usr.bin/fortune/strfile
 .endif
 
-.if ${MK_GCC} != "no" && ${MK_CXX} != "no"
-_gperf=		gnu/usr.bin/gperf
-.endif
-
 .if ${MK_VT} != "no"
 _vtfontcvt=	usr.bin/vtfontcvt
 .endif
@@ -1945,7 +1941,6 @@ bootstrap-tools: .PHONY
     ${_clang_tblgen} \
     ${_kerberos5_bootstrap_tools} \
     ${_strfile} \
-    ${_gperf} \
     ${_dtc} \
     ${_cat} \
     ${_kbdcontrol} \
@@ -2112,8 +2107,7 @@ cross-tools: .MAKE .PHONY
 NXBDESTDIR=	${OBJTREE}/nxb-bin
 NXBENV=		MAKEOBJDIRPREFIX=${OBJTREE}/nxb \
 		TOOLS_PREFIX= \
-		INSTALL="sh ${.CURDIR}/tools/install.sh" \
-		PATH=${PATH}:${OBJTREE}/gperf_for_gcc/usr/bin
+		INSTALL="sh ${.CURDIR}/tools/install.sh"
 NXBMAKE=	${NXBENV} ${MAKE} \
 		LLVM_TBLGEN=${NXBDESTDIR}/usr/bin/llvm-tblgen \
 		CLANG_TBLGEN=${NXBDESTDIR}/usr/bin/clang-tblgen \
@@ -2128,18 +2122,7 @@ NXBMAKE=	${NXBENV} ${MAKE} \
 
 # native-xtools is the current target for qemu-user cross builds of ports
 # via poudriere and the imgact_binmisc kernel module.
-# For non-clang enabled targets that are still using the in tree gcc
-# we must build a gperf binary for one instance of its Makefiles.  On
-# clang-enabled systems, the gperf binary is obsolete.
 native-xtools: .PHONY
-.if ${MK_GCC_BOOTSTRAP} != "no"
-	mkdir -p ${OBJTREE}/gperf_for_gcc/usr/bin
-	${_+_}@${ECHODIR} "===> ${_gperf} (obj,all,install)"; \
-	cd ${.CURDIR}/${_gperf}; \
-	if [ -z "${NO_OBJ}" ]; then ${NXBMAKE} DIRPRFX=${_gperf}/ obj; fi; \
-	${NXBMAKE} DIRPRFX=${_gperf}/ all; \
-	${NXBMAKE} DIRPRFX=${_gperf}/ DESTDIR=${OBJTREE}/gperf_for_gcc install
-.endif
 	mkdir -p ${NXBDESTDIR}/bin ${NXBDESTDIR}/sbin ${NXBDESTDIR}/usr
 	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.usr.dist \
 	    -p ${NXBDESTDIR}/usr >/dev/null
@@ -2810,7 +2793,6 @@ _xb-worldtmp: .PHONY
 _xb-bootstrap-tools: .PHONY
 .for _tool in \
     ${_clang_tblgen} \
-    ${_gperf} \
     ${_yacc}
 	${_+_}@${ECHODIR} "===> ${_tool} (obj,all,install)"; \
 	cd ${.CURDIR}/${_tool}; \
