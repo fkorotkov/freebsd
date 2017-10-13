@@ -2463,11 +2463,6 @@ OLD_FILES+=usr/share/man/man1/gperf.1.gz
 OLD_FILES+=usr/share/man/man1/gperf.7.gz
 .endif
 
-.if ${MK_GCOV} == no
-OLD_FILES+=usr/bin/gcov
-OLD_FILES+=usr/share/man/man1/gcov.1.gz
-.endif
-
 .if ${MK_GDB} == no || ${MK_GDB_LIBEXEC} == yes
 OLD_FILES+=usr/bin/gdb
 OLD_FILES+=usr/bin/gdbserver

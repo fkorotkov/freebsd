@@ -885,6 +885,9 @@ OLD_FILES+=usr/share/man/man9/mbp_free.9.gz
 OLD_FILES+=usr/share/man/man9/mbp_get.9.gz
 OLD_FILES+=usr/share/man/man9/mbp_create.9.gz
 OLD_FILES+=usr/share/man/man9/mbp_sync.9.gz
+# 20171013: Remove gcov
+OLD_FILES+=usr/bin/gcov
+OLD_FILES+=usr/share/man/man1/gcov.1.gz
 # 20171010: Remove libstand
 OLD_FILES+=usr/lib/libstand.a
 OLD_FILES+=usr/lib/libstand_p.a
