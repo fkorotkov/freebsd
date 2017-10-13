@@ -213,9 +213,7 @@ __TT=${MACHINE}
 .endif
 
 .include <bsd.compiler.mk>
-# If the compiler is not C++11 capable, disable Clang and use GCC instead.
-# This means that architectures that have GCC 4.2 as default can not
-# build Clang without using an external compiler.
+# If the compiler is not C++11 capable, disable Clang.
 
 .if ${COMPILER_FEATURES:Mc++11} && (${__T} == "aarch64" || \
     ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386" || \
@@ -223,17 +221,14 @@ __TT=${MACHINE}
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
 __DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
-__DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
 .elif ${COMPILER_FEATURES:Mc++11} && ${__T:Mriscv*} == "" && ${__T} != "sparc64"
 # If an external compiler that supports C++11 is used as ${CC} and Clang
-# supports the target, then Clang is enabled but GCC is installed as the
-# default /usr/bin/cc.
-__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL GCC GCC_BOOTSTRAP GNUCXX
+# supports the target, then Clang is enabled.
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL
 __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC LLD
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .else
-# Everything else disables Clang, and uses GCC instead.
-__DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
+# Everything else disables Clang.
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .endif
@@ -245,7 +240,7 @@ BROKEN_OPTIONS+=BINUTILS_BOOTSTRAP
 .endif
 # In-tree binutils/gcc are older versions without modern architecture support.
 .if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
-BROKEN_OPTIONS+=BINUTILS GCC GCC_BOOTSTRAP
+BROKEN_OPTIONS+=BINUTILS
 .endif
 .if ${__T:Mriscv*} != ""
 BROKEN_OPTIONS+=PROFILE # "sorry, unimplemented: profiler support for RISC-V"
@@ -353,7 +348,6 @@ MK_KERBEROS:=	no
 
 .if ${MK_CXX} == "no"
 MK_CLANG:=	no
-MK_GNUCXX:=	no
 MK_TESTS:=	no
 .endif
 
@@ -398,13 +392,11 @@ MK_ZONEINFO_OLD_TIMEZONES_SUPPORT:= no
 MK_BINUTILS_BOOTSTRAP:= no
 MK_CLANG_BOOTSTRAP:= no
 MK_ELFTOOLCHAIN_BOOTSTRAP:= no
-MK_GCC_BOOTSTRAP:= no
 .endif
 
 .if ${MK_TOOLCHAIN} == "no"
 MK_BINUTILS:=	no
 MK_CLANG:=	no
-MK_GCC:=	no
 MK_INCLUDES:=	no
 MK_LLD:=	no
 MK_LLDB:=	no
@@ -458,17 +450,6 @@ MK_${var}_SUPPORT:= yes
 
 .if !${COMPILER_FEATURES:Mc++11}
 MK_LLDB:=	no
-.endif
-
-# gcc 4.8 and newer supports libc++, so suppress gnuc++ in that case.
-# while in theory we could build it with that, we don't want to do
-# that since it creates too much confusion for too little gain.
-# XXX: This is incomplete and needs X_COMPILER_TYPE/VERSION checks too
-#      to prevent Makefile.inc1 from bootstrapping unneeded dependencies
-#      and to support 'make delete-old' when supplying an external toolchain.
-.if ${COMPILER_TYPE} == "gcc" && ${COMPILER_VERSION} >= 40800
-MK_GNUCXX:=no
-MK_GCC:=no
 .endif
 
 .endif #  !target(__<src.opts.mk>__)

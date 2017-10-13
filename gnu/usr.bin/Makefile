@@ -4,7 +4,6 @@
 
 SUBDIR.${MK_BINUTILS}+=	binutils
 SUBDIR.${MK_DIALOG}+=	dialog
-SUBDIR.${MK_GCC}+=	cc
 SUBDIR.${MK_GNU_DIFF}+=	diff3
 SUBDIR.${MK_TESTS}+=	tests
 
