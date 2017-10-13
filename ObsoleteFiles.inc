@@ -38,6 +38,14 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20171013: Remove xlint
+OLD_FILES+=usr/bin/lint
+OLD_FILES+=usr/libdata/lint/llib-lposix.ln
+OLD_FILES+=usr/libdata/lint/llib-lstdc.ln
+OLD_DIRS+=usr/libdata/lint
+OLD_FILES+=usr/libexec/lint1
+OLD_FILES+=usr/libexec/lint2
+OLD_FILES+=usr/share/man/man1/lint.1.gz
 # 20161010: Remove libstand
 OLD_FILES+=usr/lib/libstand.a
 OLD_FILES+=usr/lib/libstand_p.a
