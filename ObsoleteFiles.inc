@@ -59,7 +59,7 @@ OLD_FILES+=usr/share/man/man1/gdbserver.1.gz
 OLD_FILES+=usr/share/man/man1/kgdb.1.gz
 OLD_FILES+=usr/libexec/gdb
 OLD_FILES+=usr/libexec/kgdb
-# 20161010: Remove libstand
+# 20171010: Remove libstand
 OLD_FILES+=usr/lib/libstand.a
 OLD_FILES+=usr/lib/libstand_p.a
 OLD_FILES+=usr/include/stand.h
