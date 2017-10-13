@@ -492,7 +492,6 @@ LIBRDMACMDIR=	${OBJTOP}/contrib/ofed/usr.lib/librdmacm
 LIBIBSDPDIR=	${OBJTOP}/contrib/ofed/usr.lib/libsdp
 LIBDIALOGDIR=	${OBJTOP}/gnu/lib/libdialog
 LIBGCOVDIR=	${OBJTOP}/gnu/lib/libgcov
-LIBGOMPDIR=	${OBJTOP}/gnu/lib/libgomp
 LIBGNUREGEXDIR=	${OBJTOP}/gnu/lib/libregex
 LIBSSPDIR=	${OBJTOP}/gnu/lib/libssp
 LIBSSP_NONSHAREDDIR=	${OBJTOP}/gnu/lib/libssp/libssp_nonshared
