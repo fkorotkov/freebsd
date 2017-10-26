@@ -6,7 +6,6 @@ MAN=
 
 PROG=		loader.ps3
 NEWVERSWHAT=	"Playstation 3 loader" ${MACHINE_ARCH}
-BINDIR?=	/boot
 INSTALLFLAGS=	-b
 
 # Architecture-specific loader code
@@ -63,7 +62,7 @@ font.h:
 
 loader.help: help.common help.ps3 ${.CURDIR}/../../fdt/help.fdt
 	cat ${.ALLSRC} | \
-	    awk -f ${LDR_MI}/merge_help.awk > ${.TARGET}
+	    awk -f ${LDRSRC}/merge_help.awk > ${.TARGET}
 
 .PATH: ${.CURDIR}/../../forth
 .include	"${.CURDIR}/../../forth/Makefile.inc"

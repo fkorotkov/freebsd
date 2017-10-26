@@ -157,9 +157,7 @@ _libclang_rt=	libclang_rt
 .if ${MK_LIBCPLUSPLUS} != "no"
 _libcxxrt=	libcxxrt
 _libcplusplus=	libc++
-.if ${MACHINE_CPUARCH} != "arm" && ${MACHINE_CPUARCH} != "mips"
 _libcplusplus+=	libc++experimental
-.endif
 .endif
 
 SUBDIR.${MK_EFI}+=	libefivar
@@ -184,7 +182,7 @@ _librtld_db=	librtld_db
 .endif
 
 SUBDIR.${MK_OPENSSL}+=	libmp
-SUBDIR.${MK_PMC}+=	libpmc
+SUBDIR.${MK_PMC}+=	libpmc libpmcstat
 SUBDIR.${MK_RADIUS_SUPPORT}+=	libradius
 SUBDIR.${MK_SENDMAIL}+=	libmilter libsm libsmdb libsmutil
 SUBDIR.${MK_TELNET}+=	libtelnet

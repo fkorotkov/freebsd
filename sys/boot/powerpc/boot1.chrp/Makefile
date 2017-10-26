@@ -4,7 +4,6 @@ SSP_CFLAGS=
 
 PROG=           boot1.elf
 NEWVERSWHAT=    "Open Firmware boot block" ${MACHINE_ARCH}
-BINDIR?=        /boot
 INSTALLFLAGS=   -b
 
 FILES=		boot1.hfs
@@ -19,7 +18,7 @@ LDFLAGS=-nostdlib -static -Wl,-N
 
 .include "../Makefile.inc"
 
-.PATH:  ${.CURDIR}/../../../libkern ${.CURDIR}/../../../../lib/libc/powerpc/gen ${.CURDIR}
+.PATH:  ${.CURDIR}/../../../libkern ${SRCTOP}/lib/libc/powerpc/gen ${.CURDIR}
 
 # The following inserts out objects into a template HFS 
 # created by generate-hfs.sh
