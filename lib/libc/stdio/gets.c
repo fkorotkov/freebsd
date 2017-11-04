@@ -59,13 +59,13 @@ __gets_unsafe(char *buf)
 		warned = 1;
 	}
 	for (s = buf; (c = __sgetc(stdin)) != '\n'; ) {
-		if (c == EOF)
+		if (c == EOF) {
 			if (s == buf) {
 				ret = NULL;
 				goto end;
 			} else
 				break;
-		else
+		} else
 			*s++ = c;
 	}
 	*s = 0;
