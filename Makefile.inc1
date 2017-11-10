@@ -2164,8 +2164,6 @@ NXBDIRS+= \
 NXBDIRS+=	lib/clang
 SUBDIR_DEPEND_usr.bin/clang=	lib/clang
 NXBDIRS+=	usr.bin/clang
-.elif ${MK_GCC} != "no"
-NXBDIRS+=	gnu/usr.bin/cc
 .endif
 .if ${MK_BINUTILS} != "no"
 NXBDIRS+=	gnu/usr.bin/binutils
@@ -2215,8 +2213,8 @@ native-xtools: .PHONY
 	# polluting the cross-compiler build.  The LLVM/GCC libs are skipped
 	# here to avoid the problem but are kept in 'toolchain' so that
 	# needed build tools are built.
-	${_+_}cd ${.CURDIR}; ${NXBTMAKE} _includes MK_CLANG=no MK_GCC=no
-	${_+_}cd ${.CURDIR}; ${NXBTMAKE} _libraries MK_CLANG=no MK_GCC=no
+	${_+_}cd ${.CURDIR}; ${NXBTMAKE} _includes MK_CLANG=no
+	${_+_}cd ${.CURDIR}; ${NXBTMAKE} _libraries MK_CLANG=no
 .if !defined(NO_OBJWALK)
 	${_+_}cd ${.CURDIR}; ${NXBMAKE} SUBDIR_OVERRIDE="${NXBDIRS:M*}" _obj
 .endif
