@@ -81,7 +81,7 @@ MK_CLANG_BOOTSTRAP=	no
 # running CC from bsd.compiler.mk.
 .if make(installworld) || make(install) || make(distributeworld) || \
     make(stageworld)
-.-include "${OBJTOP}/compiler-metadata.mk"
+.-include "${OBJTOP}/toolchain-metadata.mk"
 .endif
 
 # Pull in COMPILER_TYPE and COMPILER_FREEBSD_VERSION early.
@@ -175,7 +175,7 @@ _COMPILER_METADATA_VARS=	COMPILER_VERSION \
 				COMPILER_FREEBSD_VERSION \
 				LINKER_VERSION \
 				LINKER_TYPE
-compiler-metadata.mk: .PHONY .META
+toolchain-metadata.mk: .PHONY .META
 	@: > ${.TARGET}
 	@echo ".info Using cached compiler metadata from build at $$(hostname) on $$(date)" \
 	    > ${.TARGET}
@@ -896,7 +896,7 @@ _cross-tools:
 	@echo "--------------------------------------------------------------"
 	@echo ">>> stage 3: cross tools"
 	@echo "--------------------------------------------------------------"
-	@rm -f ${OBJTOP}/compiler-metadata.mk
+	@rm -f ${OBJTOP}/toolchain-metadata.mk
 	${_+_}cd ${.CURDIR}; ${XMAKE} cross-tools
 	${_+_}cd ${.CURDIR}; ${XMAKE} kernel-tools
 _build-metadata:
@@ -904,7 +904,7 @@ _build-metadata:
 	@echo "--------------------------------------------------------------"
 	@echo ">>> stage 3.1: recording build metadata"
 	@echo "--------------------------------------------------------------"
-	${_+_}cd ${.CURDIR}; ${WMAKE} compiler-metadata.mk
+	${_+_}cd ${.CURDIR}; ${WMAKE} toolchain-metadata.mk
 	${_+_}cd ${.CURDIR}; ${WMAKE} host-osreldate.h
 _includes:
 	@echo
