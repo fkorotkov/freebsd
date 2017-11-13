@@ -94,7 +94,8 @@ read_archive(struct bsdar *bsdar, char mode)
 		r = archive_read_next_header(a, &entry);
 		if (r == ARCHIVE_WARN || r == ARCHIVE_RETRY ||
 		    r == ARCHIVE_FATAL)
-			bsdar_warnc(bsdar, 0, "%s", archive_error_string(a));
+			bsdar_warnc(bsdar, archive_errno(a), "%s",
+			    archive_error_string(a));
 		if (r == ARCHIVE_EOF || r == ARCHIVE_FATAL)
 			break;
 		if (r == ARCHIVE_RETRY) {
@@ -149,7 +150,7 @@ read_archive(struct bsdar *bsdar, char mode)
 			if (r == ARCHIVE_WARN || r == ARCHIVE_RETRY ||
 			    r == ARCHIVE_FATAL) {
 				(void)fprintf(stdout, "\n");
-				bsdar_warnc(bsdar, 0, "%s",
+				bsdar_warnc(bsdar, archive_errno(a), "%s",
 				    archive_error_string(a));
 			}
 
@@ -203,7 +204,7 @@ read_archive(struct bsdar *bsdar, char mode)
 			}
 
 			if (r)
-				bsdar_warnc(bsdar, 0, "%s",
+				bsdar_warnc(bsdar, archive_errno(a), "%s",
 				    archive_error_string(a));
 		}
 	}
