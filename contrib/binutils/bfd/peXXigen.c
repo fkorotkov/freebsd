@@ -1443,8 +1443,8 @@ pe_print_edata (bfd * abfd, void * vfile)
   if (datasize < 36)
     {
       fprintf (file,
-              _("\nThere is an export table in %s, but it is too small (%d)\n"),
-              section->name, (int) datasize);
+	       _("\nThere is an export table in %s, but it is too small (%d)\n"),
+	       section->name, (int) datasize);
       return TRUE;
     }
 
