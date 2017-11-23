@@ -1535,7 +1535,6 @@ vm_map_find(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 	    MAP_STACK_GROWS_UP | MAP_STACK_GROWS_DOWN)) == 0 &&
 	    prot != PROT_NONE && aslr_collapse_anon;
 	addr_save = *addr;
-	vm_map_lock(map);
 	if (en_aslr) {
 		if (vm_map_max(map) > MAP_32BIT_MAX_ADDR &&
 		    (max_addr == 0 || max_addr > MAP_32BIT_MAX_ADDR))
@@ -1552,6 +1551,7 @@ vm_map_find(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 		start = addr_save;
 	}
 	start1 = start; /* for again_any_space restart */
+	vm_map_lock(map);
 again:
 	if (en_aslr && (do_aslr == 0 || (anon &&
 	    do_aslr == aslr_sloppiness - 1))) {
@@ -1602,7 +1602,6 @@ again_any_space:
 				    max_addr : re) - *addr - length;
 				rand_max /= pagesizes[pidx];
 				if (rand_max < aslr_pages_rnd[pidx]) {
-					vm_map_unlock(map);
 					start = re;
 					do_aslr--;
 					goto again;
@@ -1635,7 +1634,6 @@ again_any_space:
 			    start + length, prot, max, cow);
 		}
 		if (result != KERN_SUCCESS && do_aslr > 0) {
-			vm_map_unlock(map);
 			do_aslr--;
 			goto again;
 		}
