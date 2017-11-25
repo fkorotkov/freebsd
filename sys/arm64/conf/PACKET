@@ -1,0 +1,13 @@
+#
+# PACKET -- Test kernel for 96 core 2S ThunderX at packet.net
+#
+
+include GENERIC
+
+ident   PACKET
+
+nooptions       VIMAGE
+options		ALT_BREAK_TO_DEBUGGER
+options		DEBUG_LOCKS
+options		DEBUG_VFS_LOCKS
+options		DIAGNOSTIC
