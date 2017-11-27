@@ -10,5 +10,4 @@ nooptions       VIMAGE
 options		ALT_BREAK_TO_DEBUGGER
 options		DEBUG_LOCKS
 options		DEBUG_VFS_LOCKS
-# PR 223906 KASSERT failure on boot
-#options 	DIAGNOSTIC
+options 	DIAGNOSTIC

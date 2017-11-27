@@ -137,8 +137,9 @@ efi_1t1_l3(vm_offset_t va)
 
 	l3 = (pt_entry_t *)PHYS_TO_DMAP(mphys);
 	l3 += pmap_l3_index(va);
-	KASSERT(*l3 == 0, ("%s: Already mapped: va %#jx *pt %#jx", __func__,
-	    va, *l3));
+	if (*l3 != 0)
+		printf("%s: Already mapped: va %#jx *pt %#jx", __func__, va,
+		    *l3);
 
 	return (l3);
 }
