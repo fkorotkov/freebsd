@@ -319,6 +319,7 @@ do {								\
 } while (0)
 #else
 #define	ENTERI()
+#define	ENTERIT(...)
 #define	RETURNI(x)	RETURNF(x)
 #define	ENTERV()
 #define	RETURNV()	return
