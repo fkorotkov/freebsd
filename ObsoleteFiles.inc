@@ -38,6 +38,16 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20xxxxxx: Remove ctm
+OLD_FILES+=usr/sbin/ctm
+OLD_FILES+=usr/sbin/ctm_dequeue
+OLD_FILES+=usr/sbin/ctm_rmail
+OLD_FILES+=usr/sbin/ctm_smail
+OLD_FILES+=usr/share/man/man1/ctm.1.gz
+OLD_FILES+=usr/share/man/man1/ctm_dequeue.1.gz
+OLD_FILES+=usr/share/man/man1/ctm_rmail.1.gz
+OLD_FILES+=usr/share/man/man1/ctm_smail.1.gz
+OLD_FILES+=usr/share/man/man5/ctm.5.gz
 # 20171118: Remove old etc casper files
 OLD_FILES+=etc/casper/system.dns
 OLD_FILES+=etc/casper/system.grp
