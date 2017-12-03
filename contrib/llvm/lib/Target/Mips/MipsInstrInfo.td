@@ -1023,19 +1023,18 @@ def MipsMemSimm16AsmOperand : AsmOperandClass {
   let DiagnosticType = "MemSImm16";
 }
 
-def MipsInvertedSImm16Operand : AsmOperandClass {
-  let Name = "InvSImm16_Relaxed";
-  let SuperClasses = [SImm16AsmOperandClass];
-  let RenderMethod = "addInvConstantSImmOperands<16>";
-  let PredicateMethod = "isConstantSImm<16>";
+def MipsInvertedImmoperand : AsmOperandClass {
+  let Name = "InvNum";
+  let RenderMethod = "addImmOperands";
+  let ParserMethod = "parseInvNum";
 }
 
 def InvertedImOperand : Operand<i32> {
-  let ParserMatchClass = MipsInvertedSImm16Operand;
+  let ParserMatchClass = MipsInvertedImmoperand;
 }
 
 def InvertedImOperand64 : Operand<i64> {
-  let ParserMatchClass = MipsInvertedSImm16Operand;
+  let ParserMatchClass = MipsInvertedImmoperand;
 }
 
 class mem_generic : Operand<iPTR> {
