@@ -1802,7 +1802,7 @@ nicvf_sq_add_hdr_subdesc(struct snd_queue *sq, int qentry,
 			if (mbuf == NULL)
 				return (ENOBUFS);
 		}
-		if (mbuf->m_pkthdr.csum_flags != 0)
+		if (mbuf->m_pkthdr.csum_flags & CSUM_IP)
 			hdr->csum_l3 = 1; /* Enable IP csum calculation */
 
 		ip = (struct ip *)(mbuf->m_data + ehdrlen);
