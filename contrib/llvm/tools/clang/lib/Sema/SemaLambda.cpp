@@ -1468,6 +1468,7 @@ bool Sema::CaptureHasSideEffects(const LambdaScopeInfo::Capture &From) {
 void Sema::DiagnoseUnusedLambdaCapture(const LambdaScopeInfo::Capture &From) {
   if (CaptureHasSideEffects(From))
     return;
+
   if (From.isVLATypeCapture())
     return;
 
