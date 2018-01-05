@@ -52,7 +52,7 @@ fi
 
 err_no_mfs="Can't locate mfs section within "
 
-if [ `file -b $1 | grep -q '^ELF ..-bit .SB executable'` ]; then
+if file -b $1 | grep -q '^ELF ..-bit .SB executable'; then
 
 	sec_info=`elfdump -c $1 2> /dev/null | grep -A 5 -E "sh_name: oldmfs$"`
 	# If we can't find the mfs section within the given kernel - bail.
