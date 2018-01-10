@@ -1,7 +1,7 @@
 .Dd January 9, 2018
 .Dt LD.LLD 1
 .Os
-.Sh Name
+.Sh NAME
 .Nm ld.lld
 .Nd ELF linker from the LLVM project
 .Sh SYNOPSIS
@@ -29,7 +29,7 @@ Only set
 .Dv DT_NEEDED
 for shared libraries if used.
 .It Fl -auxiliary Ar value
-Set
+Set the
 .Dv DT_AUXILIARY
 field to the specified name.
 .It Fl -Bdynamic
@@ -41,9 +41,9 @@ Bind defined function symbols locally.
 .It Fl -Bsymbolic
 Bind defined symbols locally.
 .It Fl -build-id= Ns Ar value
-Generate build ID note.
+Generate a build ID note.
 .It Fl -build-id
-Generate build ID note.
+Generate a build ID note.
 .It Fl -color-diagnostics= Ns Ar value
 Use colors in diagnostics.
 .It Fl -color-diagnostics
@@ -71,9 +71,13 @@ This is recorded in an ELF segment of type
 .It Fl -dynamic-list Ar value
 Read a list of dynamic symbols.
 .It Fl -eh-frame-hdr
-Request creation of .eh_frame_hdr section and PT_GNU_EH_FRAME segment header.
+Request creation of
+.Li .eh_frame_hdr
+section and
+.Dv PT_GNU_EH_FRAME
+segment header.
 .It Fl -emit-relocs
-Generate relocations in output.
+Generate relocations in the output.
 .It Fl -enable-new-dtags
 Enable new dynamic tags.
 .It Fl -end-lib
@@ -82,7 +86,8 @@ in an archive.
 .It Fl -entry Ar entry
 Name of entry point symbol.
 .It Fl -error-limit Ar value
-Maximum number of errors to emit before stopping (0 = no limit).
+Maximum number of errors to emit before stopping.
+A value of zero indicates that there is no limit.
 .It Fl -error-unresolved-symbols
 Report unresolved symbols as errors.
 .It Fl -exclude-libs Ar value
@@ -94,34 +99,39 @@ Put symbols in the dynamic symbol table.
 .It Fl -fatal-warnings
 Treat warnings as errors.
 .It Fl -filter= Ns Ar value
-Set
+Set the
 .Dv DT_FILTER
-field to the specified name.
+field to the specified value.
 .It Fl -fini Ar symbol
 Specify a finalizer function.
 .It Fl -format= Ns Ar input-format
 Change the input format of the inputs following this option.
 .It Fl -full-shutdown
-Perform a full shutdown instead of calling _exit.
+Perform a full shutdown instead of calling
+.Fn _exit .
 .It Fl -gc-sections
 Enable garbage collection of unused sections.
 .It Fl -gdb-index
-Generate .gdb_index section.
+Generate
+.Li .gdb_index
+section.
 .It Fl -hash-style Ar value
 Specify hash style (sysv, gnu or both).
 .It Fl -help
-Print option help.
+Print a usage message.
 .It Fl -icf=all
 Enable identical code folding.
 .It Fl -icf=none
 Disable identical code folding.
 .It Fl -image-base= Ns Ar value
-Set the base address.
+Set the base address to
+.Ar value .
 .It Fl -init Ar symbol
 Specify an initializer function.
 .It Fl -lto-aa-pipeline= Ns Ar value
 AA pipeline to run during LTO.
-Used in conjunction with -lto-newpm-passes.
+Used in conjunction with
+.Fl -lto-newpm-passes .
 .It Fl -lto-newpm-passes= Ns Ar value
 Passes to run during LTO.
 .It Fl -lto-O Ar opt-level
@@ -137,7 +147,7 @@ Print a link map to the specified file.
 .It Fl m Ar value
 Set target emulation.
 .It Fl -no-as-needed
-Always
+Always set
 .Dv DT_NEEDED
 for shared libraries.
 .It Fl -no-color-diagnostics
@@ -147,7 +157,9 @@ Do not assign space to common symbols.
 .It Fl -no-demangle
 Do not demangle symbol names.
 .It Fl -no-dynamic-linker
-Inhibit output of .interp section.
+Inhibit output of an
+.Li .interp
+section.
 .It Fl -no-gc-sections
 Disable garbage collection of unused sections.
 .It Fl -no-gnu-unique
@@ -202,16 +214,22 @@ Add a
 to the output.
 .It Fl -rsp-quoting= Ns Ar value
 Quoting style for response files.
-Values supported: windows|posix.
+The supported values are
+.Ar windows
+and
+.Ar posix .
 .It Fl -script Ar value
-Read linker script.
+Read linker script from the path
+.Ar value .
 .It Fl -section-start Ar address
 Set address of section.
 .It Fl -shared
 Build a shared object.
 .It Fl -soname= Ns Ar value
 Set
-.Dv DT_SONAME .
+.Dv DT_SONAME
+to
+.Ar value .
 .It Fl -sort-section Ar value
 Specifies sections sorting rule when linkerscript is used.
 .It Fl -start-lib
@@ -222,19 +240,43 @@ Strip all symbols.
 .It Fl -strip-debug
 Strip debugging information.
 .It Fl -symbol-ordering-file Ar value
-Layout sections in the order specified by symbol file.
+Lay out sections in the order specified by the symbol file.
 .It Fl -sysroot= Ns Ar value
 Set the system root.
 .It Fl -target1-abs
-Interpret R_ARM_TARGET1 as R_ARM_ABS32.
+Interpret
+.Dv R_ARM_TARGET1
+as
+.Dv R_ARM_ABS32 .
 .It Fl -target1-rel
-Interpret R_ARM_TARGET1 as R_ARM_REL32.
+Interpret
+.Dv R_ARM_TARGET1
+as
+.Dv R_ARM_REL32 .
 .It Fl -target2=type
-Interpret R_ARM_TARGET2 as type, where type is one of rel, abs, or got-rel.
+Interpret
+.Dv R_ARM_TARGET2
+as
+.Ar type ,
+where
+.Ar type
+is one of
+.Li rel ,
+.Li abs ,
+or
+.Li got-rel .
 .It Fl -Tbss Ar value
-Same as --section-start with .bss as the sectionname.
+Same as
+.Fl -section-start
+with
+.Li .bss
+as the sectionname.
 .It Fl -Tdata Ar value
-Same as --section-start with .data as the sectionname.
+Same as
+.Fl -section-start
+with
+.Li .data
+as the sectionname.
 .It Fl -thinlto-cache-dir= Ns Ar value
 Path to ThinLTO cached object file directory.
 .It Fl -thinlto-cache-policy Ar value
@@ -248,7 +290,11 @@ Trace references to symbols.
 .It Fl -trace
 Print the names of the input files.
 .It Fl -Ttext Ar value
-Same as --section-start with .text as the sectionname.
+Same as
+.Fl -section-start
+with
+.Li .text
+as the sectionname.
 .It Fl -undefined Ar value
 Force undefined symbol during linking.
 .It Fl -unresolved-symbols= Ns Ar value
@@ -277,10 +323,15 @@ Linker option extensions.
 Allow relocations against read-only segments.
 Sets the
 .Dv DT_TEXTREL flag in the
-.Dv DYNAMIC section.
+.Dv DYNAMIC
+section.
 .It Cm text
 Do not allow relocations against read-only segments.
 This is the default.
 .El
+.El
 .Sh IMPLEMENTATION NOTES
-ld.lld: supported targets: elf32-i386 elf32-iamcu elf32-littlearm elf32-ntradbigmips elf32-ntradlittlemips elf32-powerpc elf32-tradbigmips elf32-tradlittlemips elf32-x86-64 elf64-amdgpu elf64-littleaarch64 elf64-powerpc elf64-tradbigmips elf64-tradlittlemips elf64-x86-64
+The targets supported by
+.Nm
+are:
+elf32-i386 elf32-iamcu elf32-littlearm elf32-ntradbigmips elf32-ntradlittlemips elf32-powerpc elf32-tradbigmips elf32-tradlittlemips elf32-x86-64 elf64-amdgpu elf64-littleaarch64 elf64-powerpc elf64-tradbigmips elf64-tradlittlemips elf64-x86-64
