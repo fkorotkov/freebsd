@@ -60,7 +60,7 @@ FILES=	boot1.efi boot1.efifat
 FILESMODE_boot1.efi=	${BINMODE}
 
 LDSCRIPT=	${EFISRC}/loader/arch/${MACHINE}/ldscript.${MACHINE}
-LDFLAGS+=	-Wl,-T${LDSCRIPT},-Bsymbolic,-znotext -shared
+LDFLAGS+=	-Wl,-T${LDSCRIPT},-Bsymbolic,-znorelro,-znotext -shared
 
 .if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-mgeneral-regs-only
