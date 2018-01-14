@@ -53,6 +53,7 @@ __FBSDID("$FreeBSD$");
 #include <sys/un.h>
 #include <sys/wait.h>
 #include <netinet/in.h>
+#include <netinet/sctp.h>
 #include <arpa/inet.h>
 
 #include <assert.h>
@@ -387,7 +388,7 @@ static struct syscall decoded_syscalls[] = {
 	{ .name = "read", .ret_type = 1, .nargs = 3,
 	  .args = { { Int, 0 }, { BinString | OUT, 1 }, { Sizet, 2 } } },
 	{ .name = "readv", .ret_type = 1, .nargs = 3,
-	  .args = { { Int, 0 }, { Iovec, 1 }, { Int, 2 } } },
+	  .args = { { Int, 0 }, { Iovec | OUT, 1 }, { Int, 2 } } },
 	{ .name = "readlink", .ret_type = 1, .nargs = 3,
 	  .args = { { Name, 0 }, { Readlinkres | OUT, 1 }, { Sizet, 2 } } },
 	{ .name = "readlinkat", .ret_type = 1, .nargs = 4,
@@ -428,13 +429,17 @@ static struct syscall decoded_syscalls[] = {
 	{ .name = "sched_setscheduler", .ret_type = 1, .nargs = 3,
 	  .args = { { Int, 0 }, { Schedpolicy, 1 }, { Schedparam, 2 } } },
 	{ .name = "sctp_generic_recvmsg", .ret_type = 1, .nargs = 7,
-	  .args = { { Int, 0 }, { Ptr | IN, 1 }, { Int, 2 },
-	            { Sockaddr | OUT, 3 }, { Ptr | OUT, 4 }, { Ptr | OUT, 5 },
-	            { Ptr | OUT, 6 } } },
+	  .args = { { Int, 0 }, { Iovec | OUT, 1 }, { Int, 2 },
+	            { Sockaddr | OUT, 3 }, { Ptr | OUT, 4 },
+	            { Sctpsndrcvinfo | OUT, 5 }, { Ptr | OUT, 6 } } },
 	{ .name = "sctp_generic_sendmsg", .ret_type = 1, .nargs = 7,
 	  .args = { { Int, 0 }, { BinString | IN, 1 }, { Int, 2 },
-	            { Sockaddr | IN, 3 }, { Socklent, 4 }, { Ptr | IN, 5 },
-	            { Msgflags, 6 } } },
+	            { Sockaddr | IN, 3 }, { Socklent, 4 },
+	            { Sctpsndrcvinfo | IN, 5 }, { Msgflags, 6 } } },
+	{ .name = "sctp_generic_sendmsg_iov", .ret_type = 1, .nargs = 7,
+	  .args = { { Int, 0 }, { Iovec | IN, 1 }, { Int, 2 },
+	            { Sockaddr | IN, 3 }, { Socklent, 4 },
+	            { Sctpsndrcvinfo | IN, 5 }, { Msgflags, 6 } } },
 	{ .name = "select", .ret_type = 1, .nargs = 5,
 	  .args = { { Int, 0 }, { Fd_set, 1 }, { Fd_set, 2 }, { Fd_set, 3 },
 		    { Timeval, 4 } } },
@@ -523,7 +528,7 @@ static struct syscall decoded_syscalls[] = {
 	{ .name = "write", .ret_type = 1, .nargs = 3,
 	  .args = { { Int, 0 }, { BinString | IN, 1 }, { Sizet, 2 } } },
 	{ .name = "writev", .ret_type = 1, .nargs = 3,
-	  .args = { { Int, 0 }, { Iovec, 1 }, { Int, 2 } } },
+	  .args = { { Int, 0 }, { Iovec | IN, 1 }, { Int, 2 } } },
 
 	/* Linux ABI */
 	{ .name = "linux_access", .ret_type = 1, .nargs = 2,
@@ -2203,6 +2208,33 @@ print_arg(struct syscall_args *sc, unsigned long *args, long *retval,
 			fprintf(fp, ",%zu}", iov[i].iov_len);
 		}
 		fprintf(fp, "%s%s", iov_truncated ? ",..." : "", "]");
+		break;
+	}
+	case Sctpsndrcvinfo: {
+		struct sctp_sndrcvinfo info;
+
+		if (get_struct(pid, (void *)args[sc->offset],
+		    &info, sizeof(struct sctp_sndrcvinfo)) == -1) {
+			fprintf(fp, "0x%lx", args[sc->offset]);
+			break;
+		}
+		fprintf(fp, "{sid=%u,", info.sinfo_stream);
+		if (sc->type & OUT) {
+			fprintf(fp, "ssn=%u,", info.sinfo_ssn);
+		}
+		fputs("flgs=", fp);
+		sysdecode_sctp_sinfo_flags(fp, info.sinfo_flags);
+		fprintf(fp, ",ppid=%u,", ntohl(info.sinfo_ppid));
+		/* Can't use IN here, since IN is 0 */
+		if ((sc->type & OUT) == 0) {
+			fprintf(fp, "ctx=%u,", info.sinfo_context);
+			fprintf(fp, "ttl=%u,", info.sinfo_timetolive);
+		}
+		if (sc->type & OUT) {
+			fprintf(fp, "tsn=%u,", info.sinfo_tsn);
+			fprintf(fp, "cumtsn=%u,", info.sinfo_cumtsn);
+		}
+		fprintf(fp, "id=%u}", info.sinfo_assoc_id);
 		break;
 	}
 
