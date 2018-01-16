@@ -506,23 +506,18 @@ ef_seg_read_string(elf_file_t ef, Elf_Off offset, size_t len, char *dest)
 	u_long ofs = ef_get_offset(ef, offset);
 	ssize_t r;
 
-	if (ofs == 0) {
+	if (ofs == 0 || ofs == (Elf_Off)-1) {
 		if (ef->ef_verbose)
-			warnx("ef_seg_read_string(%s): zero offset (%lx:%ld)",
+			warnx("ef_seg_read_string(%s): bad offset (%lx:%ld)",
 			    ef->ef_name, (long)offset, ofs);
-		return EFAULT;
+		return (EFAULT);
 	}
 
-	if (ofs != (Elf_Off)-1) {
-		if (lseek(ef->ef_fd, ofs, SEEK_SET) == -1)
-			return EIO;
-	}
-
-	r = read(ef->ef_fd, dest, len);
+	r = pread(ef->ef_fd, dest, len, ofs);
 	if (r < 0)
-		return EIO;
+		return (errno);
 	if (strnlen(dest, len) == len)
-		return EFAULT;
+		return (EFAULT);
 
 	return (0);
 }

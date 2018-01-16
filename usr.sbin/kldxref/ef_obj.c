@@ -313,10 +313,10 @@ ef_obj_seg_read_string(elf_file_t ef, Elf_Off offset, size_t len, char *dest)
 	}
 
 	if (ef->size - offset < len)
-	    len = ef->size - offset;
+		len = ef->size - offset;
 
 	if (strnlen(ef->address + offset, len) == len)
-	    return (EFAULT);
+		return (EFAULT);
 
 	memcpy(dest, ef->address + offset, len);
 	return (0);
