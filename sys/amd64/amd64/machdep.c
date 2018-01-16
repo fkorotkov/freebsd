@@ -658,9 +658,9 @@ struct user_segment_descriptor gdt[NGDT * MAXCPU];/* global descriptor tables */
 static struct gate_descriptor idt0[NIDT];
 struct gate_descriptor *idt = &idt0[0];	/* interrupt descriptor table */
 
-char dblfault_stack[PAGE_SIZE] __aligned(16);
+static char dblfault_stack[PAGE_SIZE] __aligned(16);
 
-char nmi0_stack[PAGE_SIZE] __aligned(16);
+static char nmi0_stack[PAGE_SIZE] __aligned(16);
 CTASSERT(sizeof(struct nmi_pcpu) == 16);
 
 struct amd64tss common_tss[MAXCPU];

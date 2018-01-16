@@ -2488,7 +2488,7 @@ pmap_pinit_type(pmap_t pmap, enum pmap_type pm_type, int flags)
 		pmap_pinit_pml4(pml4pg);
 		if (pti) {
 			pml4pgu = vm_page_alloc(NULL, 0, VM_ALLOC_NORMAL |
-			    VM_ALLOC_NOOBJ | VM_ALLOC_WAITOK);
+			    VM_ALLOC_NOOBJ | VM_ALLOC_WIRED | VM_ALLOC_WAITOK);
 			pmap->pm_pml4u = (pml4_entry_t *)PHYS_TO_DMAP(
 			    VM_PAGE_TO_PHYS(pml4pgu));
 			pmap_pinit_pml4_pti(pml4pgu);
@@ -2780,6 +2780,8 @@ pmap_release(pmap_t pmap)
 
 	if (pmap->pm_pml4u != NULL) {
 		m = PHYS_TO_VM_PAGE(DMAP_TO_PHYS((vm_offset_t)pmap->pm_pml4u));
+		m->wire_count--;
+		atomic_subtract_int(&vm_cnt.v_wire_count, 1);
 		vm_page_free(m);
 	}
 }
@@ -7545,7 +7547,21 @@ pmap_pti_alloc_page(void)
 	return (m);
 }
 
-extern char kernphys[], etext[], dblfault_stack[], nmi0_stack[];
+static bool
+pmap_pti_free_page(vm_page_t m, bool last)
+{
+
+	m->wire_count--;
+	if (m->wire_count == 0 || last) {
+		KASSERT(m->wire_count == 0, ("page %p wired", m));
+		atomic_subtract_int(&vm_cnt.v_wire_count, 1);
+		vm_page_free_zero(m);
+		return (true);
+	}
+	return (false);
+}
+
+extern char kernphys[], etext[];
 
 static void
 pmap_pti_init(void)
@@ -7608,7 +7624,7 @@ pmap_pti_pdpe(vm_offset_t va)
 			panic("pml4 alloc after finalization\n");
 		m = pmap_pti_alloc_page();
 		if (*pml4e != 0) {
-			vm_page_free_zero(m);
+			pmap_pti_free_page(m, true);
 			mphys = *pml4e & ~PAGE_MASK;
 		} else {
 			mphys = VM_PAGE_TO_PHYS(m);
@@ -7640,9 +7656,7 @@ pmap_pti_unwire_pde(void *pde, bool only_ref)
 	m = PHYS_TO_VM_PAGE(DMAP_TO_PHYS((uintptr_t)pde));
 	MPASS(m->wire_count > 0);
 	MPASS(only_ref || m->wire_count > 1);
-	m->wire_count--;
-	if (m->wire_count == 0)
-		vm_page_free_zero(m);
+	pmap_pti_free_page(m, false);
 }
 
 static void
@@ -7654,9 +7668,7 @@ pmap_pti_unwire_pte(void *pte, vm_offset_t va)
 	VM_OBJECT_ASSERT_WLOCKED(pti_obj);
 	m = PHYS_TO_VM_PAGE(DMAP_TO_PHYS((uintptr_t)pte));
 	MPASS(m->wire_count > 0);
-	m->wire_count--;
-	if (m->wire_count == 0) {
-		vm_page_free_zero(m);
+	if (pmap_pti_free_page(m, false)) {
 		pde = pmap_pti_pde(va);
 		MPASS((*pde & (X86_PG_PS | X86_PG_V)) == X86_PG_V);
 		*pde = 0;
@@ -7679,7 +7691,7 @@ pmap_pti_pde(vm_offset_t va)
 	if (*pdpe == 0) {
 		m = pmap_pti_alloc_page();
 		if (*pdpe != 0) {
-			vm_page_free_zero(m);
+			pmap_pti_free_page(m, true);
 			MPASS((*pdpe & X86_PG_PS) == 0);
 			mphys = *pdpe & ~PAGE_MASK;
 		} else {
@@ -7715,7 +7727,7 @@ pmap_pti_pte(vm_offset_t va, bool *unwire_pde)
 	if (*pde == 0) {
 		m = pmap_pti_alloc_page();
 		if (*pde != 0) {
-			vm_page_free_zero(m);
+			pmap_pti_free_page(m, true);
 			MPASS((*pde & X86_PG_PS) == 0);
 			mphys = *pde & ~(PAGE_MASK | pg_nx);
 		} else {

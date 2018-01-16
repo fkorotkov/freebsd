@@ -52,10 +52,7 @@ int0x80_syscall_common:
 	movq	%rdi,TF_RDI(%rsp)
 	movq	PCPU(CURPCB),%rdi
 	andl	$~PCB_FULL_IRET,PCB_FLAGS(%rdi)
-	movw	%fs,TF_FS(%rsp)
-	movw	%gs,TF_GS(%rsp)
-	movw	%es,TF_ES(%rsp)
-	movw	%ds,TF_DS(%rsp)
+	SAVE_SEGS
 	sti
 	movq	%rsi,TF_RSI(%rsp)
 	movq	%rdx,TF_RDX(%rsp)
