@@ -217,6 +217,8 @@ pmap_rw_bit(pmap_t pmap)
 	return (mask);
 }
 
+static pt_entry_t pg_g;
+
 static __inline pt_entry_t
 pmap_global_bit(pmap_t pmap)
 {
@@ -347,7 +349,7 @@ SYSCTL_INT(_machdep, OID_AUTO, nkpt, CTLFLAG_RD, &nkpt, 0,
 static int ndmpdp;
 vm_paddr_t dmaplimit;
 vm_offset_t kernel_vm_end = VM_MIN_KERNEL_ADDRESS;
-pt_entry_t pg_nx, pg_g;
+pt_entry_t pg_nx;
 
 static SYSCTL_NODE(_vm, OID_AUTO, pmap, CTLFLAG_RD, 0, "VM/pmap parameters");
 

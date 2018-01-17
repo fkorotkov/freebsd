@@ -37,8 +37,7 @@
  */
 	.text
 	SUPERALIGN_TEXT
-IDTVEC(vmbus_isr)
-	INTR_PUSH_FRAME
+	INTR_HANDLER	vmbus_isr
 	FAKE_MCOUNT(TF_RIP(%rsp))
 	movq	%rsp, %rdi
 	call	vmbus_handle_intr
