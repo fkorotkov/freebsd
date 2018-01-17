@@ -176,10 +176,12 @@ suffix may be provided to indicate that
 indicates a percentage of the calculated image size.
 .It Fl M Ar minimum-size
 Set the minimum size of the file system image to
-.Ar minimum-size .
+.Ar minimum-size
+bytes.
 .It Fl m Ar maximum-size
 Set the maximum size of the file system image to
-.Ar maximum-size .
+.Ar maximum-size
+bytes.
 An error will be raised if the target file system needs to be larger
 than this to accommodate the provided directory tree.
 .It Fl N Ar userdb-dir
@@ -211,7 +213,8 @@ See the
 flag.
 .It Fl R Ar roundup-size
 Round the image up to
-.Ar roundup-size .
+.Ar roundup-size
+bytes.
 .Ar roundup-size
 should be a multiple of the file system block size.
 This option only applies to the
@@ -224,7 +227,8 @@ Set the file system sector size to
 Defaults to 512.
 .It Fl s Ar image-size
 Set the size of the file system image to
-.Ar image-size .
+.Ar image-size
+bytes.
 .It Fl T Ar timestamp
 Specify a timestamp to be set for all filesystem files and directories
 created so that repeatable builds are possible.
