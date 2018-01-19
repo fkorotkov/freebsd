@@ -100,7 +100,7 @@ uint32_t ARM::calcEFlags() const {
   // We don't currently use any features incompatible with EF_ARM_EABI_VER5,
   // but we don't have any firm guarantees of conformance. Linux AArch64
   // kernels (as of 2016) require an EABI version to be set.
-  return EF_ARM_EABI_VER5;
+  return EF_ARM_EABI_VER5 | EF_ARM_VFP_FLOAT;
 }
 
 RelExpr ARM::getRelExpr(RelType Type, const Symbol &S,
