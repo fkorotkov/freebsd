@@ -184,12 +184,12 @@ invltlb_ret:
 	call	invltlb_pcid_handler
 	jmp	invltlb_ret
 
-	INTR_HANDLER invltlb_invpcid
-	cmpb	$0,pti(%rip)
-	jne	1f
+	INTR_HANDLER invltlb_invpcid_nopti
 	call	invltlb_invpcid_handler
 	jmp	invltlb_ret
-1:	call	invltlb_invpcid_pti_handler
+
+	INTR_HANDLER invltlb_invpcid_pti
+	call	invltlb_invpcid_pti_handler
 	jmp	invltlb_ret
 
 /*
@@ -199,12 +199,12 @@ invltlb_ret:
 	call	invlpg_handler
 	jmp	invltlb_ret
 
-	INTR_HANDLER invlpg_invpcid_pti
-	call	invlpg_invpcid_pti_handler
+	INTR_HANDLER invlpg_invpcid
+	call	invlpg_invpcid_handler
 	jmp	invltlb_ret
 
-	INTR_HANDLER invlpg_pcid_pti
-	call	invlpg_pcid_pti_handler
+	INTR_HANDLER invlpg_pcid
+	call	invlpg_pcid_handler
 	jmp	invltlb_ret
 
 /*
@@ -214,12 +214,12 @@ invltlb_ret:
 	call	invlrng_handler
 	jmp	invltlb_ret
 
-	INTR_HANDLER invlrng_invpcid_pti
-	call	invlrng_invpcid_pti_handler
+	INTR_HANDLER invlrng_invpcid
+	call	invlrng_invpcid_handler
 	jmp	invltlb_ret
 
-	INTR_HANDLER invlrng_pcid_pti
-	call	invlrng_pcid_pti_handler
+	INTR_HANDLER invlrng_pcid
+	call	invlrng_pcid_handler
 	jmp	invltlb_ret
 
 /*

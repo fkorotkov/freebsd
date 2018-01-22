@@ -803,6 +803,12 @@ msr_onfault:
 	POP_FRAME_POINTER
 	ret
 
+/*
+ * void pmap_pti_pcid_invalidate(uint64_t ucr3, uint64_t kcr3);
+ * Invalidates address space addressed by ucr3, then returns to kcr3.
+ * Done in assembler to ensure no other memory accesses happen while
+ * on ucr3.
+ */
 	ALIGN_TEXT
 ENTRY(pmap_pti_pcid_invalidate)
 	pushfq
@@ -812,6 +818,10 @@ ENTRY(pmap_pti_pcid_invalidate)
 	popfq
 	retq
 
+/*
+ * void pmap_pti_pcid_invlpg(uint64_t ucr3, uint64_t kcr3, vm_offset_t va);
+ * Invalidates virtual address va in address space ucr3, then returns to kcr3.
+ */
 	ALIGN_TEXT
 ENTRY(pmap_pti_pcid_invlpg)
 	pushfq
@@ -822,6 +832,12 @@ ENTRY(pmap_pti_pcid_invlpg)
 	popfq
 	retq
 
+/*
+ * void pmap_pti_pcid_invlrng(uint64_t ucr3, uint64_t kcr3, vm_offset_t sva,
+ *     vm_offset_t eva);
+ * Invalidates virtual addresses between sva and eva in address space ucr3,
+ * then returns to kcr3.
+ */
 	ALIGN_TEXT
 ENTRY(pmap_pti_pcid_invlrng)
 	pushfq

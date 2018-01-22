@@ -228,6 +228,8 @@
 #define	PMAP_PCID_OVERMAX_KERN	0x800
 #define	PMAP_PCID_USER_PT	0x800
 
+#define	PMAP_NO_CR3		(~0UL)
+
 #ifndef LOCORE
 
 #include <sys/queue.h>
