@@ -217,19 +217,19 @@ struct l_stat64 {
 	l_ulonglong	st_ino;
 };
 
-struct l_statfs64 { 
-        l_int           f_type; 
-        l_int           f_bsize; 
-        uint64_t        f_blocks; 
-        uint64_t        f_bfree; 
-        uint64_t        f_bavail; 
-        uint64_t        f_files; 
-        uint64_t        f_ffree; 
-        l_fsid_t        f_fsid;
-        l_int           f_namelen;
-        l_int           f_frsize;
-        l_int           f_flags;
-        l_int           f_spare[4];
+struct l_statfs64 {
+	l_int		f_type;
+	l_int		f_bsize;
+	uint64_t	f_blocks;
+	uint64_t	f_bfree;
+	uint64_t	f_bavail;
+	uint64_t	f_files;
+	uint64_t	f_ffree;
+	l_fsid_t	f_fsid;
+	l_int		f_namelen;
+	l_int		f_frsize;
+	l_int		f_flags;
+	l_int		f_spare[4];
 };
 
 #define	LINUX_NSIG_WORDS	2

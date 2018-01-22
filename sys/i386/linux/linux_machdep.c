@@ -282,7 +282,7 @@ linux_set_cloned_tls(struct thread *td, void *desc)
 	} else {
 		idx = info.entry_number;
 
-		/* 
+		/*
 		 * looks like we're getting the idx we returned
 		 * in the set_thread_area() syscall
 		 */
@@ -651,38 +651,38 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 #endif
 
 	idx = info.entry_number;
-	/* 
+	/*
 	 * Semantics of linux version: every thread in the system has array of
-	 * 3 tls descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. This 
+	 * 3 tls descriptors. 1st is GLIBC TLS, 2nd is WINE, 3rd unknown. This
 	 * syscall loads one of the selected tls decriptors with a value and
 	 * also loads GDT descriptors 6, 7 and 8 with the content of the
 	 * per-thread descriptors.
 	 *
-	 * Semantics of fbsd version: I think we can ignore that linux has 3 
+	 * Semantics of fbsd version: I think we can ignore that linux has 3
 	 * per-thread descriptors and use just the 1st one. The tls_array[]
 	 * is used only in set/get-thread_area() syscalls and for loading the
 	 * GDT descriptors. In fbsd we use just one GDT descriptor for TLS so
-	 * we will load just one. 
+	 * we will load just one.
 	 *
 	 * XXX: this doesn't work when a user space process tries to use more
 	 * than 1 TLS segment. Comment in the linux sources says wine might do
 	 * this.
 	 */
 
-	/* 
-	 * we support just GLIBC TLS now 
+	/*
+	 * we support just GLIBC TLS now
 	 * we should let 3 proceed as well because we use this segment so
 	 * if code does two subsequent calls it should succeed
 	 */
 	if (idx != 6 && idx != -1 && idx != 3)
 		return (EINVAL);
 
-	/* 
+	/*
 	 * we have to copy out the GDT entry we use
 	 * FreeBSD uses GDT entry #3 for storing %gs so load that
 	 *
 	 * XXX: what if a user space program doesn't check this value and tries
-	 * to use 6, 7 or 8? 
+	 * to use 6, 7 or 8?
 	 */
 	idx = info.entry_number = 3;
 	error = copyout(&info, args->desc, sizeof(struct l_user_desc));
@@ -719,14 +719,14 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 	PCPU_GET(fsgs_gdt)[1] = sd;
 	load_gs(GSEL(GUGS_SEL, SEL_UPL));
 	critical_exit();
-   
+
 	return (0);
 }
 
 int
 linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args)
 {
-   	
+
 	struct l_user_desc info;
 	int error;
 	int idx;

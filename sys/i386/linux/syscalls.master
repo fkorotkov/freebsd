@@ -22,7 +22,7 @@
 ; types:
 ;	STD	always included
 ;	UNIMPL	not implemented, placeholder only
-;	NOPROTO same as STD except do not create structure or
+;	NOPROTO	same as STD except do not create structure or
 ;		function prototype in sys/sysproto.h.  Does add a
 ;		definition to syscall.h besides adding a sysent.
 

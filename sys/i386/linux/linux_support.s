@@ -85,7 +85,7 @@ ENTRY(futex_orl)
 #endif
 	cmpxchgl %ecx,(%edx)
 	jnz	1b
-futex_tail:	
+futex_tail:
 	movl	12(%esp),%edx
 	movl	%eax,(%edx)
 	xorl	%eax,%eax
