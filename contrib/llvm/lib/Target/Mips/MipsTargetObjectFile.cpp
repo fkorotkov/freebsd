@@ -136,6 +136,13 @@ IsGlobalInSmallSectionImpl(const GlobalObject *GO,
     return false;
 
   Type *Ty = GVA->getValueType();
+
+  // It is possible that the target type is unsized. In this case don't
+  // attempt to put it in the small data section. This happens e.g. when
+  // building the FreeBSD kernel.
+  if (!Ty->isSized())
+    return false;
+
   return IsInSmallSection(
       GVA->getParent()->getDataLayout().getTypeAllocSize(Ty));
 }
