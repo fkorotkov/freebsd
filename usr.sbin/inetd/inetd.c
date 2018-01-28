@@ -1264,7 +1264,7 @@ setup(struct servtab *sep)
 		return;
 	}
 #define	turnon(fd, opt) \
-setsockopt(fd, SOL_SOCKET, opt, (char *)&on, sizeof (on))
+    setsockopt(fd, SOL_SOCKET, opt, (char *)&on, sizeof (on))
 	if (strcmp(sep->se_proto, "tcp") == 0 && (options & SO_DEBUG) &&
 	    turnon(sep->se_fd, SO_DEBUG) < 0)
 		syslog(LOG_ERR, "setsockopt (SO_DEBUG): %m");
