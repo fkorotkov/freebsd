@@ -319,11 +319,7 @@ sys_preadv(struct thread *td, struct preadv_args *uap)
 }
 
 int
-kern_preadv(td, fd, auio, offset)
-	struct thread *td;
-	int fd;
-	struct uio *auio;
-	off_t offset;
+kern_preadv(struct thread *td, int fd, struct uio *auio, off_t offset)
 {
 	struct file *fp;
 	cap_rights_t rights;

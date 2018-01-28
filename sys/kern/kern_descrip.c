@@ -1143,8 +1143,7 @@ fail:
  * This is common code for FIOGETOWN ioctl called by fcntl(fd, F_GETOWN, arg).
  */
 pid_t
-fgetown(sigiop)
-	struct sigio **sigiop;
+fgetown(struct sigio **sigiop)
 {
 	pid_t pgid;
 
