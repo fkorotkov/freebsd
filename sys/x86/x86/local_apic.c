@@ -2104,7 +2104,6 @@ native_lapic_ipi_vectored(u_int vector, int dest)
  * APIC page is mapped as an uncached region. In x2APIC mode there is an
  * explicit 'mfence' before the ICR MSR is written. Therefore in both cases
  * the IDT slot update is globally visible before the IPI is delivered.
- * XXX pti
  */
 static int
 native_lapic_ipi_alloc(inthand_t *ipifunc)
