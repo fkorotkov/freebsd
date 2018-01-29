@@ -138,8 +138,7 @@ cpu_mp_start(void)
 			    IDTVEC(invltlb_invpcid_nopti), SDT_SYSIGT,
 			    SEL_KPL, 0);
 			setidt(IPI_INVLPG, pti ? IDTVEC(invlpg_invpcid_pti) :
-			    IDTVEC(invlpg_invpcid), SDT_SYSIGT, SEL_KPL,
-			    0);
+			    IDTVEC(invlpg_invpcid), SDT_SYSIGT, SEL_KPL, 0);
 			setidt(IPI_INVLRNG, pti ? IDTVEC(invlrng_invpcid_pti) :
 			    IDTVEC(invlrng_invpcid), SDT_SYSIGT, SEL_KPL, 0);
 		} else {
