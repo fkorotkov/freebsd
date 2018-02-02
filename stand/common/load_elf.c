@@ -452,10 +452,11 @@ __elfN(loadimage)(struct preloaded_file *fp, elf_file_t ef, u_int64_t off)
     }
     phdr = (Elf_Phdr *)(ef->firstpage + ehdr->e_phoff);
 
-#ifdef __powerpc__
-    /* XXX: should be in a seprate helper. */
     for (i = 0; i < ehdr->e_phnum; i++) {
+#ifdef __powerpc__
 	/*
+	 * XXX: should be in a seprate helper.
+	 *
 	 * Fixup ELF endianness.
 	 *
 	 * The Xhdr structure was loaded using block read call to
