@@ -37,6 +37,7 @@ __DEFAULT_YES_OPTIONS = \
     IPSEC_SUPPORT \
     ISCSI \
     KERNEL_SYMBOLS \
+    LINUX_EMULATION \
     NETGRAPH \
     PF \
     REPRODUCIBLE_BUILD \
@@ -82,6 +83,7 @@ BROKEN_OPTIONS+= FORMAT_EXTENSIONS
 # Things that don't work because the kernel doesn't have the support
 # for them.
 .if ${MACHINE} != "i386" && ${MACHINE} != "amd64"
+BROKEN_OPTIONS+= LINUX_EMULATION
 BROKEN_OPTIONS+= OFED
 .endif
 

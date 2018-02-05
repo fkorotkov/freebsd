@@ -221,11 +221,6 @@ SUBDIR=	\
 	libalias \
 	libiconv \
 	libmchain \
-	${_linprocfs} \
-	${_linsysfs} \
-	${_linux} \
-	${_linux_common} \
-	${_linux64} \
 	linuxkpi \
 	${_lio} \
 	lmc \
@@ -489,6 +484,19 @@ SUBDIR+=	iscsi
 SUBDIR+=	iscsi_initiator
 .endif
 
+.if ${MK_LINUX_EMULATION} != "no" || defined(ALL_MODULES)
+.if ${MACHINE_CPUARCH} == "amd64"
+SUBDIR+=	linux64
+SUBDIR+=	linux_common
+.endif
+
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
+SUBDIR+=	linprocfs
+SUBDIR+=	linsysfs
+SUBDIR+=	linux
+.endif
+.endif
+
 .if ${MK_NAND} != "no" || defined(ALL_MODULES)
 _nandfs=	nandfs
 _nandsim=	nandsim
@@ -601,9 +609,6 @@ _iser=		iser
 .endif
 _ix=		ix
 _ixv=		ixv
-_linprocfs=	linprocfs
-_linsysfs=	linsysfs
-_linux=		linux
 .if ${MK_SOURCELESS_UCODE} != "no"
 _lio=		lio
 .endif
@@ -711,8 +716,6 @@ _efirt=		efirt
 _ioat=		ioat
 _ixl=		ixl
 _ixlv=		ixlv
-_linux64=	linux64
-_linux_common=	linux_common
 _ntb=		ntb
 _pms=		pms
 _qlxge=		qlxge

@@ -1,0 +1,6 @@
+.\" $FreeBSD$
+Set to not build the Linux emulation kernel module and the
+.Xr linprocfs 5
+and
+.Xr linsysfs 5
+file systems.
