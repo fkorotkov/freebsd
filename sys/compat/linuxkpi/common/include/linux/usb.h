@@ -65,12 +65,12 @@ struct usb_driver {
 	const char *name;
 
 	int     (*probe) (struct usb_interface *intf,
-	    	const	struct usb_device_id *id);
+		const	struct usb_device_id *id);
 
 	void    (*disconnect) (struct usb_interface *intf);
 
 	int     (*ioctl) (struct usb_interface *intf, unsigned int code,
-	    	void  *buf);
+		void  *buf);
 
 	int     (*suspend) (struct usb_interface *intf, pm_message_t message);
 	int     (*resume) (struct usb_interface *intf);

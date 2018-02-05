@@ -43,8 +43,8 @@ union ktime {
 
 typedef union ktime ktime_t;
 
-#define KTIME_MAX                       ((s64)~((u64)1 << 63))
-#define KTIME_SEC_MAX                   (KTIME_MAX / NSEC_PER_SEC)
+#define KTIME_MAX			((s64)~((u64)1 << 63))
+#define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
 
 static inline int64_t
 ktime_to_ns(ktime_t kt)
@@ -70,13 +70,13 @@ ktime_divns(const ktime_t kt, int64_t div)
 static inline int64_t
 ktime_to_us(ktime_t kt)
 {
-        return ktime_divns(kt, NSEC_PER_USEC);
+	return ktime_divns(kt, NSEC_PER_USEC);
 }
 
 static inline int64_t
 ktime_to_ms(ktime_t kt)
 {
-        return ktime_divns(kt, NSEC_PER_MSEC);
+	return ktime_divns(kt, NSEC_PER_MSEC);
 }
 
 static inline struct timeval
@@ -120,15 +120,15 @@ ktime_sub(ktime_t lhs, ktime_t rhs)
 static inline int64_t
 ktime_us_delta(ktime_t later, ktime_t earlier)
 {
-        ktime_t diff = ktime_sub(later, earlier);
-        return ktime_to_us(diff);
+	ktime_t diff = ktime_sub(later, earlier);
+	return ktime_to_us(diff);
 }
 
 static inline int64_t
 ktime_ms_delta(ktime_t later, ktime_t earlier)
 {
-        ktime_t diff = ktime_sub(later, earlier);
-        return ktime_to_ms(diff);
+	ktime_t diff = ktime_sub(later, earlier);
+	return ktime_to_ms(diff);
 }
 
 static inline ktime_t

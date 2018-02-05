@@ -190,7 +190,7 @@ kobject_add_complete(struct kobject *kobj, struct kobject *parent)
 		}
 		if (error)
 			sysfs_remove_dir(kobj);
-		
+
 	}
 	return (error);
 }
@@ -1718,7 +1718,7 @@ mod_timer(struct timer_list *timer, int expires)
 {
 
 	timer->expires = expires;
-	callout_reset(&timer->timer_callout,		      
+	callout_reset(&timer->timer_callout,
 	    linux_timer_jiffies_until(expires),
 	    &linux_timer_callback_wrapper, timer);
 }
@@ -1995,22 +1995,22 @@ int
 register_inetaddr_notifier(struct notifier_block *nb)
 {
 
-        nb->tags[NETDEV_CHANGEIFADDR] = EVENTHANDLER_REGISTER(
-            ifaddr_event, linux_handle_ifaddr_event, nb, 0);
-        return (0);
+	nb->tags[NETDEV_CHANGEIFADDR] = EVENTHANDLER_REGISTER(
+	    ifaddr_event, linux_handle_ifaddr_event, nb, 0);
+	return (0);
 }
 
 int
 unregister_netdevice_notifier(struct notifier_block *nb)
 {
 
-        EVENTHANDLER_DEREGISTER(ifnet_link_event,
+	EVENTHANDLER_DEREGISTER(ifnet_link_event,
 	    nb->tags[NETDEV_UP]);
-        EVENTHANDLER_DEREGISTER(ifnet_arrival_event,
+	EVENTHANDLER_DEREGISTER(ifnet_arrival_event,
 	    nb->tags[NETDEV_REGISTER]);
-        EVENTHANDLER_DEREGISTER(ifnet_departure_event,
+	EVENTHANDLER_DEREGISTER(ifnet_departure_event,
 	    nb->tags[NETDEV_UNREGISTER]);
-        EVENTHANDLER_DEREGISTER(iflladdr_event,
+	EVENTHANDLER_DEREGISTER(iflladdr_event,
 	    nb->tags[NETDEV_CHANGEADDR]);
 
 	return (0);
@@ -2020,10 +2020,10 @@ int
 unregister_inetaddr_notifier(struct notifier_block *nb)
 {
 
-        EVENTHANDLER_DEREGISTER(ifaddr_event,
-            nb->tags[NETDEV_CHANGEIFADDR]);
+	EVENTHANDLER_DEREGISTER(ifaddr_event,
+	    nb->tags[NETDEV_CHANGEIFADDR]);
 
-        return (0);
+	return (0);
 }
 
 struct list_sort_thunk {
