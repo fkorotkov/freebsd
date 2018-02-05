@@ -76,7 +76,7 @@
 				    l_size_t nbyte, l_loff_t offset); }
 18	AUE_PWRITE	STD	{ int linux_pwrite(l_uint fd, char *buf, \
 				    l_size_t nbyte, l_loff_t offset); }
-19	AUE_READV	NOPROTO { int readv(int fd, struct iovec *iovp, \
+19	AUE_READV	NOPROTO	{ int readv(int fd, struct iovec *iovp, \
 				    u_int iovcnt); }
 20	AUE_WRITEV	NOPROTO	{ int writev(int fd, struct iovec *iovp, \
 				    u_int iovcnt); }
