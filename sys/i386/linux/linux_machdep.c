@@ -293,8 +293,8 @@ linux_set_cloned_tls(struct thread *td, void *desc)
 
 		/* this doesnt happen in practice */
 		if (idx == 6) {
-	   		/* we might copy out the entry_number as 3 */
-		   	info.entry_number = 3;
+			/* we might copy out the entry_number as 3 */
+			info.entry_number = 3;
 			error = copyout(&info, desc, sizeof(struct l_user_desc));
 			if (error)
 				printf(LMSG("copyout failed!"));
@@ -638,16 +638,16 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 
 #ifdef DEBUG
 	if (ldebug(set_thread_area))
-	   	printf(ARGS(set_thread_area, "%i, %x, %x, %i, %i, %i, %i, %i, %i\n"),
+		printf(ARGS(set_thread_area, "%i, %x, %x, %i, %i, %i, %i, %i, %i\n"),
 		      info.entry_number,
-      		      info.base_addr,
-      		      info.limit,
-      		      info.seg_32bit,
+		      info.base_addr,
+		      info.limit,
+		      info.seg_32bit,
 		      info.contents,
-      		      info.read_exec_only,
-      		      info.limit_in_pages,
-      		      info.seg_not_present,
-      		      info.useable);
+		      info.read_exec_only,
+		      info.limit_in_pages,
+		      info.seg_not_present,
+		      info.useable);
 #endif
 
 	idx = info.entry_number;
@@ -700,7 +700,7 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 	memcpy(&sd, &a, sizeof(a));
 #ifdef DEBUG
 	if (ldebug(set_thread_area))
-	   	printf("Segment created in set_thread_area: lobase: %x, hibase: %x, lolimit: %x, hilimit: %x, type: %i, dpl: %i, p: %i, xx: %i, def32: %i, gran: %i\n", sd.sd_lobase,
+		printf("Segment created in set_thread_area: lobase: %x, hibase: %x, lolimit: %x, hilimit: %x, type: %i, dpl: %i, p: %i, xx: %i, def32: %i, gran: %i\n", sd.sd_lobase,
 			sd.sd_hibase,
 			sd.sd_lolimit,
 			sd.sd_hilimit,
@@ -767,7 +767,7 @@ linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args
 
 	error = copyout(&info, args->desc, sizeof(struct l_user_desc));
 	if (error)
-	   	return (EFAULT);
+		return (EFAULT);
 
 	return (0);
 }
@@ -777,7 +777,7 @@ int
 linux_mq_open(struct thread *td, struct linux_mq_open_args *args)
 {
 #ifdef P1003_1B_MQUEUE
-   	return sys_kmq_open(td, (struct kmq_open_args *) args);
+	return sys_kmq_open(td, (struct kmq_open_args *) args);
 #else
 	return (ENOSYS);
 #endif
@@ -787,7 +787,7 @@ int
 linux_mq_unlink(struct thread *td, struct linux_mq_unlink_args *args)
 {
 #ifdef P1003_1B_MQUEUE
-   	return sys_kmq_unlink(td, (struct kmq_unlink_args *) args);
+	return sys_kmq_unlink(td, (struct kmq_unlink_args *) args);
 #else
 	return (ENOSYS);
 #endif
@@ -797,7 +797,7 @@ int
 linux_mq_timedsend(struct thread *td, struct linux_mq_timedsend_args *args)
 {
 #ifdef P1003_1B_MQUEUE
-   	return sys_kmq_timedsend(td, (struct kmq_timedsend_args *) args);
+	return sys_kmq_timedsend(td, (struct kmq_timedsend_args *) args);
 #else
 	return (ENOSYS);
 #endif
@@ -807,7 +807,7 @@ int
 linux_mq_timedreceive(struct thread *td, struct linux_mq_timedreceive_args *args)
 {
 #ifdef P1003_1B_MQUEUE
-   	return sys_kmq_timedreceive(td, (struct kmq_timedreceive_args *) args);
+	return sys_kmq_timedreceive(td, (struct kmq_timedreceive_args *) args);
 #else
 	return (ENOSYS);
 #endif
@@ -827,7 +827,7 @@ int
 linux_mq_getsetattr(struct thread *td, struct linux_mq_getsetattr_args *args)
 {
 #ifdef P1003_1B_MQUEUE
-   	return sys_kmq_setattr(td, (struct kmq_setattr_args *) args);
+	return sys_kmq_setattr(td, (struct kmq_setattr_args *) args);
 #else
 	return (ENOSYS);
 #endif

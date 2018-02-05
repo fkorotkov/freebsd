@@ -431,11 +431,11 @@ struct l_sigframe {
 
 struct l_rt_sigframe {
 	l_int			sf_sig;
-	l_siginfo_t 		*sf_siginfo;
+	l_siginfo_t		*sf_siginfo;
 	struct l_ucontext	*sf_ucontext;
 	l_siginfo_t		sf_si;
-	struct l_ucontext 	sf_sc;
-	l_handler_t 		sf_handler;
+	struct l_ucontext	sf_sc;
+	l_handler_t		sf_handler;
 };
 
 extern struct sysentvec linux_sysvec;
