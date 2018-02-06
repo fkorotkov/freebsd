@@ -111,6 +111,7 @@ static void mps_parse_debug(struct mps_softc *sc, char *list);
 SYSCTL_NODE(_hw, OID_AUTO, mps, CTLFLAG_RD, 0, "MPS Driver Parameters");
 
 MALLOC_DEFINE(M_MPT2, "mps", "mpt2 driver memory");
+MALLOC_DECLARE(M_MPSUSER);
 
 /*
  * Do a "Diagnostic Reset" aka a hard reset.  This should get the chip out of
@@ -393,6 +394,7 @@ mps_resize_queues(struct mps_softc *sc)
 	reqcr = MIN(reqcr, sc->facts->RequestCredit);
 
 	sc->num_reqs = prireqcr + reqcr;
+	sc->num_prireqs = prireqcr;
 	sc->num_replies = MIN(sc->max_replyframes + sc->max_evtframes,
 	    sc->facts->MaxReplyDescriptorPostQueueDepth) - 1;
 
@@ -1160,6 +1162,42 @@ mps_memaddr_cb(void *arg, bus_dma_segment_t *segs, int nsegs, int error)
 	*addr = segs[0].ds_addr;
 }
 
+void
+mps_memaddr_wait_cb(void *arg, bus_dma_segment_t *segs, int nsegs, int error)
+{
+	struct mps_busdma_context *ctx;
+	int need_unload, need_free;
+
+	ctx = (struct mps_busdma_context *)arg;
+	need_unload = 0;
+	need_free = 0;
+
+	mps_lock(ctx->softc);
+	ctx->error = error;
+	ctx->completed = 1;
+	if ((error == 0) && (ctx->abandoned == 0)) {
+		*ctx->addr = segs[0].ds_addr;
+	} else {
+		if (nsegs != 0)
+			need_unload = 1;
+		if (ctx->abandoned != 0)
+			need_free = 1;
+	}
+	if (need_free == 0)
+		wakeup(ctx);
+
+	mps_unlock(ctx->softc);
+
+	if (need_unload != 0) {
+		bus_dmamap_unload(ctx->buffer_dmat,
+				  ctx->buffer_dmamap);
+		*ctx->addr = 0;
+	}
+
+	if (need_free != 0)
+		free(ctx, M_MPSUSER);
+}
+
 static int
 mps_alloc_queues(struct mps_softc *sc)
 {
@@ -1416,7 +1454,7 @@ mps_alloc_requests(struct mps_softc *sc)
 
 		/* XXX Is a failure here a critical problem? */
 		if (bus_dmamap_create(sc->buffer_dmat, 0, &cm->cm_dmamap) == 0)
-			if (i <= sc->facts->HighPriorityCredit)
+			if (i <= sc->num_prireqs)
 				mps_free_high_priority_command(sc, cm);
 			else
 				mps_free_command(sc, cm);
@@ -2609,6 +2647,17 @@ mps_push_sge(struct mps_command *cm, void *sgep, size_t len, int segsleft)
 	if (cm->cm_sglsize < MPS_SGC_SIZE)
 		panic("MPS: Need SGE Error Code\n");
 
+	if (segsleft >= 1 && cm->cm_sglsize < len + MPS_SGC_SIZE) {
+		/*
+		 * 1 or more segment, enough room for only a chain.
+		 * Hope the previous element wasn't a Simple entry
+		 * that needed to be marked with
+		 * MPI2_SGE_FLAGS_LAST_ELEMENT.  Case (4).
+		 */
+		if ((error = mps_add_chain(cm)) != 0)
+			return (error);
+	}
+
 	if (segsleft >= 2 &&
 	    cm->cm_sglsize < len + MPS_SGC_SIZE + MPS_SGE64_SIZE) {
 		/*
@@ -2631,17 +2680,6 @@ mps_push_sge(struct mps_command *cm, void *sgep, size_t len, int segsleft)
 		bcopy(sgep, cm->cm_sge, len);
 		cm->cm_sge = (MPI2_SGE_IO_UNION *)((uintptr_t)cm->cm_sge + len);
 		return (mps_add_chain(cm));
-	}
-
-	if (segsleft >= 1 && cm->cm_sglsize < len + MPS_SGC_SIZE) {
-		/*
-		 * 1 or more segment, enough room for only a chain.
-		 * Hope the previous element wasn't a Simple entry
-		 * that needed to be marked with
-		 * MPI2_SGE_FLAGS_LAST_ELEMENT.  Case (4).
-		 */
-		if ((error = mps_add_chain(cm)) != 0)
-			return (error);
 	}
 
 #ifdef INVARIANTS
