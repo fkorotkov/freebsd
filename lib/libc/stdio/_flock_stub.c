@@ -45,6 +45,8 @@ __FBSDID("$FreeBSD$");
 #include <string.h>
 #include <pthread.h>
 #include "un-namespace.h"
+#include <signal.h>
+#include <unistd.h>
 
 #include "local.h"
 
@@ -137,5 +139,11 @@ _funlockfile(FILE *fp)
 			fp->_fl_owner = NULL;
 			_pthread_mutex_unlock(&fp->_fl_mutex);
 		}
+	} else {
+		char x[120];
+		snprintf(x, sizeof(x), "funlockfile %p %p %p\n", fp,
+		    curthread, fp->_fl_owner);
+		write(2, x, strlen(x));
+		raise(SIGBUS);
 	}
 }
