@@ -41,6 +41,7 @@ __DEFAULT_YES_OPTIONS = \
     NETGRAPH \
     PF \
     REPRODUCIBLE_BUILD \
+    RETPOLINE \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
     TESTS \
@@ -85,6 +86,11 @@ BROKEN_OPTIONS+= FORMAT_EXTENSIONS
 .if ${MACHINE} != "i386" && ${MACHINE} != "amd64"
 BROKEN_OPTIONS+= LINUX_EMULATION
 BROKEN_OPTIONS+= OFED
+.endif
+
+# Things that don't work based on toolchain support.
+.if ${MACHINE} != "amd64"
+BROKEN_OPTIONS+= RETPOLINE
 .endif
 
 # expanded inline from bsd.mkopt.mk to avoid share/mk dependency
