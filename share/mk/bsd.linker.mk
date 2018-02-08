@@ -75,6 +75,9 @@ ${X_}LINKER_FEATURES+=	build-id
 .if ${${X_}LINKER_TYPE} == "lld" && ${${X_}LINKER_VERSION} >= 60000
 ${X_}LINKER_FEATURES+=	retpoline
 .endif
+.if ${${X_}LINKER_TYPE} == "lld" && ${${X_}LINKER_VERSION} >= 60000
+${X_}LINKER_FEATURES+=	retpoline
+.endif
 .endif
 .else
 # Use LD's values
