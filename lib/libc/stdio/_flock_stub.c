@@ -40,7 +40,7 @@
 __FBSDID("$FreeBSD$");
 
 #include <sys/types.h>
-#include <machine/atomic.h>
+#include <machine/cpufunc.h>
 #include "namespace.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -116,14 +116,17 @@ void
 _funlockfile(FILE *fp)
 {
 	pthread_t	curthread = _pthread_self();
-	pthread_t	fl_owner;
+	pthread_t	owner;
 
 	/*
 	 * Check if this file is owned by the current thread:
 	 */
-	while ((fp->_fl_owner = (pthread_t)atomic_load_ptr(&fp->_fl_owner)) == NULL)
-		;
-	if (fl_owner == curthread) {
+	owner = fp->_fl_owner;
+	if (owner == NULL) {
+		mfence();
+		owner = fp->_fl_owner;
+	}
+	if (owner == curthread) {
 		/*
 		 * Check if this thread has locked the FILE
 		 * more than once:
