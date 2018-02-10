@@ -122,10 +122,12 @@ _funlockfile(FILE *fp)
 	 * Check if this file is owned by the current thread:
 	 */
 	owner = fp->_fl_owner;
+#ifdef __x86_64__
 	if (owner == NULL) {
 		mfence();
 		owner = fp->_fl_owner;
 	}
+#endif
 	if (owner == curthread) {
 		/*
 		 * Check if this thread has locked the FILE
