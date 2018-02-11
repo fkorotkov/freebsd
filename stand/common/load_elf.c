@@ -203,8 +203,8 @@ __elfN(load_elf_header)(char *filename, elf_file_t ef)
 	int			 err;
 
 	/*
-	* Open the image, read and validate the ELF header
-	*/
+	 * Open the image, read and validate the ELF header
+	 */
 	if (filename == NULL)	/* can't handle nameless */
 		return (EFTYPE);
 	if ((ef->fd = open(filename, O_RDONLY)) == -1)
@@ -387,7 +387,7 @@ __elfN(loadfile_raw)(char *filename, u_int64_t dest,
 		printf("%s entry at 0x%jx\n", filename,
 		    (uintmax_t)ehdr->e_entry);
 #else
-		printf("%s ", filename);
+	printf("%s ", filename);
 #endif
 
 	fp->f_size = __elfN(loadimage)(fp, &ef, dest);
@@ -411,7 +411,7 @@ out:
 		free(ef.firstpage);
 	if (ef.fd != -1)
 		close(ef.fd);
-	return(err);
+	return (err);
 }
 
 /*
@@ -797,7 +797,7 @@ nosyms:
 			break;
 		case DT_SYMTAB:
 			ef->symtab =
-			    (Elf_Sym*)(uintptr_t)(dp[i].d_un.d_ptr + off);
+			    (Elf_Sym *)(uintptr_t)(dp[i].d_un.d_ptr + off);
 			break;
 		case DT_REL:
 			ef->rel =
