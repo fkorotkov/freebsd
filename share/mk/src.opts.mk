@@ -172,7 +172,6 @@ __DEFAULT_YES_OPTIONS = \
 __DEFAULT_NO_OPTIONS = \
     BSD_GREP \
     BSD_GREP_FASTMATCH \
-    CLANG_EXTRAS \
     DTRACE_TESTS \
     GNU_DIFF \
     GNU_GREP \
@@ -221,18 +220,18 @@ __TT=${MACHINE}
     ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386" || \
     ${__TT} == "mips" || ${__T:Mpowerpc*} != "")
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
-__DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
-__DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_EXTRAS CLANG_FULL CLANG_IS_CC
+__DEFAULT_YES_OPTIONS+=LLD LLD_BOOTSTRAP LLD_IS_LD
 .elif ${COMPILER_FEATURES:Mc++11} && ${__T:Mriscv*} == "" && ${__T} != "sparc64"
 # If an external compiler that supports C++11 is used as ${CC} and Clang
 # supports the target, then Clang is enabled.
-__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_EXTRAS CLANG_FULL
 __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC LLD
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .else
 # Everything else disables Clang.
-__DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC LLD
-__DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
+__DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_EXRAS CLANG_FULL CLANG_IS_CC
+__DEFAULT_NO_OPTIONS+=LLD LLD_BOOTSTRAP LLD_IS_LD
 .endif
 # Only program remaining from in-tree binutils (for bootstrap) is GNU as for
 # i386/amd64 - assume we will use LLD or external binutils linker and Clang IAS
