@@ -68,3 +68,19 @@ chdir.S:3:239: error: la used to load 64-bit address
 ```
 /usr/local/bin/riscv64-freebsd-ld: cannot find -lstdc++
 ```
+
+# Build
+src.conf.5 knobs need documentation:
+* `WITHOUT_BSD_GREP`
+* `WITH_BSD_GREP_FASTMATCH`
+* `WITH_GNU_DIFF`
+* `WITH_GNU_GREP`
+* `WITH_LIB32`
+* `WITH_LOADER_FORCE_LE`
+* `WITHOUT_REPRODUCIBLE_BUILD`
+* `WITH_RESCUE`
+* `WITH_SENDMAIL`
+* `WITH_TCP_WRAPPERS`
+* `WITH_TESTS`
+* `WITH_TESTS_SUPPORT`
+
