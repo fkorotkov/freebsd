@@ -39,16 +39,12 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
-#include <sys/types.h>
-#include <machine/cpufunc.h>
 #include "namespace.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
 #include "un-namespace.h"
-#include <signal.h>
-#include <unistd.h>
 
 #include "local.h"
 
@@ -116,19 +112,11 @@ void
 _funlockfile(FILE *fp)
 {
 	pthread_t	curthread = _pthread_self();
-	pthread_t	owner;
 
 	/*
 	 * Check if this file is owned by the current thread:
 	 */
-	owner = fp->_fl_owner;
-#ifdef __x86_64__
-	if (owner == NULL) {
-		mfence();
-		owner = fp->_fl_owner;
-	}
-#endif
-	if (owner == curthread) {
+	if (fp->_fl_owner == curthread) {
 		/*
 		 * Check if this thread has locked the FILE
 		 * more than once:
@@ -149,11 +137,5 @@ _funlockfile(FILE *fp)
 			fp->_fl_owner = NULL;
 			_pthread_mutex_unlock(&fp->_fl_mutex);
 		}
-	} else {
-		char x[120];
-		snprintf(x, sizeof(x), "funlockfile %p %p %p\n", fp,
-		    curthread, fp->_fl_owner);
-		write(2, x, strlen(x));
-		raise(SIGBUS);
 	}
 }
