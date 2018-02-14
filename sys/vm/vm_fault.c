@@ -1136,7 +1136,7 @@ readrest:
 				pmap_copy_page(fs.m, fs.first_m);
 				fs.first_m->valid = VM_PAGE_BITS_ALL;
 				if ((fault_flags & VM_FAULT_WIRE) == 0) {
-					prot &= VM_PROT_WRITE;
+					prot &= ~VM_PROT_WRITE;
 					fault_type &= ~VM_PROT_WRITE;
 				}
 				if (wired && (fault_flags &
