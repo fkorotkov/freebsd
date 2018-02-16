@@ -152,5 +152,4 @@ CFLAGS.bzipfs.c+= -I${SRCTOP}/contrib/bzip2
 .PATH: ${SYSDIR}/libkern
 SRCS+=  explicit_bzero.c
 
-.include <bsd.stand.mk>
 .include <bsd.lib.mk>
