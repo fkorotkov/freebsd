@@ -94,14 +94,12 @@ MODULE_VERSION(linux64, 1);
 #endif
 
 #if defined(DEBUG)
-SYSCTL_PROC(_compat_linux, OID_AUTO, debug,
-	    CTLTYPE_STRING | CTLFLAG_RW,
-	    0, 0, linux_sysctl_debug, "A",
-	    "Linux 64 debugging control");
+SYSCTL_PROC(_compat_linux, OID_AUTO, debug, CTLTYPE_STRING | CTLFLAG_RW, 0, 0,
+    linux_sysctl_debug, "A", "64-bit Linux debugging control");
 #endif
 
 /*
- * Allow the this functions to use the ldebug() facility
+ * Allow the sendsig functions to use the ldebug() facility
  * even though they are not syscalls themselves. Map them
  * to syscall 0. This is slightly less bogus than using
  * ldebug(sigreturn).
@@ -185,15 +183,15 @@ translate_traps(int signal, int trap_code)
 {
 
 	if (signal != SIGBUS)
-		return signal;
+		return (signal);
 	switch (trap_code) {
 	case T_PROTFLT:
 	case T_TSSFLT:
 	case T_DOUBLEFLT:
 	case T_PAGEFLT:
-		return SIGSEGV;
+		return (SIGSEGV);
 	default:
-		return signal;
+		return (signal);
 	}
 }
 

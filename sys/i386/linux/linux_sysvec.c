@@ -180,6 +180,7 @@ LINUX_VDSO_SYM_INTPTR(linux_vsyscall);
 static int
 translate_traps(int signal, int trap_code)
 {
+
 	if (signal != SIGBUS)
 		return (signal);
 	switch (trap_code) {
