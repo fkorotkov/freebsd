@@ -41,7 +41,6 @@ __DEFAULT_YES_OPTIONS = \
     NETGRAPH \
     PF \
     REPRODUCIBLE_BUILD \
-    RETPOLINE \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
     TESTS \
@@ -50,6 +49,7 @@ __DEFAULT_YES_OPTIONS = \
 
 __DEFAULT_NO_OPTIONS = \
     EXTRA_TCP_STACKS \
+    KERNEL_RETPOLINE \
     NAND \
     OFED \
     RATELIMIT
@@ -90,7 +90,7 @@ BROKEN_OPTIONS+= OFED
 
 # Things that don't work based on toolchain support.
 .if ${MACHINE} != "amd64"
-BROKEN_OPTIONS+= RETPOLINE
+BROKEN_OPTIONS+= KERNEL_RETPOLINE
 .endif
 
 # expanded inline from bsd.mkopt.mk to avoid share/mk dependency
