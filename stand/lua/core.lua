@@ -37,60 +37,6 @@ local compose_loader_cmd = function(cmd_name, argstr)
 	return cmd_name
 end
 
--- Internal function
--- Parses arguments to boot and returns two values: kernel_name, argstr
--- Defaults to nil and "" respectively.
--- This will also parse arguments to autoboot, but the with_kernel argument
--- will need to be explicitly overwritten to false
-local parse_boot_args = function(argv, with_kernel)
-	if with_kernel == nil then
-		with_kernel = true
-	end
-	if #argv == 0 then
-		if with_kernel then
-			return nil, ""
-		else
-			return ""
-		end
-	end
-	local kernel_name
-	local argstr = ""
-
-	for k, v in ipairs(argv) do
-		if with_kernel and v:sub(1,1) ~= "-" then
-			kernel_name = v
-		else
-			argstr = argstr .. " " .. v
-		end
-	end
-	if with_kernel then
-		return kernel_name, argstr
-	else
-		return argstr
-	end
-end
-
--- Globals
-function boot(...)
-	local argv = {...}
-	local cmd_name = ""
-	cmd_name, argv = core.popFrontTable(argv)
-	local kernel, argstr = parse_boot_args(argv)
-	if kernel ~= nil then
-		loader.perform("unload")
-		config.selectkernel(kernel)
-	end
-	core.boot(argstr)
-end
-
-function autoboot(...)
-	local argv = {...}
-	local cmd_name = ""
-	cmd_name, argv = core.popFrontTable(argv)
-	local argstr = parse_boot_args(argv, false)
-	core.autoboot(argstr)
-end
-
 -- Module exports
 -- Commonly appearing constants
 core.KEY_BACKSPACE	= 8
@@ -189,6 +135,7 @@ end
 function core.kernelList()
 	local k = loader.getenv("kernel")
 	local v = loader.getenv("kernels")
+	local autodetect = loader.getenv("kernels_autodetect") or ""
 
 	local kernels = {}
 	local unique = {}
@@ -207,9 +154,12 @@ function core.kernelList()
 				unique[n] = true
 			end
 		end
+	end
 
-		-- We will not automatically detect kernels to be displayed if
-		-- loader.conf(5) explicitly set 'kernels'.
+	-- Base whether we autodetect kernels or not on a loader.conf(5)
+	-- setting, kernels_autodetect. If it's set to 'yes', we'll add
+	-- any kernels we detect based on the criteria described.
+	if autodetect:lower() ~= "yes" then
 		return kernels
 	end
 
@@ -242,6 +192,41 @@ function core.kernelList()
 	return kernels
 end
 
+function core.bootenvDefault()
+	return loader.getenv("zfs_be_active")
+end
+
+function core.bootenvList()
+	local bootenv_count = tonumber(loader.getenv("bootenvs_count"))
+	local bootenvs = {}
+	local curenv
+	local curenv_idx = 0
+	local envcount = 0
+	local unique = {}
+
+	if bootenv_count == nil or bootenv_count <= 0 then
+		return bootenvs
+	end
+
+	-- Currently selected bootenv is always first/default
+	curenv = core.bootenvDefault()
+	if curenv ~= nil then
+		envcount = envcount + 1
+		bootenvs[envcount] = curenv
+		unique[curenv] = true
+	end
+
+	for curenv_idx = 0, bootenv_count - 1 do
+		curenv = loader.getenv("bootenvs[" .. curenv_idx .. "]")
+		if curenv ~= nil and unique[curenv] == nil then
+			envcount = envcount + 1
+			bootenvs[envcount] = curenv
+			unique[curenv] = true
+		end
+	end
+	return bootenvs
+end
+
 function core.setDefaults()
 	core.setACPI(core.getACPIPresent(true))
 	core.setSafeMode(false)
@@ -262,6 +247,15 @@ end
 function core.isSingleUserBoot()
 	local single_user = loader.getenv("boot_single")
 	return single_user ~= nil and single_user:lower() == "yes"
+end
+
+function core.isZFSBoot()
+	local c = loader.getenv("currdev")
+
+	if c ~= nil then
+		return c:match("^zfs:") ~= nil
+	end
+	return false
 end
 
 function core.isSerialBoot()
