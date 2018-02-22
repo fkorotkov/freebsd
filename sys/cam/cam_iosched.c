@@ -1219,7 +1219,11 @@ cam_iosched_get_write(struct cam_iosched_softc *isc)
 	 */
 	if (bioq_first(&isc->bio_queue) && isc->current_read_bias) {
 		if (iosched_debug)
-			printf("Reads present and current_read_bias is %d queued writes %d queued reads %d\n", isc->current_read_bias, isc->write_stats.queued, isc->read_stats.queued);
+			printf(
+			    "Reads present and current_read_bias is %d queued "
+			    "writes %d queued reads %d\n",
+			    isc->current_read_bias, isc->write_stats.queued,
+    			    isc->read_stats.queued);
 		isc->current_read_bias--;
 		/* We're not limiting writes, per se, just doing reads first */
 		return NULL;
@@ -1392,7 +1396,7 @@ cam_iosched_queue_work(struct cam_iosched_softc *isc, struct bio *bp)
 	 * the work on the bio queue.
 	 */
 	if (bp->bio_cmd == BIO_DELETE) {
-		bioq_disksort(&isc->trim_queue, bp);
+		bioq_insert_tail(&isc->trim_queue, bp);
 #ifdef CAM_IOSCHED_DYNAMIC
 		isc->trim_stats.in++;
 		isc->trim_stats.queued++;
