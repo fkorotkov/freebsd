@@ -44,15 +44,15 @@ __FBSDID("$FreeBSD$");
 LIN_SDT_PROVIDER_DECLARE(LINUX_DTRACE);
 
 UNIMPLEMENTED(afs_syscall);
-UNIMPLEMENTED(create_module);	/* added in Linux 1.0 removed in 2.6 */
+UNIMPLEMENTED(create_module);	/* Added in Linux 1.0 removed in 2.6. */
 UNIMPLEMENTED(epoll_ctl_old);
 UNIMPLEMENTED(epoll_wait_old);
-UNIMPLEMENTED(get_kernel_syms);	/* added in Linux 1.0 removed in 2.6 */
+UNIMPLEMENTED(get_kernel_syms);	/* Added in Linux 1.0 removed in 2.6. */
 UNIMPLEMENTED(get_thread_area);
 UNIMPLEMENTED(getpmsg);
-UNIMPLEMENTED(nfsservctl);	/* added in Linux 2.2 removed in 3.1 */
+UNIMPLEMENTED(nfsservctl);	/* Added in Linux 2.2 removed in 3.1. */
 UNIMPLEMENTED(putpmsg);
-UNIMPLEMENTED(query_module);	/* added in Linux 2.2 removed in 2.6 */
+UNIMPLEMENTED(query_module);	/* Added in Linux 2.2 removed in 2.6. */
 UNIMPLEMENTED(security);
 UNIMPLEMENTED(set_thread_area);
 UNIMPLEMENTED(tuxcall);

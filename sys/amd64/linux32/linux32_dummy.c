@@ -1,3 +1,4 @@
+    sys/sys/sysent.2
 /*-
  * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
  *
@@ -47,19 +48,19 @@ LIN_SDT_PROVIDER_DECLARE(LINUX_DTRACE);
 
 UNIMPLEMENTED(afs_syscall);
 UNIMPLEMENTED(break);
-UNIMPLEMENTED(create_module);	/* added in Linux 1.0 removed in 2.6 */
+UNIMPLEMENTED(create_module);	/* Added in Linux 1.0 removed in 2.6. */
 UNIMPLEMENTED(ftime);
-UNIMPLEMENTED(get_kernel_syms);	/* added in Linux 1.0 removed in 2.6 */
+UNIMPLEMENTED(get_kernel_syms);	/* Added in Linux 1.0 removed in 2.6. */
 UNIMPLEMENTED(getpmsg);
 UNIMPLEMENTED(gtty);
 UNIMPLEMENTED(stty);
 UNIMPLEMENTED(lock);
 UNIMPLEMENTED(mpx);
-UNIMPLEMENTED(nfsservctl);	/* added in Linux 2.2 removed in 3.1 */
+UNIMPLEMENTED(nfsservctl);	/* Added in Linux 2.2 removed in 3.1. */
 UNIMPLEMENTED(prof);
 UNIMPLEMENTED(profil);
 UNIMPLEMENTED(putpmsg);
-UNIMPLEMENTED(query_module);	/* added in Linux 2.2 removed in 2.6 */
+UNIMPLEMENTED(query_module);	/* Added in Linux 2.2 removed in 2.6. */
 UNIMPLEMENTED(ulimit);
 UNIMPLEMENTED(vserver);
 
