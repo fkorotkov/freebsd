@@ -204,7 +204,7 @@ sys_read(struct thread *td, struct read_args *uap)
 	auio.uio_resid = uap->nbyte;
 	auio.uio_segflg = UIO_USERSPACE;
 	error = kern_readv(td, uap->fd, &auio);
-	return(error);
+	return (error);
 }
 
 /*
@@ -358,7 +358,7 @@ dofileread(struct thread *td, int fd, struct file *fp, struct uio *auio,
 	/* Finish zero length reads right here */
 	if (auio->uio_resid == 0) {
 		td->td_retval[0] = 0;
-		return(0);
+		return (0);
 	}
 	auio->uio_rw = UIO_READ;
 	auio->uio_offset = offset;
@@ -407,7 +407,7 @@ sys_write(struct thread *td, struct write_args *uap)
 	auio.uio_resid = uap->nbyte;
 	auio.uio_segflg = UIO_USERSPACE;
 	error = kern_writev(td, uap->fd, &auio);
-	return(error);
+	return (error);
 }
 
 /*
@@ -446,7 +446,7 @@ kern_pwrite(struct thread *td, int fd, const void *buf, size_t nbyte,
 	auio.uio_resid = nbyte;
 	auio.uio_segflg = UIO_USERSPACE;
 	error = kern_pwritev(td, fd, &auio, offset);
-	return(error);
+	return (error);
 }
 
 #if defined(COMPAT_FREEBSD6)
