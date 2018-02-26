@@ -121,8 +121,8 @@ static register_t * linux_copyout_strings(struct image_params *imgp);
 static int	elf_linux_fixup(register_t **stack_base,
 		    struct image_params *iparams);
 static bool	linux_trans_osrel(const Elf_Note *note, int32_t *osrel);
-static void	linux_vdso_install(void *param);
-static void	linux_vdso_deinstall(void *param);
+static void	linux_vdso_install(const void *param);
+static void	linux_vdso_deinstall(const void *param);
 static void	linux_set_syscall_retval(struct thread *td, int error);
 static int	linux_fetch_syscall_args(struct thread *td);
 static int	exec_linux_imgact_try(struct image_params *iparams);
@@ -803,7 +803,7 @@ struct sysentvec elf_linux_sysvec = {
 };
 
 static void
-linux_vdso_install(void *param)
+linux_vdso_install(const void *param)
 {
 
 	amd64_lower_shared_page(&elf_linux_sysvec);
@@ -829,16 +829,16 @@ linux_vdso_install(void *param)
 	    (linux_platform - (caddr_t)elf_linux_sysvec.sv_shared_page_base);
 }
 SYSINIT(elf_linux_vdso_init, SI_SUB_EXEC, SI_ORDER_ANY,
-    (sysinit_cfunc_t)linux_vdso_install, NULL);
+    linux_vdso_install, NULL);
 
 static void
-linux_vdso_deinstall(void *param)
+linux_vdso_deinstall(const void *param)
 {
 
 	__elfN(linux_shared_page_fini)(linux_shared_page_obj);
 };
 SYSUNINIT(elf_linux_vdso_uninit, SI_SUB_EXEC, SI_ORDER_FIRST,
-    (sysinit_cfunc_t)linux_vdso_deinstall, NULL);
+    linux_vdso_deinstall, NULL);
 
 static char GNULINUX_ABI_VENDOR[] = "GNU";
 static int GNULINUX_ABI_DESC = 0;

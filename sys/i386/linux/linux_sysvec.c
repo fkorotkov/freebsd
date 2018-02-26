@@ -118,8 +118,8 @@ static void	exec_linux_setregs(struct thread *td,
 		    struct image_params *imgp, u_long stack);
 static register_t *linux_copyout_strings(struct image_params *imgp);
 static bool	linux_trans_osrel(const Elf_Note *note, int32_t *osrel);
-static void	linux_vdso_install(void *param);
-static void	linux_vdso_deinstall(void *param);
+static void	linux_vdso_install(const void *param);
+static void	linux_vdso_deinstall(const void *param);
 
 static int linux_szplatform;
 const char *linux_kplatform;
@@ -1009,7 +1009,7 @@ struct sysentvec elf_linux_sysvec = {
 };
 
 static void
-linux_vdso_install(void *param)
+linux_vdso_install(const void *param)
 {
 
 	linux_szsigcode = (&_binary_linux_locore_o_end -
@@ -1030,16 +1030,16 @@ linux_vdso_install(void *param)
 	elf_linux_sysvec.sv_shared_page_obj = linux_shared_page_obj;
 }
 SYSINIT(elf_linux_vdso_init, SI_SUB_EXEC, SI_ORDER_ANY,
-    (sysinit_cfunc_t)linux_vdso_install, NULL);
+    linux_vdso_install, NULL);
 
 static void
-linux_vdso_deinstall(void *param)
+linux_vdso_deinstall(const void *param)
 {
 
 	__elfN(linux_shared_page_fini)(linux_shared_page_obj);
 };
 SYSUNINIT(elf_linux_vdso_uninit, SI_SUB_EXEC, SI_ORDER_FIRST,
-    (sysinit_cfunc_t)linux_vdso_deinstall, NULL);
+    linux_vdso_deinstall, NULL);
 
 static char GNU_ABI_VENDOR[] = "GNU";
 static int GNULINUX_ABI_DESC = 0;
