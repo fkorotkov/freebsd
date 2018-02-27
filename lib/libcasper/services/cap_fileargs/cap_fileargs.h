@@ -45,6 +45,7 @@ int fileargs_open(fileargs_t *fa, const char *name);
 void fileargs_free(fileargs_t *fa);
 FILE *fileargs_fopen(fileargs_t *fa, const char *name, const char *mode);
 #else
+#include <sys/dnv.h>
 typedef struct fileargs {
 	int	fa_flags;
 	mode_t	fa_mode;
@@ -79,7 +80,7 @@ fileargs_initnv(nvlist_t *limits)
 
 	fa = fileargs_init(0, NULL,
 	    nvlist_get_number(limits, "flags"),
-	    dnvlist_get_number(limits, "mode", 0));
+	    dnvlist_get_number(limits, "mode", 0), NULL);
 	nvlist_destroy(limits);
 
 	return (fa);
