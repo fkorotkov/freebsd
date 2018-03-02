@@ -99,7 +99,6 @@ __DEFAULT_YES_OPTIONS = \
     FINGER \
     FLOPPY \
     FMTREE \
-    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \
@@ -125,6 +124,7 @@ __DEFAULT_YES_OPTIONS = \
     LIBPTHREAD \
     LIBTHR \
     LLVM_COV \
+    LOADER_LUA \
     LOCALES \
     LOCATE \
     LPR \
@@ -184,6 +184,7 @@ __DEFAULT_NO_OPTIONS = \
     BSD_GREP \
     BSD_GREP_FASTMATCH \
     DTRACE_TESTS \
+    FORTH \
     GNU_DIFF \
     GNU_GREP \
     GNU_GREP_COMPAT \
@@ -191,7 +192,6 @@ __DEFAULT_NO_OPTIONS = \
     LIBSOFT \
     LOADER_FIREWIRE \
     LOADER_FORCE_LE \
-    LOADER_LUA \
     NAND \
     OFED \
     OPENLDAP \
