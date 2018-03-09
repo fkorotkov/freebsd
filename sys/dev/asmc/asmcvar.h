@@ -424,7 +424,7 @@ struct asmc_softc {
 				  "Tm0P", "Tm1P", "Ts0P", "Ts0S", \
 				  NULL }
 
-#define	ASMC_MBA4_TEMPDESCSx	{ "TB0T", "TB1T", "TB2T", "TC0C", \
+#define	ASMC_MBA4_TEMPDESCS	{ "TB0T", "TB1T", "TB2T", "TC0C", \
 				  "TC0D", "TC0E", "TC0F", "TC0P", \
 				  "TC1C", "TC2C", "TCGC", "TCSA", \
 				  "TH0F", "TH0J", "TH0O", "TH0o", \
