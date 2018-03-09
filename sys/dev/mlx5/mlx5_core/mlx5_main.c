@@ -1022,6 +1022,8 @@ static int mlx5_load_one(struct mlx5_core_dev *dev, struct mlx5_priv *priv)
 		goto err_reg_dev;
 	}
 
+	mlx5_fwdump_prep(dev);
+
 	clear_bit(MLX5_INTERFACE_STATE_DOWN, &dev->intf_state);
 	set_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state);
 
@@ -1089,6 +1091,7 @@ static int mlx5_unload_one(struct mlx5_core_dev *dev, struct mlx5_priv *priv)
 		goto out;
 	}
 
+	mlx5_fwdump_clean(dev);
 	mlx5_unregister_device(dev);
 
 	mlx5_cleanup_fs(dev);
@@ -1374,7 +1377,7 @@ static const struct pci_device_id mlx5_core_pci_table[] = {
 
 MODULE_DEVICE_TABLE(pci, mlx5_core_pci_table);
 
-static struct pci_driver mlx5_core_driver = {
+struct pci_driver mlx5_core_driver = {
 	.name           = DRIVER_NAME,
 	.id_table       = mlx5_core_pci_table,
 	.shutdown	= shutdown_one,
@@ -1391,8 +1394,14 @@ static int __init init(void)
 	if (err)
 		goto err_debug;
 
-
-	return 0;
+	err = mlx5_fwdump_init();
+	if (err)
+		goto err_fwdump;
+ 
+ 	return 0;
+ 
+err_fwdump:
+	pci_unregister_driver(&mlx5_core_driver);
 
 err_debug:
 	return err;
@@ -1400,6 +1409,7 @@ err_debug:
 
 static void __exit cleanup(void)
 {
+	mlx5_fwdump_fini();
 	pci_unregister_driver(&mlx5_core_driver);
 }
 

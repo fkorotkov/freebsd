@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2013-2017, Mellanox Technologies, Ltd.  All rights reserved.
+ * Copyright (c) 2018, Mellanox Technologies, Ltd.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,29 +25,36 @@
  * $FreeBSD$
  */
 
-#ifndef MLX5_CMD_H
-#define MLX5_CMD_H
+#ifndef _DEV_MLX5_MLX5IO_H_
+#define _DEV_MLX5_MLX5IO_H_
 
-#include <linux/types.h>
+#include <sys/ioccom.h>
 
-struct manage_pages_layout {
-	u64	ptr;
-	u32	reserved;
-	u16	num_entries;
-	u16	func_id;
+struct mlx5_fwdump_reg {
+	uint32_t addr;
+	uint32_t val;
 };
 
-
-struct mlx5_cmd_alloc_uar_imm_out {
-	u32	rsvd[3];
-	u32	uarn;
+struct mlx5_fwdump_addr {
+	uint32_t domain;
+	uint8_t bus;
+	uint8_t slot;
+	uint8_t func;
 };
 
-struct mlx5_core_dev;
-int mlx5_cmd_query_cong_counter(struct mlx5_core_dev *dev,
-                                bool reset, void *out, int out_size);
-int mlx5_cmd_query_cong_params(struct mlx5_core_dev *dev, int cong_point,
-                               void *out, int out_size);
-int mlx5_cmd_modify_cong_params(struct mlx5_core_dev *mdev,
-                                void *in, int in_size);
-#endif /* MLX5_CMD_H */
+struct mlx5_fwdump_get {
+	struct mlx5_fwdump_addr devaddr;
+	struct mlx5_fwdump_reg *buf;
+	size_t reg_cnt;
+	size_t reg_filled; /* out */
+};
+
+#define	MLX5_FWDUMP_GET		_IOWR('m', 1, struct mlx5_fwdump_get)
+#define	MLX5_FWDUMP_RESET	_IOW('m', 2, struct mlx5_fwdump_addr)
+#define	MLX5_FWDUMP_FORCE	_IOW('m', 3, struct mlx5_fwdump_addr)
+
+#ifndef _KERNEL
+#define	MLX5_DEV_PATH	_PATH_DEV"mlx5ctl"
+#endif
+
+#endif
