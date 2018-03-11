@@ -395,14 +395,20 @@ void InputSection::copyRelocations(uint8_t *Buf, ArrayRef<RelTy> Rels) {
         continue;
       }
 
+      int64_t AddendAdjustment = 0;
+      if (Config->EMachine == EM_MIPS && Config->Relocatable) {
+        if (Type == R_MIPS_GPREL32 || Type == R_MIPS_GPREL16)
+          AddendAdjustment = Sec->getFile<ELFT>()->MipsGp0;
+      }
+
       if (Config->IsRela) {
-        P->r_addend =
-            Sym.getVA(getAddend<ELFT>(Rel)) - Section->getOutputSection()->Addr;
+        P->r_addend = Sym.getVA(getAddend<ELFT>(Rel) + AddendAdjustment) -
+                      Section->getOutputSection()->Addr;
       } else if (Config->Relocatable) {
         const uint8_t *BufLoc = Sec->Data.begin() + Rel.r_offset;
-        Sec->Relocations.push_back({R_ABS, Type, Rel.r_offset,
-                                    Target->getImplicitAddend(BufLoc, Type),
-                                    &Sym});
+        Sec->Relocations.push_back(
+             {R_ABS, Type, Rel.r_offset,
+              Target->getImplicitAddend(BufLoc, Type) + AddendAdjustment, &Sym});
       }
     }
 
