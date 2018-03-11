@@ -283,8 +283,6 @@ BROKEN_OPTIONS+=LIBSOFT
 BROKEN_OPTIONS+=SSP
 # profiling won't work on MIPS64 because there is only assembly for o32
 BROKEN_OPTIONS+=PROFILE
-# binaries too large? "relocation R_MIPS_GOT_DISP out of range" errors
-BROKEN_OPTIONS+=RESCUE
 # error: ABI 'o32' is not supported on CPU 'mips3'
 BROKEN_OPTIONS+=LIB32
 .endif
