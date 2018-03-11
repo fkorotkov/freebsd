@@ -281,8 +281,6 @@ BROKEN_OPTIONS+=LIBSOFT
 .endif
 .if ${__T:Mmips*}
 BROKEN_OPTIONS+=SSP
-# profiling won't work on MIPS64 because there is only assembly for o32
-BROKEN_OPTIONS+=PROFILE
 # error: ABI 'o32' is not supported on CPU 'mips3'
 BROKEN_OPTIONS+=LIB32
 .endif
@@ -303,6 +301,10 @@ BROKEN_OPTIONS+=LOADER_OFW
 BROKEN_OPTIONS+=LOADER_UBOOT
 .endif
 
+.if ${__T:Mmips64*}
+# profiling won't work on MIPS64 because there is only assembly for o32
+BROKEN_OPTIONS+=PROFILE
+.endif
 .if ${__T} == "aarch64" || ${__T} == "amd64" || ${__T} == "i386" || \
     ${__T} == "powerpc64" || ${__T} == "sparc64"
 __DEFAULT_YES_OPTIONS+=CXGBETOOL
