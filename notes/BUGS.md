@@ -14,7 +14,7 @@ lld refuses to link pre-armv7 objects
 /scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armv6/tmp/usr/bin/ld: error: lld may use movt/movw, no object with architecture supporting feature detected.
 ```
 
-### armv7
+### armeb
 ```
 /scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armeb/tmp/usr/bin/ld: error: lld uses blx instruction, no object with architecture supporting feature detected.
 /scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armeb/tmp/usr/bin/ld: error: lld uses extended branch encoding, no object with architecture supporting feature detected.
