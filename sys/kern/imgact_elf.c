@@ -99,7 +99,7 @@ static int __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp);
 static bool __elfN(freebsd_trans_osrel)(const Elf_Note *note,
     int32_t *osrel);
 static bool kfreebsd_trans_osrel(const Elf_Note *note, int32_t *osrel);
-static boolean_t __elfN(check_note)(struct image_params *imgp,
+static bool __elfN(check_note)(struct image_params *imgp,
     Elf_Brandnote *checknote, int32_t *osrel);
 static vm_prot_t __elfN(trans_prot)(Elf_Word);
 static Elf_Word __elfN(untrans_prot)(vm_prot_t);
@@ -236,16 +236,16 @@ __elfN(remove_brand_entry)(Elf_Brandinfo *entry)
 	return (0);
 }
 
-int
+bool
 __elfN(brand_inuse)(Elf_Brandinfo *entry)
 {
 	struct proc *p;
-	int rval = FALSE;
+	bool rval = false;
 
 	sx_slock(&allproc_lock);
 	FOREACH_PROC_IN_SYSTEM(p) {
 		if (p->p_sysent == entry->sysvec) {
-			rval = TRUE;
+			rval = true;
 			break;
 		}
 	}
@@ -260,7 +260,7 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 {
 	const Elf_Ehdr *hdr = (const Elf_Ehdr *)imgp->image_header;
 	Elf_Brandinfo *bi, *bi_m;
-	boolean_t ret;
+	bool ret;
 	int i;
 
 	/*
@@ -790,7 +790,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	u_long text_size, data_size, total_size, text_addr, data_addr;
 	u_long seg_size, seg_addr, addr, baddr, et_dyn_addr, entry, proghdr;
 	int32_t osrel;
-	int error, i, n, interp_name_len, have_interp;
+	int error, i, n, interp_name_len;
+	bool have_interp;
 
 	hdr = (const Elf_Ehdr *)imgp->image_header;
 
@@ -1033,7 +1034,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	imgp->entry_addr = entry;
 
 	if (interp != NULL) {
-		have_interp = FALSE;
+		have_interp = false;
 		VOP_UNLOCK(imgp->vp, 0);
 		if (brand_info->emul_path != NULL &&
 		    brand_info->emul_path[0] != '\0') {
@@ -1044,7 +1045,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			    &imgp->entry_addr, sv->sv_pagesize);
 			free(path, M_TEMP);
 			if (error == 0)
-				have_interp = TRUE;
+				have_interp = true;
 		}
 		if (!have_interp && newinterp != NULL &&
 		    (brand_info->interp_path == NULL ||
@@ -1052,7 +1053,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			error = __elfN(load_file)(imgp->proc, newinterp, &addr,
 			    &imgp->entry_addr, sv->sv_pagesize);
 			if (error == 0)
-				have_interp = TRUE;
+				have_interp = true;
 		}
 		if (!have_interp) {
 			error = __elfN(load_file)(imgp->proc, interp, &addr,
@@ -1511,7 +1512,7 @@ each_dumpable_segment(struct thread *td, segment_callback func, void *closure)
 	vm_map_t map = &p->p_vmspace->vm_map;
 	vm_map_entry_t entry;
 	vm_object_t backing_object, object;
-	boolean_t ignore_entry;
+	bool ignore_entry;
 
 	vm_map_lock_read(map);
 	for (entry = map->header.next; entry != &map->header;
@@ -2323,7 +2324,7 @@ __elfN(note_procstat_auxv)(void *arg, struct sbuf *sb, size_t *sizep)
 	}
 }
 
-static boolean_t
+static bool
 __elfN(parse_notes)(struct image_params *imgp, Elf_Brandnote *checknote,
     int32_t *osrel, const Elf_Phdr *pnote)
 {
@@ -2331,11 +2332,11 @@ __elfN(parse_notes)(struct image_params *imgp, Elf_Brandnote *checknote,
 	const char *note_name;
 	char *buf;
 	int i, error;
-	boolean_t res;
+	bool res;
 
 	/* We need some limit, might as well use PAGE_SIZE. */
 	if (pnote == NULL || pnote->p_filesz > PAGE_SIZE)
-		return (FALSE);
+		return (false);
 	ASSERT_VOP_LOCKED(imgp->vp, "parse_notes");
 	if (pnote->p_offset > PAGE_SIZE ||
 	    pnote->p_filesz > PAGE_SIZE - pnote->p_offset) {
@@ -2347,7 +2348,7 @@ __elfN(parse_notes)(struct image_params *imgp, Elf_Brandnote *checknote,
 		    curthread->td_ucred, NOCRED, NULL, curthread);
 		if (error != 0) {
 			uprintf("i/o error PT_NOTE\n");
-			res = FALSE;
+			res = false;
 			goto ret;
 		}
 		note = note0 = (const Elf_Note *)buf;
@@ -2362,7 +2363,7 @@ __elfN(parse_notes)(struct image_params *imgp, Elf_Brandnote *checknote,
 	for (i = 0; i < 100 && note >= note0 && note < note_end; i++) {
 		if (!aligned(note, Elf32_Addr) || (const char *)note_end -
 		    (const char *)note < sizeof(Elf_Note)) {
-			res = FALSE;
+			res = false;
 			goto ret;
 		}
 		if (note->n_namesz != checknote->hdr.n_namesz ||
@@ -2384,14 +2385,14 @@ __elfN(parse_notes)(struct image_params *imgp, Elf_Brandnote *checknote,
 			res = checknote->trans_osrel(note, osrel);
 			goto ret;
 		}
-		res = TRUE;
+		res = true;
 		goto ret;
 nextnote:
 		note = (const Elf_Note *)((const char *)(note + 1) +
 		    roundup2(note->n_namesz, ELF_NOTE_ROUNDSIZE) +
 		    roundup2(note->n_descsz, ELF_NOTE_ROUNDSIZE));
 	}
-	res = FALSE;
+	res = false;
 ret:
 	free(buf, M_TEMP);
 	return (res);
@@ -2402,7 +2403,7 @@ ret:
  * fetch the osreldate for binary from the ELF OSABI-note. Only the
  * first page of the image is searched, the same as for headers.
  */
-static boolean_t
+static bool
 __elfN(check_note)(struct image_params *imgp, Elf_Brandnote *checknote,
     int32_t *osrel)
 {
@@ -2416,9 +2417,9 @@ __elfN(check_note)(struct image_params *imgp, Elf_Brandnote *checknote,
 	for (i = 0; i < hdr->e_phnum; i++) {
 		if (phdr[i].p_type == PT_NOTE &&
 		    __elfN(parse_notes)(imgp, checknote, osrel, &phdr[i]))
-			return (TRUE);
+			return (true);
 	}
-	return (FALSE);
+	return (false);
 
 }
 

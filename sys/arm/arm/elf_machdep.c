@@ -51,7 +51,7 @@ __FBSDID("$FreeBSD$");
 #include <machine/vfp.h>
 #endif
 
-static boolean_t elf32_arm_abi_supported(struct image_params *);
+static bool elf32_arm_abi_supported(struct image_params *);
 
 u_long elf_hwcap;
 u_long elf_hwcap2;
@@ -116,7 +116,7 @@ SYSINIT(elf32, SI_SUB_EXEC, SI_ORDER_FIRST,
 	(sysinit_cfunc_t) elf32_insert_brand_entry,
 	&freebsd_brand_info);
 
-static boolean_t
+static bool
 elf32_arm_abi_supported(struct image_params *imgp)
 {
 	const Elf_Ehdr *hdr = (const Elf_Ehdr *)imgp->image_header;
