@@ -1,26 +1,23 @@
 # Tool Chain bugs
 ## arm
-lld refuses to link pre-armv7 objects
-### arm
+lld refuses to link pre-armv7 objects.
+
+armv6 reports two errors:
 ```
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.arm/tmp/usr/bin/ld: error: lld uses blx instruction, no object with architecture supporting feature detected.
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.arm/tmp/usr/bin/ld: error: lld uses extended branch encoding, no object with architecture supporting feature detected.
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.arm/tmp/usr/bin/ld: error: lld may use movt/movw, no object with architecture supporting feature detected.
+lld uses extended branch encoding, no object with architecture supporting feature detected.
+lld may use movt/movw, no object with architecture supporting feature detected.
 ```
 
-### armv6
+arm and armeb reports one additional error:
 ```
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armv6/tmp/usr/bin/ld: error: lld uses extended branch encoding, no object with architecture supporting feature detected.
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armv6/tmp/usr/bin/ld: error: lld may use movt/movw, no object with architecture supporting feature detected.
+lld uses blx instruction, no object with architecture supporting feature detected.
 ```
 
-### armeb
-```
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armeb/tmp/usr/bin/ld: error: lld uses blx instruction, no object with architecture supporting feature detected.
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armeb/tmp/usr/bin/ld: error: lld uses extended branch encoding, no object with architecture supporting feature detected.
-/scratch/tmp/emaste/obj/scratch/tmp/emaste/freebsd/arm.armeb/tmp/usr/bin/ld: error: lld may use movt/movw, no object with architecture supporting feature detected.
-```
-also many lines of
+See also a
+[mailing list post about movt/movw](https://lists.freebsd.org/pipermail/freebsd-arm/2018-January/017389.html)
+concerning armv7, although in practice it seems we do not emit movt/movw.
+
+An armeb build also emits many times
 ```
 subsection length greater than section length
 ```
