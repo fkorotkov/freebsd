@@ -1,7 +1,7 @@
 /*-
  * Copyright (c) 1989, 1990 William F. Jolitz.
  * Copyright (c) 1990 The Regents of the University of California.
- * Copyright (c) 2007 The FreeBSD Foundation
+ * Copyright (c) 2007, 2018 The FreeBSD Foundation
  * All rights reserved.
  *
  * Portions of this software were developed by A. Joseph Koshy under
@@ -38,14 +38,11 @@
 #include "opt_atpic.h"
 #include "opt_hwpmc_hooks.h"
 
+#include "assym.s"
+
 #include <machine/asmacros.h>
 #include <machine/psl.h>
 #include <machine/trap.h>
-
-#include "assym.s"
-
-#define	SEL_RPL_MASK	0x0003
-#define	GSEL_KPL	0x0020	/* GSEL(GCODE_SEL, SEL_KPL) */
 
 #ifdef KDTRACE_HOOKS
 	.bss
@@ -63,9 +60,10 @@ dtrace_invop_calltrap_addr:
 	.zero	8
 #endif
 	.text
-#ifdef HWPMC_HOOKS
-	ENTRY(start_exceptions)
-#endif
+ENTRY(start_exceptions)
+	.globl	tramp_idleptd
+tramp_idleptd:	.long	0
+
 /*****************************************************************************/
 /* Trap handling                                                             */
 /*****************************************************************************/
@@ -92,6 +90,10 @@ dtrace_invop_calltrap_addr:
  * must restore them prior to calling 'iret'.  The cpu adjusts the %cs and
  * %ss segment registers, but does not mess with %ds, %es, or %fs.  Thus we
  * must load them with appropriate values for supervisor mode operation.
+ *
+ * This code is not executed at the address of linking.  It is copied to the
+ * trampoline area.  As the consequence, all code there and in included files
+ * must be PIC.
  */
 
 MCOUNT_LABEL(user)
@@ -103,8 +105,6 @@ IDTVEC(div)
 	pushl $0; TRAP(T_DIVIDE)
 IDTVEC(dbg)
 	pushl $0; TRAP(T_TRCTRAP)
-IDTVEC(nmi)
-	pushl $0; TRAP(T_NMI)
 IDTVEC(bpt)
 	pushl $0; TRAP(T_BPTFLT)
 IDTVEC(dtrace_ret)
@@ -124,15 +124,16 @@ IDTVEC(fpusegm)
 IDTVEC(tss)
 	TRAP(T_TSSFLT)
 IDTVEC(missing)
-	TRAP(T_SEGNPFLT)
+	pushl	$T_SEGNPFLT
+	jmp	irettraps
 IDTVEC(stk)
-	TRAP(T_STKFLT)
+	pushl	$T_STKFLT
+	jmp	irettraps
 IDTVEC(prot)
-	TRAP(T_PROTFLT)
+	pushl	$T_PROTFLT
+	jmp	irettraps
 IDTVEC(page)
 	TRAP(T_PAGEFLT)
-IDTVEC(mchk)
-	pushl $0; TRAP(T_MCHK)
 IDTVEC(rsvd_pti)
 IDTVEC(rsvd)
 	pushl $0; TRAP(T_RESERVED)
@@ -144,7 +145,8 @@ IDTVEC(xmm)
 	pushl $0; TRAP(T_XMMFLT)
 
 	/*
-	 * All traps except ones for syscalls jump to alltraps.  If
+	 * All traps except ones for syscalls or invalid segment,
+	 * jump to alltraps.  If
 	 * interrupts were enabled when the trap occurred, then interrupts
 	 * are enabled now if the trap was through a trap gate, else
 	 * disabled if the trap was through an interrupt gate.  Note that
@@ -156,20 +158,16 @@ IDTVEC(xmm)
 	.globl	alltraps
 	.type	alltraps,@function
 alltraps:
-	pushal
-	pushl	$0
-	movw	%ds,(%esp)
-	pushl	$0
-	movw	%es,(%esp)
-	pushl	$0
-	movw	%fs,(%esp)
+	PUSH_FRAME2
 alltraps_with_regs_pushed:
 	SET_KERNEL_SREGS
 	cld
+	KENTER
 	FAKE_MCOUNT(TF_EIP(%esp))
 calltrap:
 	pushl	%esp
-	call	trap
+	movl	$trap,%eax
+	call	*%eax
 	add	$4, %esp
 
 	/*
@@ -178,20 +176,43 @@ calltrap:
 	MEXITCOUNT
 	jmp	doreti
 
+	.globl	irettraps
+	.type	irettraps,@function
+irettraps:
+	PUSH_FRAME2
+	SET_KERNEL_SREGS
+	cld
+	/* XXXKIB vm86 */
+	testb	$SEL_RPL_MASK, TF_CS(%esp)
+	jnz	2f
+	call	1f
+1:	popl	%ebx
+	leal	(doreti_iret - 1b)(%ebx), %ecx
+	cmpl	%ecx, TF_EIP(%esp)
+	je	2f
+	leal	(doreti_popl_ds - 1b)(%ebx), %ecx
+	cmpl	%ecx, TF_EIP(%esp)
+	je	2f
+	leal	(doreti_popl_es - 1b)(%ebx), %ecx
+	cmpl	%ecx, TF_EIP(%esp)
+	je	2f
+	leal	(doreti_popl_fs - 1b)(%ebx), %ecx
+	cmpl	%ecx, TF_EIP(%esp)
+	je	2f
+	/* kernel mode */
+	FAKE_MCOUNT(TF_EIP(%esp))
+	jmp	calltrap
+2:	/* user mode, or kernel mode with user %cr3 and trampoline stack */
+	MOVE_STACKS
+	FAKE_MCOUNT(TF_EIP(%esp))
+	jmp	calltrap
+
 /*
  * Privileged instruction fault.
  */
 #ifdef KDTRACE_HOOKS
 	SUPERALIGN_TEXT
 IDTVEC(ill)
-	/*
-	 * Check if a DTrace hook is registered.  The default (data) segment
-	 * cannot be used for this since %ds is not known good until we
-	 * verify that the entry was from kernel mode.
-	 */
-	cmpl	$0,%ss:dtrace_invop_jump_addr
-	je	norm_ill
-
 	/*
 	 * Check if this is a user fault.  If so, just handle it as a normal
 	 * trap.
@@ -200,6 +221,13 @@ IDTVEC(ill)
 	jne	norm_ill
 	testl	$PSL_VM, 8(%esp)	/* and vm86 mode. */
 	jnz	norm_ill
+
+	/*
+	 * Check if a DTrace hook is registered.  The trampoline cannot
+	 * be instrumented.
+	 */
+	cmpl	$0, dtrace_invop_jump_addr
+	je	norm_ill
 
 	/*
 	 * This is a kernel instruction fault that might have been caused
@@ -221,43 +249,39 @@ IDTVEC(ill)
 	 * Process the instruction fault in the normal way.
 	 */
 norm_ill:
-	pushl $0
-	TRAP(T_PRIVINFLT)
+	pushl	$0
+	pushl	$T_PRIVINFLT
+	jmp	alltraps
 #endif
 
-/*
- * Call gate entry for syscalls (lcall 7,0).
- * This is used by FreeBSD 1.x a.out executables and "old" NetBSD executables.
- *
- * The intersegment call has been set up to specify one dummy parameter.
- * This leaves a place to put eflags so that the call frame can be
- * converted to a trap frame. Note that the eflags is (semi-)bogusly
- * pushed into (what will be) tf_err and then copied later into the
- * final spot. It has to be done this way because esp can't be just
- * temporarily altered for the pushfl - an interrupt might come in
- * and clobber the saved cs/eip.
- */
-	SUPERALIGN_TEXT
-IDTVEC(lcall_syscall)
-	pushfl				/* save eflags */
-	popl	8(%esp)			/* shuffle into tf_eflags */
-	pushl	$7			/* sizeof "lcall 7,0" */
-	pushl	$0			/* tf_trapno */
-	pushal
+IDTVEC(mchk)
 	pushl	$0
-	movw	%ds,(%esp)
+	pushl	$T_MCHK
+	jmp	nmi_mchk_common
+
+IDTVEC(nmi)
 	pushl	$0
-	movw	%es,(%esp)
-	pushl	$0
-	movw	%fs,(%esp)
+	pushl	$T_NMI
+nmi_mchk_common:
+	PUSH_FRAME2
 	SET_KERNEL_SREGS
 	cld
+	/*
+	 * Save %cr3 into tf_err.  There is no good place to put it.
+	 * Always reload %cr3, since we might have interrupted the
+	 * kernel entry or exit.
+	 * Do not switch to the thread kernel stack, otherwise we might
+	 * obliterate the previous context partially copied from the
+	 * trampoline stack.
+	 */
+	movl	%cr3, %eax
+	movl	%eax, TF_ERR(%esp)
+	call	1f
+1:	popl	%eax
+	movl	(tramp_idleptd - 1b)(%eax), %eax
+	movl	%eax, %cr3
 	FAKE_MCOUNT(TF_EIP(%esp))
-	pushl	%esp
-	call	syscall
-	add	$4, %esp
-	MEXITCOUNT
-	jmp	doreti
+	jmp	calltrap
 
 /*
  * Trap gate entry for syscalls (int 0x80).
@@ -272,18 +296,15 @@ IDTVEC(lcall_syscall)
 IDTVEC(int0x80_syscall)
 	pushl	$2			/* sizeof "int 0x80" */
 	pushl	$0			/* tf_trapno */
-	pushal
-	pushl	$0
-	movw	%ds,(%esp)
-	pushl	$0
-	movw	%es,(%esp)
-	pushl	$0
-	movw	%fs,(%esp)
+	PUSH_FRAME2
 	SET_KERNEL_SREGS
 	cld
+	MOVE_STACKS
+	sti
 	FAKE_MCOUNT(TF_EIP(%esp))
 	pushl	%esp
-	call	syscall
+	movl	$syscall, %eax
+	call	*%eax
 	add	$4, %esp
 	MEXITCOUNT
 	jmp	doreti
@@ -292,7 +313,8 @@ ENTRY(fork_trampoline)
 	pushl	%esp			/* trapframe pointer */
 	pushl	%ebx			/* arg1 */
 	pushl	%esi			/* function */
-	call	fork_exit
+	movl	$fork_exit, %eax
+	call	*%eax
 	addl	$12,%esp
 	/* cut from syscall */
 
@@ -393,7 +415,8 @@ doreti_ast:
 	je	doreti_exit
 	sti
 	pushl	%esp			/* pass a pointer to the trapframe */
-	call	ast
+	movl	$ast, %eax
+	call	*%eax
 	add	$4,%esp
 	jmp	doreti_ast
 
@@ -406,6 +429,23 @@ doreti_ast:
 	 */
 doreti_exit:
 	MEXITCOUNT
+
+	cmpl	$T_NMI, TF_TRAPNO(%esp)
+	je	doreti_iret_nmi
+	cmpl	$T_MCHK, TF_TRAPNO(%esp)
+	je	doreti_iret_nmi
+	testl	$SEL_RPL_MASK, TF_CS(%esp)
+	jz	doreti_popl_fs
+	movl	%esp, %esi
+	movl	PCPU(TRAMPSTK), %edx
+	movl	$TF_SZ, %ecx
+	subl	%ecx, %edx
+	movl	%edx, %edi
+	rep; movsb
+	movl	%edx, %esp
+	movl	PCPU(CURPCB),%eax
+	movl	PCB_CR3(%eax), %eax
+	movl	%eax, %cr3
 
 	.globl	doreti_popl_fs
 doreti_popl_fs:
@@ -421,6 +461,11 @@ doreti_popl_ds:
 	.globl	doreti_iret
 doreti_iret:
 	iret
+
+doreti_iret_nmi:
+	movl	TF_ERR(%esp), %eax
+	movl	%eax, %cr3
+	jmp	doreti_popl_fs
 
 	/*
 	 * doreti_iret_fault and friends.  Alternative return code for
@@ -490,11 +535,20 @@ doreti_nmi:
 	testl	$TDP_CALLCHAIN,TD_PFLAGS(%eax) /* flagged for capture? */
 	jz	doreti_exit
 	/*
+	 * Switch to thread stack.  Reset tf_trapno to not indicate NMI,
+	 * to cause normal userspace exit.
+	 */
+	movl	$T_RESERVED, TF_TRAPNO(%esp)
+	NMOVE_STACKS
+	/*
 	 * Take the processor out of NMI mode by executing a fake "iret".
 	 */
 	pushfl
 	pushl	%cs
-	pushl	$outofnmi
+	call	1f
+1:	popl	%eax
+	leal	(outofnmi-1b)(%eax),%eax
+	pushl	%eax
 	iret
 outofnmi:
 	/*
@@ -511,5 +565,6 @@ outofnmi:
 	call	*%ecx
 	addl	$12,%esp
 	jmp	doreti_ast
-	ENTRY(end_exceptions)
 #endif
+
+ENTRY(end_exceptions)

@@ -951,22 +951,6 @@ device		ndis
 #####################################################################
 # VM OPTIONS
 
-# Disable the 4 MByte page PSE CPU feature.  The PSE feature allows the
-# kernel to use 4 MByte pages to map the kernel instead of 4k pages.
-# This saves on the amount of memory needed for page tables needed to
-# map the kernel.  You should only disable this feature as a temporary
-# workaround if you are having problems with it enabled.
-#
-#options 	DISABLE_PSE
-
-# Disable the global pages PGE CPU feature.  The PGE feature allows pages
-# to be marked with the PG_G bit.  TLB entries for these pages are not
-# flushed from the cache when %cr3 is reloaded.  This can make context
-# switches less expensive.  You should only disable this feature as a
-# temporary workaround if you are having problems with it enabled.
-#
-#options 	DISABLE_PG_G
-
 # KSTACK_PAGES is the number of memory pages to assign to the kernel
 # stack of each thread.
 

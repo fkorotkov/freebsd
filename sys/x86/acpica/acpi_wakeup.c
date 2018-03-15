@@ -186,7 +186,7 @@ acpi_wakeup_cpus(struct acpi_softc *sc)
 	 * cpususpend_handler() and we will release them soon.  Then each
 	 * will invalidate its TLB.
 	 */
-	kernel_pmap->pm_pdir[0] = 0;
+	PTD[KPTDI] = 0;
 	invltlb_glob();
 #endif
 
@@ -256,7 +256,7 @@ acpi_sleep_machdep(struct acpi_softc *sc, int state)
 		 * be careful to use the kernel map (PTD[0] is for curthread
 		 * which may be a user thread in deprecated APIs).
 		 */
-		kernel_pmap->pm_pdir[0] = PTD[KPTDI];
+		PTD[KPTDI] = PTD[LOWPTDI];
 #endif
 
 		/* Call ACPICA to enter the desired sleep state */
