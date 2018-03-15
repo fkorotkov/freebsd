@@ -1,0 +1,20 @@
++ PAE
+- no, NULL deref needs two PDEs: move base from 8M to 4M (and 2M for PAE) ?
++ ISA Hole double-mapping ?
++ NULL deref protection
++ TSS and LDT in trampoline map
+audit all KERNBASE usage:
+  + i386/i386/minidump
+  + kern/link_elf.c and kern/link_elf_obj.c
+coredump
++ LOR on copyout ("w")
++ NMI: always reload %cr3
++ MCHK: same
++ Comment explaining KVA layout.
++ lcall
++ superpage mapping of the kernel text
++ enable PTD[0] for sleep/wakeup
+
+Usermode:
++ 1. trampoline
++ 2. sys_machdep.  ldt and tss allocation

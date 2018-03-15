@@ -104,9 +104,8 @@ ENTRY(vm86_bioscall)
 
 	movl	%cr3,%eax
 	pushl	%eax			/* save address space */
-	movl	IdlePTD,%ecx
+	movl	IdlePTD,%ecx		/* va (and pa) of Idle PTD */
 	movl	%ecx,%ebx
-	addl	$KERNBASE,%ebx		/* va of Idle PTD */
 	movl	0(%ebx),%eax
 	pushl	%eax			/* old ptde != 0 when booting */
 	pushl	%ebx			/* keep for reuse */

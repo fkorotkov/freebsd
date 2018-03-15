@@ -116,44 +116,58 @@ static int trap_pfault(struct trapframe *, int, vm_offset_t);
 static void trap_fatal(struct trapframe *, vm_offset_t);
 void dblfault_handler(void);
 
-extern inthand_t IDTVEC(lcall_syscall);
-
 #define MAX_TRAP_MSG		32
-static char *trap_msg[] = {
-	"",					/*  0 unused */
-	"privileged instruction fault",		/*  1 T_PRIVINFLT */
-	"",					/*  2 unused */
-	"breakpoint instruction fault",		/*  3 T_BPTFLT */
-	"",					/*  4 unused */
-	"",					/*  5 unused */
-	"arithmetic trap",			/*  6 T_ARITHTRAP */
-	"",					/*  7 unused */
-	"",					/*  8 unused */
-	"general protection fault",		/*  9 T_PROTFLT */
-	"trace trap",				/* 10 T_TRCTRAP */
-	"",					/* 11 unused */
-	"page fault",				/* 12 T_PAGEFLT */
-	"",					/* 13 unused */
-	"alignment fault",			/* 14 T_ALIGNFLT */
-	"",					/* 15 unused */
-	"",					/* 16 unused */
-	"",					/* 17 unused */
-	"integer divide fault",			/* 18 T_DIVIDE */
-	"non-maskable interrupt trap",		/* 19 T_NMI */
-	"overflow trap",			/* 20 T_OFLOW */
-	"FPU bounds check fault",		/* 21 T_BOUND */
-	"FPU device not available",		/* 22 T_DNA */
-	"double fault",				/* 23 T_DOUBLEFLT */
-	"FPU operand fetch fault",		/* 24 T_FPOPFLT */
-	"invalid TSS fault",			/* 25 T_TSSFLT */
-	"segment not present fault",		/* 26 T_SEGNPFLT */
-	"stack fault",				/* 27 T_STKFLT */
-	"machine check trap",			/* 28 T_MCHK */
-	"SIMD floating-point exception",	/* 29 T_XMMFLT */
-	"reserved (unknown) fault",		/* 30 T_RESERVED */
-	"",					/* 31 unused (reserved) */
-	"DTrace pid return trap",               /* 32 T_DTRACE_RET */
+
+struct trap_data {
+	bool		ei;
+	const char	*msg;
 };
+
+static const struct trap_data trap_data[] = {
+	[T_PRIVINFLT] =	{ .ei = true,	.msg = "privileged instruction fault" },
+	[T_BPTFLT] =	{ .ei = false,	.msg = "breakpoint instruction fault" },
+	[T_ARITHTRAP] =	{ .ei = true,	.msg = "arithmetic trap" },
+	[T_PROTFLT] =	{ .ei = true,	.msg = "general protection fault" },
+	[T_TRCTRAP] =	{ .ei = false,	.msg = "trace trap" },
+	[T_PAGEFLT] =	{ .ei = false,	.msg = "page fault" },
+	[T_ALIGNFLT] = 	{ .ei = true,	.msg = "alignment fault" },
+	[T_DIVIDE] =	{ .ei = true,	.msg = "integer divide fault" },
+	[T_NMI] =	{ .ei = false,	.msg = "non-maskable interrupt trap" },
+	[T_OFLOW] =	{ .ei = true,	.msg = "overflow trap" },
+	[T_BOUND] =	{ .ei = true,	.msg = "FPU bounds check fault" },
+	[T_DNA] =	{ .ei = true,	.msg = "FPU device not available" },
+	[T_DOUBLEFLT] =	{ .ei = false,	.msg = "double fault" },
+	[T_FPOPFLT] =	{ .ei = true,	.msg = "FPU operand fetch fault" },
+	[T_TSSFLT] =	{ .ei = true,	.msg = "invalid TSS fault" },
+	[T_SEGNPFLT] =	{ .ei = true,	.msg = "segment not present fault" },
+	[T_STKFLT] =	{ .ei = true,	.msg = "stack fault" },
+	[T_MCHK] =	{ .ei = true,	.msg = "machine check trap" },
+	[T_XMMFLT] =	{ .ei = true,	.msg = "SIMD floating-point exception" },
+	[T_DTRACE_RET] ={ .ei = true,	.msg = "DTrace pid return trap" },
+};
+
+static bool
+trap_enable_intr(int trapno)
+{
+
+	if (trapno < nitems(trap_data) && trap_data[trapno].msg != NULL)
+		return (trap_data[trapno].ei);
+	return (false);
+}
+
+static const char *
+trap_msg(int trapno)
+{
+	const char *res;
+	static const char unkn[] = "UNKNOWN";
+
+	res = NULL;
+	if (trapno < nitems(trap_data))
+		res = trap_data[trapno].msg;
+	if (res == NULL)
+		res = unkn;
+	return (res);
+}
 
 #if defined(I586_CPU) && !defined(NO_F00F_HACK)
 int has_f00f_bug = 0;		/* Initialized so that it can be patched. */
@@ -199,6 +213,8 @@ trap(struct trapframe *frame)
 
 	VM_CNT_INC(v_trap);
 	type = frame->tf_trapno;
+	if (trap_enable_intr(type))
+		enable_intr();
 
 #ifdef SMP
 	/* Handler for NMI IPIs used for stopping CPUs. */
@@ -582,24 +598,40 @@ user_trctrap_out:
 			 * problem here and not have to check all the
 			 * selectors and pointers when the user changes
 			 * them.
+			 *
+			 * N.B. Comparing to long mode, 32-bit mode
+			 * does not push %esp on the trap frame,
+			 * because iretl faulted while in ring 0.  As
+			 * the consequence, there is no need to fixup
+			 * the stack pointer for doreti_iret_fault,
+			 * the fixup and the complimentary trap() call
+			 * are executed on the main thread stack, not
+			 * on the trampoline stack.
 			 */
-			if (frame->tf_eip == (int)doreti_iret) {
-				frame->tf_eip = (int)doreti_iret_fault;
+			if (frame->tf_eip == (int)doreti_iret + setidt_disp) {
+				frame->tf_eip = (int)doreti_iret_fault +
+				    setidt_disp;
 				return;
 			}
 			if (type == T_STKFLT)
 				break;
 
-			if (frame->tf_eip == (int)doreti_popl_ds) {
-				frame->tf_eip = (int)doreti_popl_ds_fault;
+			if (frame->tf_eip == (int)doreti_popl_ds +
+			    setidt_disp) {
+				frame->tf_eip = (int)doreti_popl_ds_fault +
+				    setidt_disp;
 				return;
 			}
-			if (frame->tf_eip == (int)doreti_popl_es) {
-				frame->tf_eip = (int)doreti_popl_es_fault;
+			if (frame->tf_eip == (int)doreti_popl_es +
+			    setidt_disp) {
+				frame->tf_eip = (int)doreti_popl_es_fault +
+				    setidt_disp;
 				return;
 			}
-			if (frame->tf_eip == (int)doreti_popl_fs) {
-				frame->tf_eip = (int)doreti_popl_fs_fault;
+			if (frame->tf_eip == (int)doreti_popl_fs +
+			    setidt_disp) {
+				frame->tf_eip = (int)doreti_popl_fs_fault +
+				    setidt_disp;
 				return;
 			}
 			if (curpcb->pcb_onfault != NULL) {
@@ -626,23 +658,6 @@ user_trctrap_out:
 
 		case T_TRCTRAP:	 /* trace trap */
 kernel_trctrap:
-			if (frame->tf_eip == (int)IDTVEC(lcall_syscall)) {
-				/*
-				 * We've just entered system mode via the
-				 * syscall lcall.  Continue single stepping
-				 * silently until the syscall handler has
-				 * saved the flags.
-				 */
-				return;
-			}
-			if (frame->tf_eip == (int)IDTVEC(lcall_syscall) + 1) {
-				/*
-				 * The syscall handler has now saved the
-				 * flags.  Stop single stepping it.
-				 */
-				frame->tf_eflags &= ~PSL_T;
-				return;
-			}
 			/*
 			 * Ignore debug register trace traps due to
 			 * accesses in the user's address space, which
@@ -710,10 +725,11 @@ kernel_trctrap:
 	ksi.ksi_trapno = type;
 	if (uprintf_signal) {
 		uprintf("pid %d comm %s: signal %d err %x code %d type %d "
-		    "addr 0x%x esp 0x%08x eip 0x%08x "
+		    "addr 0x%x ss 0x%04x esp 0x%08x cs 0x%04x eip 0x%08x "
 		    "<%02x %02x %02x %02x %02x %02x %02x %02x>\n",
 		    p->p_pid, p->p_comm, signo, frame->tf_err, ucode, type,
-		    addr, frame->tf_esp, frame->tf_eip,
+		    addr, frame->tf_ss, frame->tf_esp, frame->tf_cs,
+		    frame->tf_eip,
 		    fubyte((void *)(frame->tf_eip + 0)),
 		    fubyte((void *)(frame->tf_eip + 1)),
 		    fubyte((void *)(frame->tf_eip + 2)),
@@ -790,7 +806,7 @@ trap_pfault(struct trapframe *frame, int usermode, vm_offset_t eva)
 		}
 	}
 	va = trunc_page(eva);
-	if (va >= KERNBASE) {
+	if (va >= PMAP_TRM_MIN_ADDRESS) {
 		/*
 		 * Don't allow user-mode faults in kernel address space.
 		 * An exception:  if the faulting address is the invalid
@@ -805,20 +821,17 @@ trap_pfault(struct trapframe *frame, int usermode, vm_offset_t eva)
 #endif
 		if (usermode)
 			return (SIGSEGV);
-
-		map = kernel_map;
+		trap_fatal(frame, eva);
+		return (-1);
 	} else {
-		map = &p->p_vmspace->vm_map;
+		map = usermode ? &p->p_vmspace->vm_map : kernel_map;
 
 		/*
-		 * When accessing a user-space address, kernel must be
-		 * ready to accept the page fault, and provide a
-		 * handling routine.  Since accessing the address
-		 * without the handler is a bug, do not try to handle
-		 * it normally, and panic immediately.
+		 * Kernel cannot access a user-space address directly
+		 * because user pages are not mapped.  Also, page
+		 * faults must not be caused during the interrupts.
 		 */
-		if (!usermode && (td->td_intr_nesting_level != 0 ||
-		    curpcb->pcb_onfault == NULL)) {
+		if (!usermode && td->td_intr_nesting_level != 0) {
 			trap_fatal(frame, eva);
 			return (-1);
 		}
@@ -881,17 +894,12 @@ trap_fatal(frame, eva)
 	int code, ss, esp;
 	u_int type;
 	struct soft_segment_descriptor softseg;
-	char *msg;
 
 	code = frame->tf_err;
 	type = frame->tf_trapno;
 	sdtossd(&gdt[IDXSEL(frame->tf_cs & 0xffff)].sd, &softseg);
 
-	if (type <= MAX_TRAP_MSG)
-		msg = trap_msg[type];
-	else
-		msg = "UNKNOWN";
-	printf("\n\nFatal trap %d: %s while in %s mode\n", type, msg,
+	printf("\n\nFatal trap %d: %s while in %s mode\n", type, trap_msg(type),
 	    frame->tf_eflags & PSL_VM ? "vm86" :
 	    ISPL(frame->tf_cs) == SEL_UPL ? "user" : "kernel");
 #ifdef SMP
@@ -954,8 +962,8 @@ trap_fatal(frame, eva)
 	}
 #endif
 	printf("trap number		= %d\n", type);
-	if (type <= MAX_TRAP_MSG)
-		panic("%s", trap_msg[type]);
+	if (trap_msg(type) != NULL)
+		panic("%s", trap_msg(type));
 	else
 		panic("unknown/reserved trap");
 }
@@ -973,16 +981,16 @@ trap_fatal(frame, eva)
  * of this is that "trace <ebp>" in ddb won't work.
  */
 void
-dblfault_handler()
+dblfault_handler(void)
 {
 #ifdef KDTRACE_HOOKS
 	if (dtrace_doubletrap_func != NULL)
 		(*dtrace_doubletrap_func)();
 #endif
 	printf("\nFatal double fault:\n");
-	printf("eip = 0x%x\n", PCPU_GET(common_tss.tss_eip));
-	printf("esp = 0x%x\n", PCPU_GET(common_tss.tss_esp));
-	printf("ebp = 0x%x\n", PCPU_GET(common_tss.tss_ebp));
+	printf("eip = 0x%x\n", PCPU_GET(common_tssp)->tss_eip);
+	printf("esp = 0x%x\n", PCPU_GET(common_tssp)->tss_esp);
+	printf("ebp = 0x%x\n", PCPU_GET(common_tssp)->tss_ebp);
 #ifdef SMP
 	/* two separate prints in case of a trap on an unmapped page */
 	printf("cpuid = %d; ", PCPU_GET(cpuid));

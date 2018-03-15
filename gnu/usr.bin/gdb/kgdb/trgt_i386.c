@@ -279,12 +279,26 @@ kgdb_trgt_frame_cache(struct frame_info *next_frame, void **this_cache)
 	char buf[MAX_REGISTER_SIZE];
 	struct kgdb_frame_cache *cache;
 	char *pname;
+	CORE_ADDR pcx;
+	uintptr_t addr, setidt_disp;
 
 	cache = *this_cache;
 	if (cache == NULL) {
 		cache = FRAME_OBSTACK_ZALLOC(struct kgdb_frame_cache);
 		*this_cache = cache;
-		cache->pc = frame_func_unwind(next_frame);
+		pcx = frame_func_unwind(next_frame);
+		if (pcx >= 0xffc00000) {
+			addr = kgdb_lookup("setidt_disp");
+			if (addr != 0) {
+				if (kvm_read(kvm, addr, &setidt_disp,
+				    sizeof(setidt_disp)) !=
+				    sizeof(setidt_disp))
+					warnx("kvm_read: %s", kvm_geterr(kvm));
+				else
+					pcx += setidt_disp;
+			}
+		}
+		cache->pc = pcx;
 		find_pc_partial_function(cache->pc, &pname, NULL, NULL);
 		if (pname[0] != 'X')
 			cache->frame_type = FT_NORMAL;

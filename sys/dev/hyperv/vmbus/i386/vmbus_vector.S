@@ -26,10 +26,10 @@
  * $FreeBSD$
  */
 
+#include "assym.s"
+
 #include <machine/asmacros.h>
 #include <machine/specialreg.h>
-
-#include "assym.s"
 
 /*
  * This is the Hyper-V vmbus channel direct callback interrupt.
@@ -42,6 +42,7 @@ IDTVEC(vmbus_isr)
 	PUSH_FRAME
 	SET_KERNEL_SREGS
 	cld
+	KENTER
 	FAKE_MCOUNT(TF_EIP(%esp))
 	pushl	%esp
 	call	vmbus_handle_intr
