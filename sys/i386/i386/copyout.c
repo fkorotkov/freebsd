@@ -67,7 +67,8 @@ cp_fast0(vm_offset_t uva, size_t len, bool write,
 		return (EFAULT);
 	sched_pin();
 	pc = get_pcpu();
-	if (curthread->td_vslock_sz > 0) {
+	if (curthread->td_vslock_sz > 0 ||
+	    (curthread->td_pflags & TDP_NOFAULTING) != 0) {
 		sleepable = false;
 		mtx_lock(&pc->pc_copyout_mlock);
 		kaddr = pc->pc_copyout_maddr;

@@ -177,35 +177,58 @@ calltrap:
 	.globl	irettraps
 	.type	irettraps,@function
 irettraps:
+	/* XXXKIB vm86 */
+	testb	$SEL_RPL_MASK, TF_CS-TF_ERR(%esp)
+	jz	alltraps
+
+	/*
+	 * Kernel mode.
+	 * The special case there is the kernel mode with user %cr3 and
+	 * trampoline stack. We need to copy both current frame and the
+	 * hardware portion of the frame we tried to return to, to the
+	 * normal stack.  This logic must follow the stack unwind order
+	 * in doreti.
+	 */
 	PUSH_FRAME2
 	SET_KERNEL_SREGS
 	cld
-	/* XXXKIB vm86 */
-	testb	$SEL_RPL_MASK, TF_CS(%esp)
-	jnz	3f
 	call	1f
 1:	popl	%ebx
-	leal	(doreti_iret - 1b)(%ebx), %ecx
-	cmpl	%ecx, TF_EIP(%esp)
-	je	2f
-	leal	(doreti_popl_ds - 1b)(%ebx), %ecx
-	cmpl	%ecx, TF_EIP(%esp)
-	je	2f
-	leal	(doreti_popl_es - 1b)(%ebx), %ecx
-	cmpl	%ecx, TF_EIP(%esp)
-	je	2f
-	leal	(doreti_popl_fs - 1b)(%ebx), %ecx
-	cmpl	%ecx, TF_EIP(%esp)
-	je	2f
-	/* kernel mode */
-	FAKE_MCOUNT(TF_EIP(%esp))
-	jmp	calltrap
-2:	cmpl	$PMAP_TRM_MIN_ADDRESS, %esp	/* trampoline stack ? */
-	jb	calltrap	/* if not, no need to change stacks */
-3:	/* user mode, or kernel mode with user %cr3 and trampoline stack */
-	MOVE_STACKS
-	FAKE_MCOUNT(TF_EIP(%esp))
-	jmp	calltrap
+	leal	(doreti_iret - 1b)(%ebx), %edx
+       	cmpl	%edx, TF_EIP(%esp)
+       	jne	2f
+       	movl	$(2 * TF_SZ - TF_EIP), %ecx
+       	jmp	6f
+2:     	leal	(doreti_popl_ds - 1b)(%ebx), %edx
+       	cmpl	%edx, TF_EIP(%esp)
+       	jne	3f
+       	movl	$(2 * TF_SZ - TF_DS), %ecx
+       	jmp	6f
+3:     	leal	(doreti_popl_es - 1b)(%ebx), %edx
+       	cmpl	%edx, TF_EIP(%esp)
+       	jne	3f
+       	movl	$(2 * TF_SZ - TF_ES), %ecx
+       	jmp	6f
+4:     	leal	(doreti_popl_fs - 1b)(%ebx), %edx
+       	cmpl	%edx, TF_EIP(%esp)
+       	jne	5f
+       	movl	$(2 * TF_SZ - TF_FS), %ecx
+       	jmp	6f
+       	/* kernel mode, normal */
+5:     	FAKE_MCOUNT(TF_EIP(%esp))
+       	jmp	calltrap
+6:     	cmpl	$PMAP_TRM_MIN_ADDRESS, %esp	/* trampoline stack ? */
+       	jb	5b	/* if not, no need to change stacks */
+       	movl	(tramp_idleptd - 1b)(%ebx), %eax
+       	movl	%eax, %cr3
+       	movl	PCPU(KESP0), %edx
+       	subl	%ecx, %edx
+       	movl	%edx, %edi
+       	movl	%esp, %esi
+       	rep; movsb
+       	movl	%edx, %esp
+       	FAKE_MCOUNT(TF_EIP(%esp))
+       	jmp	calltrap
 
 /*
  * Privileged instruction fault.
