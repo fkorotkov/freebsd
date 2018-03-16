@@ -24,19 +24,19 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ *
+ * $FreeBSD$
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <sys/errno.h>
 
 /*
  * Linux syscalls return negative errno's, we do positive and map them
  * Reference:
  *   FreeBSD: src/sys/sys/errno.h
- *   Linux:   linux-2.6.17.8/include/asm-generic/errno-base.h
- *            linux-2.6.17.8/include/asm-generic/errno.h
+ *   Linux:   include/uapi/asm-generic/errno-base.h
+ *            include/uapi/asm-generic/errno.h
  */
 const int bsd_to_linux_errno_generic[ELAST + 1] = {
 	-0,
