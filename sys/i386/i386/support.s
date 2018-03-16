@@ -484,3 +484,13 @@ END(handle_ibrs_entry)
 ENTRY(handle_ibrs_exit)
 	ret
 END(handle_ibrs_exit)
+
+/* External retpoline thunk */
+ENTRY(__x86_indirect_thunk_eax)
+	calll	2f
+1:	pause
+	lfence
+	jmp	1b
+2:	movl	%eax, (%esp)
+	retl
+END(__x86_indirect_thunk_eax)
