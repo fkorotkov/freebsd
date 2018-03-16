@@ -2519,7 +2519,8 @@ machdep_init_trampoline(void)
 	    M_NOWAIT);
 	bcopy(start_exceptions, trampoline, end_exceptions - start_exceptions);
 	tramp_stack_base = pmap_trm_alloc(TRAMP_STACK_SZ, M_NOWAIT);
-	PCPU_SET(trampstk, (uintptr_t)tramp_stack_base - VM86_STACK_SPACE);
+	PCPU_SET(trampstk, (uintptr_t)tramp_stack_base + TRAMP_STACK_SZ -
+	    VM86_STACK_SPACE);
 	tss[0].tss_esp0 = PCPU_GET(trampstk);
 
 	idt = pmap_trm_alloc(sizeof(idt0), M_NOWAIT | M_ZERO);
@@ -2546,7 +2547,7 @@ machdep_init_trampoline(void)
 	dblfault_stack = pmap_trm_alloc(PAGE_SIZE, M_NOWAIT);
 	dblfault_tss->tss_esp = dblfault_tss->tss_esp0 =
 	    dblfault_tss->tss_esp1 = dblfault_tss->tss_esp2 =
-	    (int)dblfault_stack;
+	    (int)dblfault_stack + PAGE_SIZE;
 	dblfault_tss->tss_ss = dblfault_tss->tss_ss0 = dblfault_tss->tss_ss1 =
 	    dblfault_tss->tss_ss2 = GSEL(GDATA_SEL, SEL_KPL);
 #if defined(PAE) || defined(PAE_TABLES)
@@ -2554,7 +2555,7 @@ machdep_init_trampoline(void)
 #else
 	dblfault_tss->tss_cr3 = (int)IdlePTD;
 #endif
-	dblfault_tss->tss_eip = (int)dblfault_handler + setidt_disp;
+	dblfault_tss->tss_eip = (int)dblfault_handler;
 	dblfault_tss->tss_eflags = PSL_KERNEL;
 	dblfault_tss->tss_ds = dblfault_tss->tss_es =
 	    dblfault_tss->tss_gs = GSEL(GDATA_SEL, SEL_KPL);

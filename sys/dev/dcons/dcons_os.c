@@ -313,11 +313,11 @@ dcons_drv_init(int stage)
 		invltlb();
 #endif
 		/* XXX P to V */
-#ifdef __i386__
+#ifdef __amd64__
+		dg.buf = (struct dcons_buf *)(vm_offset_t)(KERNBASE + addr);
+#else /* __i386__ */
 		dg.buf = (struct dcons_buf *)((vm_offset_t)PMAP_MAP_LOW +
 		    addr);
-#else /* __amd64__ */
-		dg.buf = (struct dcons_buf *)(vm_offset_t)(KERNBASE + addr);
 #endif
 		dg.size = size;
 		if (dcons_load_buffer(dg.buf, dg.size, sc) < 0)

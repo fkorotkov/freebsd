@@ -70,11 +70,9 @@ tramp_idleptd:	.long	0
 /*
  * Trap and fault vector routines.
  *
- * Most traps are 'trap gates', SDT_SYS386TGT.  A trap gate pushes state on
- * the stack that mostly looks like an interrupt, but does not disable
- * interrupts.  A few of the traps we are use are interrupt gates,
- * SDT_SYS386IGT, which are nearly the same thing except interrupts are
- * disabled on entry.
+ * All traps are 'interrupt gates', SDT_SYS386IGT.  Interrupts are disabled
+ * by hardware to not allow interrupts until code switched to the kernel
+ * address space and the kernel thread stack.
  *
  * The cpu will push a certain amount of state onto the kernel stack for
  * the current process.  The amount of state depends on the type of trap
@@ -91,7 +89,7 @@ tramp_idleptd:	.long	0
  * %ss segment registers, but does not mess with %ds, %es, or %fs.  Thus we
  * must load them with appropriate values for supervisor mode operation.
  *
- * This code is not executed at the address of linking.  It is copied to the
+ * This code is not executed at the linked address, it is copied to the
  * trampoline area.  As the consequence, all code there and in included files
  * must be PIC.
  */
@@ -184,7 +182,7 @@ irettraps:
 	cld
 	/* XXXKIB vm86 */
 	testb	$SEL_RPL_MASK, TF_CS(%esp)
-	jnz	2f
+	jnz	3f
 	call	1f
 1:	popl	%ebx
 	leal	(doreti_iret - 1b)(%ebx), %ecx
@@ -202,7 +200,9 @@ irettraps:
 	/* kernel mode */
 	FAKE_MCOUNT(TF_EIP(%esp))
 	jmp	calltrap
-2:	/* user mode, or kernel mode with user %cr3 and trampoline stack */
+2:	cmpl	$PMAP_TRM_MIN_ADDRESS, %esp	/* trampoline stack ? */
+	jb	calltrap	/* if not, no need to change stacks */
+3:	/* user mode, or kernel mode with user %cr3 and trampoline stack */
 	MOVE_STACKS
 	FAKE_MCOUNT(TF_EIP(%esp))
 	jmp	calltrap
@@ -285,7 +285,7 @@ nmi_mchk_common:
 
 /*
  * Trap gate entry for syscalls (int 0x80).
- * This is used by FreeBSD ELF executables, "new" NetBSD executables, and all
+ * This is used by FreeBSD ELF executables, "new" a.out executables, and all
  * Linux executables.
  *
  * Even though the name says 'int0x80', this is actually a trap gate, not an
@@ -485,7 +485,8 @@ doreti_iret_nmi:
 	ALIGN_TEXT
 	.globl	doreti_iret_fault
 doreti_iret_fault:
-	subl	$8,%esp
+	pushl	$0	/* tf_err */
+	pushl	$0	/* tf_trapno XXXKIB: provide more useful value? */
 	pushal
 	pushl	$0
 	movw	%ds,(%esp)
@@ -508,7 +509,8 @@ doreti_popl_fs_fault:
 	sti
 	movl	$0,TF_ERR(%esp)	/* XXX should be the error code */
 	movl	$T_PROTFLT,TF_TRAPNO(%esp)
-	jmp	alltraps_with_regs_pushed
+	SET_KERNEL_SREGS
+	jmp	calltrap
 
 doreti_popl_ds_kfault:
 	movl	$0,(%esp)

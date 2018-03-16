@@ -264,7 +264,8 @@ init_secondary(void)
 	lldt(_default_ldt);
 	PCPU_SET(currentldt, _default_ldt);
 
-	PCPU_SET(trampstk, (uintptr_t)ap_tramp_stack_base - VM86_STACK_SPACE);
+	PCPU_SET(trampstk, (uintptr_t)ap_tramp_stack_base + TRAMP_STACK_SZ -
+	    VM86_STACK_SPACE);
 
 	gsel_tss = GSEL(GPROC0_SEL, SEL_KPL);
 	gdt[myid * NGDT + GPROC0_SEL].sd.sd_type = SDT_SYS386TSS;
