@@ -195,40 +195,40 @@ irettraps:
 	call	1f
 1:	popl	%ebx
 	leal	(doreti_iret - 1b)(%ebx), %edx
-       	cmpl	%edx, TF_EIP(%esp)
-       	jne	2f
-       	movl	$(2 * TF_SZ - TF_EIP), %ecx
-       	jmp	6f
-2:     	leal	(doreti_popl_ds - 1b)(%ebx), %edx
-       	cmpl	%edx, TF_EIP(%esp)
-       	jne	3f
-       	movl	$(2 * TF_SZ - TF_DS), %ecx
-       	jmp	6f
-3:     	leal	(doreti_popl_es - 1b)(%ebx), %edx
-       	cmpl	%edx, TF_EIP(%esp)
-       	jne	3f
-       	movl	$(2 * TF_SZ - TF_ES), %ecx
-       	jmp	6f
-4:     	leal	(doreti_popl_fs - 1b)(%ebx), %edx
-       	cmpl	%edx, TF_EIP(%esp)
-       	jne	5f
-       	movl	$(2 * TF_SZ - TF_FS), %ecx
-       	jmp	6f
-       	/* kernel mode, normal */
-5:     	FAKE_MCOUNT(TF_EIP(%esp))
-       	jmp	calltrap
-6:     	cmpl	$PMAP_TRM_MIN_ADDRESS, %esp	/* trampoline stack ? */
-       	jb	5b	/* if not, no need to change stacks */
-       	movl	(tramp_idleptd - 1b)(%ebx), %eax
-       	movl	%eax, %cr3
-       	movl	PCPU(KESP0), %edx
-       	subl	%ecx, %edx
-       	movl	%edx, %edi
-       	movl	%esp, %esi
-       	rep; movsb
-       	movl	%edx, %esp
-       	FAKE_MCOUNT(TF_EIP(%esp))
-       	jmp	calltrap
+	cmpl	%edx, TF_EIP(%esp)
+	jne	2f
+	movl	$(2 * TF_SZ - TF_EIP), %ecx
+	jmp	6f
+2:	leal	(doreti_popl_ds - 1b)(%ebx), %edx
+	cmpl	%edx, TF_EIP(%esp)
+	jne	3f
+	movl	$(2 * TF_SZ - TF_DS), %ecx
+	jmp	6f
+3:	leal	(doreti_popl_es - 1b)(%ebx), %edx
+	cmpl	%edx, TF_EIP(%esp)
+	jne	3f
+	movl	$(2 * TF_SZ - TF_ES), %ecx
+	jmp	6f
+4:	leal	(doreti_popl_fs - 1b)(%ebx), %edx
+	cmpl	%edx, TF_EIP(%esp)
+	jne	5f
+	movl	$(2 * TF_SZ - TF_FS), %ecx
+	jmp	6f
+	/* kernel mode, normal */
+5:	FAKE_MCOUNT(TF_EIP(%esp))
+	jmp	calltrap
+6:	cmpl	$PMAP_TRM_MIN_ADDRESS, %esp	/* trampoline stack ? */
+	jb	5b	/* if not, no need to change stacks */
+	movl	(tramp_idleptd - 1b)(%ebx), %eax
+	movl	%eax, %cr3
+	movl	PCPU(KESP0), %edx
+	subl	%ecx, %edx
+	movl	%edx, %edi
+	movl	%esp, %esi
+	rep; movsb
+	movl	%edx, %esp
+	FAKE_MCOUNT(TF_EIP(%esp))
+	jmp	calltrap
 
 /*
  * Privileged instruction fault.
