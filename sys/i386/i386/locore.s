@@ -52,7 +52,7 @@
 #include <machine/pmap.h>
 #include <machine/specialreg.h>
 
-#include "assym.s"
+#include "assym.inc"
 
 /*
  * PTmap is recursive pagemap at top of virtual address space.
