@@ -435,7 +435,7 @@ sysctl_bufdomain_int(SYSCTL_HANDLER_ARGS)
 		return (error);
 	*(int *)arg1 = value;
 	for (i = 0; i < buf_domains; i++)
-		*(int *)(((uintptr_t)&bdomain[i]) + arg2) =
+		*(int *)(uintptr_t)(((uintptr_t)&bdomain[i]) + arg2) =
 		    value / buf_domains;
 
 	return (error);
@@ -454,7 +454,7 @@ sysctl_bufdomain_long(SYSCTL_HANDLER_ARGS)
 		return (error);
 	*(long *)arg1 = value;
 	for (i = 0; i < buf_domains; i++)
-		*(long *)(((uintptr_t)&bdomain[i]) + arg2) =
+		*(long *)(uintptr_t)(((uintptr_t)&bdomain[i]) + arg2) =
 		    value / buf_domains;
 
 	return (error);
@@ -2931,10 +2931,8 @@ vfs_vmio_unwire(struct buf *bp, vm_page_t m)
 				vm_page_deactivate_noreuse(m);
 			else if (m->queue == PQ_ACTIVE)
 				vm_page_reference(m);
-			else if (m->queue != PQ_INACTIVE)
-				vm_page_deactivate(m);
 			else
-				vm_page_requeue(m);
+				vm_page_deactivate(m);
 		}
 	}
 	vm_page_unlock(m);

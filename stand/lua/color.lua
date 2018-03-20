@@ -65,11 +65,25 @@ function color.escapef(color_value)
 	return core.KEYSTR_CSI .. "3" .. color_value .. "m"
 end
 
+function color.resetf()
+	if color.disabled then
+		return ''
+	end
+	return core.KEYSTR_CSI .. "39m"
+end
+
 function color.escapeb(color_value)
 	if color.disabled then
 		return color_value
 	end
 	return core.KEYSTR_CSI .. "4" .. color_value .. "m"
+end
+
+function color.resetb()
+	if color.disabled then
+		return ''
+	end
+	return core.KEYSTR_CSI .. "49m"
 end
 
 function color.escape(fg_color, bg_color, attribute)
@@ -89,14 +103,16 @@ function color.default()
 	if color.disabled then
 		return ""
 	end
-	return core.KEYSTR_CSI .. "0;37;40m"
+	return color.escape(color.WHITE, color.BLACK, color.DEFAULT)
 end
 
 function color.highlight(str)
 	if color.disabled then
 		return str
 	end
-	return core.KEYSTR_CSI .. "1m" .. str .. core.KEYSTR_CSI .. "0m"
+	-- We need to reset attributes as well as color scheme here, just in
+	-- case the terminal defaults don't match what we're expecting.
+	return core.KEYSTR_CSI .. "1m" .. str .. core.KEYSTR_CSI .. "22m"
 end
 
 return color

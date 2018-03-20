@@ -738,9 +738,9 @@ linux_exec_imgact_try(struct image_params *imgp)
 	 */
 	if (((const short *)head)[0] == SHELLMAGIC) {
 		/*
-		 * Run our normal shell image activator.  If it succeeds attempt
-		 * to use the alternate path for the interpreter.  If an
-		 * alternate path is found, use our stringspace to store it.
+		 * Run our normal shell image activator.  If it succeeds then
+		 * attempt to use the alternate path for the interpreter.  If
+		 * an alternate path is found, use our stringspace to store it.
 		 */
 		if ((error = exec_shell_imgact(imgp)) == 0) {
 			linux_emul_convpath(FIRST_THREAD_IN_PROC(imgp->proc),
