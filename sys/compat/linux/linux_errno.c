@@ -38,7 +38,7 @@
  *   Linux:   include/uapi/asm-generic/errno-base.h
  *            include/uapi/asm-generic/errno.h
  */
-const int bsd_to_linux_errno_generic[ELAST + 1] = {
+const int lx_errtbl[ELAST + 1] = {
 	-0,
 	-1,
 	-2,
