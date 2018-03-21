@@ -35,7 +35,7 @@
  *   Linux:   include/uapi/asm-generic/errno-base.h
  *            include/uapi/asm-generic/errno.h
  */
-const int lx_errtbl[ELAST + 1] = {
+const int linux_errtbl[ELAST + 1] = {
 	-0,
 	-1,
 	-2,
@@ -145,4 +145,4 @@ const int lx_errtbl[ELAST + 1] = {
 };
 
 _Static_assert(ELAST == 96,
-    "missing errno entries in lx_errtbl");
+    "missing errno entries in linux_errtbl");
