@@ -139,8 +139,8 @@ sysdecode_abi_to_freebsd_errno(enum sysdecode_abi abi, int error)
 		 * This is imprecise since it returns the first
 		 * matching errno.
 		 */
-		for (i = 0; i < nitems(lx_errtbl); i++) {
-			if (error == lx_errtbl[i])
+		for (i = 0; i < nitems(linux_errtbl); i++) {
+			if (error == linux_errtbl[i])
 				return (i);
 		}
 		break;
@@ -170,7 +170,7 @@ sysdecode_freebsd_to_abi_errno(enum sysdecode_abi abi, int error)
 	case SYSDECODE_ABI_LINUX:
 	case SYSDECODE_ABI_LINUX32:
 		if (error >= 0 && error <= ELAST)
-			return (lx_errtbl[error]);
+			return (linux_errtbl[error]);
 		break;
 #endif
 	case SYSDECODE_ABI_CLOUDABI32:
