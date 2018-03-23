@@ -101,11 +101,13 @@ DUMMY(migrate_pages);
 DUMMY(unshare);
 /* Linux 2.6.17: */
 DUMMY(splice);
-DUMMY(tee);
 DUMMY(sync_file_range);
+DUMMY(tee);
 DUMMY(vmsplice);
 /* Linux 2.6.18: */
 DUMMY(move_pages);
+/* Linux 2.6.19: */
+DUMMY(getcpu);
 /* Linux 2.6.22: */
 DUMMY(signalfd);
 /* Linux 2.6.27: */
@@ -113,7 +115,7 @@ DUMMY(signalfd4);
 DUMMY(inotify_init1);
 /* Linux 2.6.31: */
 DUMMY(perf_event_open);
-/* Linux 2.6.38: */
+/* Linux 2.6.36: */
 DUMMY(fanotify_init);
 DUMMY(fanotify_mark);
 /* Linux 2.6.39: */
@@ -122,7 +124,6 @@ DUMMY(open_by_handle_at);
 DUMMY(clock_adjtime);
 /* Linux 3.0: */
 DUMMY(setns);
-DUMMY(getcpu);
 /* Linux 3.2: */
 DUMMY(process_vm_readv);
 DUMMY(process_vm_writev);
