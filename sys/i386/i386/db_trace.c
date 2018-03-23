@@ -405,6 +405,20 @@ db_nextframe(struct i386_frame **fp, db_addr_t *ip, struct thread *td)
 	}
 	db_printf(", eip = %#r, esp = %#r, ebp = %#r ---\n", eip, esp, ebp);
 
+	switch (frame_type) {
+	case TRAP:
+	case TRAP_TIMERINT:
+	case TRAP_INTERRUPT:
+	case INTERRUPT:
+		if ((tf->tf_eflags & PSL_VM) != 0 ||
+		    (tf->tf_cs & SEL_RPL_MASK) != 0)
+			ebp = 0;
+		break;
+	case SYSCALL:
+		ebp = 0;
+		break;
+	}
+
 	*ip = (db_addr_t) eip;
 	*fp = (struct i386_frame *) ebp;
 }
@@ -554,8 +568,7 @@ out:
 		 * !INKERNEL() classifies both.  Stop tracing if either,
 		 * after printing the pc if it is the kernel.
 		 */
-		if (INKERNEL((int)pc) && (!INKERNEL((int)frame) ||
-		    frame == NULL || frame <= actframe)) {
+		if (frame == NULL || frame <= actframe) {
 			sym = db_search_symbol(pc, DB_STGY_ANY, &offset);
 			db_symbol_values(sym, &name, NULL);
 			db_print_stack_entry(name, 0, 0, 0, pc, frame);

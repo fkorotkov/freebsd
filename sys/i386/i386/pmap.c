@@ -4153,7 +4153,7 @@ void
 pmap_copy(pmap_t dst_pmap, pmap_t src_pmap, vm_offset_t dst_addr, vm_size_t len,
     vm_offset_t src_addr)
 {
-}	
+}
 
 /*
  * Zero 1 page of virtual memory mapped from a hardware page by the caller.
@@ -5565,6 +5565,7 @@ pmap_quick_remove_page(vm_offset_t addr)
 
 static vmem_t *pmap_trm_arena;
 static vmem_addr_t pmap_trm_arena_last = PMAP_TRM_MIN_ADDRESS;
+static int trm_guard = PAGE_SIZE;
 
 static int
 pmap_trm_import(void *unused __unused, vmem_size_t size, int flags,
@@ -5575,7 +5576,7 @@ pmap_trm_import(void *unused __unused, vmem_size_t size, int flags,
 	pt_entry_t *trm_pte;
 
 	prev_addr = atomic_load_long(&pmap_trm_arena_last);
-	size = round_page(size);
+	size = round_page(size) + trm_guard;
 	for (;;) {
 		if (prev_addr + size < prev_addr || prev_addr + size < size ||
 		    prev_addr + size > PMAP_TRM_MAX_ADDRESS)
@@ -5584,6 +5585,7 @@ pmap_trm_import(void *unused __unused, vmem_size_t size, int flags,
 		if (atomic_fcmpset_int(&pmap_trm_arena_last, &prev_addr, addr))
 			break;
 	}
+	prev_addr += trm_guard;
 	trm_pte = PTmap + atop(prev_addr);
 	for (af = prev_addr; af < addr; af += PAGE_SIZE) {
 		m = vm_page_alloc(NULL, 0, VM_ALLOC_NOOBJ | VM_ALLOC_NOBUSY |
@@ -5601,6 +5603,9 @@ void pmap_init_trm(void)
 {
 	vm_page_t pd_m;
 
+	TUNABLE_INT_FETCH("machdep.trm_guard", &trm_guard);
+	if ((trm_guard & PAGE_MASK) != 0)
+		trm_guard = 0;
 	pmap_trm_arena = vmem_create("i386trampoline", 0, 0, 1, 0, M_WAITOK);
 	vmem_set_import(pmap_trm_arena, pmap_trm_import, NULL, NULL, PAGE_SIZE);
 	pd_m = vm_page_alloc(NULL, 0, VM_ALLOC_NOOBJ | VM_ALLOC_NOBUSY |

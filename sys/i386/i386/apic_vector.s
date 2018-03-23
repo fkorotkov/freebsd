@@ -39,6 +39,7 @@
 #include "opt_smp.h"
 
 #include <machine/asmacros.h>
+#include <machine/psl.h>
 #include <machine/specialreg.h>
 #include <x86/apicreg.h>
 

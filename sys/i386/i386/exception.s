@@ -40,8 +40,8 @@
 
 #include "assym.inc"
 
-#include <machine/asmacros.h>
 #include <machine/psl.h>
+#include <machine/asmacros.h>
 #include <machine/trap.h>
 
 #ifdef KDTRACE_HOOKS
@@ -177,9 +177,10 @@ calltrap:
 	.globl	irettraps
 	.type	irettraps,@function
 irettraps:
-	/* XXXKIB vm86 */
-	testb	$SEL_RPL_MASK, TF_CS-TF_ERR(%esp)
-	jz	alltraps
+	testl	$PSL_VM, TF_EFLAGS-TF_TRAPNO(%esp)
+	jnz	alltraps
+	testb	$SEL_RPL_MASK, TF_CS-TF_TRAPNO(%esp)
+	jnz	alltraps
 
 	/*
 	 * Kernel mode.
@@ -206,7 +207,7 @@ irettraps:
 	jmp	6f
 3:	leal	(doreti_popl_es - 1b)(%ebx), %edx
 	cmpl	%edx, TF_EIP(%esp)
-	jne	3f
+	jne	4f
 	movl	$(2 * TF_SZ - TF_ES), %ecx
 	jmp	6f
 4:	leal	(doreti_popl_fs - 1b)(%ebx), %edx
@@ -240,10 +241,10 @@ IDTVEC(ill)
 	 * Check if this is a user fault.  If so, just handle it as a normal
 	 * trap.
 	 */
-	cmpl	$GSEL_KPL, 4(%esp)	/* Check the code segment */
-	jne	norm_ill
 	testl	$PSL_VM, 8(%esp)	/* and vm86 mode. */
 	jnz	norm_ill
+	cmpl	$GSEL_KPL, 4(%esp)	/* Check the code segment */
+	jne	norm_ill
 
 	/*
 	 * Check if a DTrace hook is registered.  The trampoline cannot
@@ -420,7 +421,7 @@ doreti_next:
 	movl	PCPU(CURPCB),%ecx
 	testl	$PCB_VM86CALL,PCB_FLAGS(%ecx)
 	jz	doreti_ast
-	jmp	doreti_exit
+	jmp	doreti_popl_fs
 
 doreti_notvm86:
 	testb	$SEL_RPL_MASK,TF_CS(%esp) /* are we returning to user mode? */
@@ -509,7 +510,7 @@ doreti_iret_nmi:
 	.globl	doreti_iret_fault
 doreti_iret_fault:
 	pushl	$0	/* tf_err */
-	pushl	$0	/* tf_trapno XXXKIB: provide more useful value? */
+	pushl	$0	/* tf_trapno XXXKIB: provide more useful value ? */
 	pushal
 	pushl	$0
 	movw	%ds,(%esp)
@@ -529,7 +530,6 @@ doreti_popl_es_fault:
 doreti_popl_fs_fault:
 	testb	$SEL_RPL_MASK,TF_CS-TF_FS(%esp)
 	jz	doreti_popl_fs_kfault
-	sti
 	movl	$0,TF_ERR(%esp)	/* XXX should be the error code */
 	movl	$T_PROTFLT,TF_TRAPNO(%esp)
 	SET_KERNEL_SREGS
@@ -552,6 +552,8 @@ doreti_nmi:
 	 * was from user mode and if so whether the current thread
 	 * needs a user call chain capture.
 	 */
+	testl	$PSL_VM, TF_EFLAGS(%esp)
+	jnz	doreti_exit
 	testb	$SEL_RPL_MASK,TF_CS(%esp)
 	jz	doreti_exit
 	movl	PCPU(CURTHREAD),%eax	/* curthread present? */

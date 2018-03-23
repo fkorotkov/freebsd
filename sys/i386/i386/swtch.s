@@ -198,7 +198,7 @@ sw1:
 	 */
 
 	/* Load a pointer to the thread kernel stack into PCPU. */
-	leal	-16(%edx), %eax			/* leave space for vm86 */
+	leal	-VM86_STACK_SPACE(%edx), %eax	/* leave space for vm86 */
 	movl	%eax, PCPU(KESP0)
 
 	cmpl	$0, PCB_EXT(%edx)		/* has pcb extension? */

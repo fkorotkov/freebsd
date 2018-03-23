@@ -1633,6 +1633,24 @@ DB_SHOW_COMMAND(dbregs, db_show_dbregs)
 	db_printf("dr6\t0x%08x\n", rdr6());
 	db_printf("dr7\t0x%08x\n", rdr7());	
 }
+
+DB_SHOW_COMMAND(frame, db_show_frame)
+{
+	struct trapframe *frame;
+
+	frame = have_addr ? (struct trapframe *)addr : curthread->td_frame;
+	printf("ss %#x esp %#x efl %#x cs %#x eip %#x\n",
+	    frame->tf_ss, frame->tf_esp, frame->tf_eflags, frame->tf_cs,
+	    frame->tf_eip);
+	printf("err %#x trapno %d\n", frame->tf_err, frame->tf_trapno);
+	printf("ds %#x es %#x fs %#x\n",
+	    frame->tf_ds, frame->tf_es, frame->tf_fs);
+	printf("eax %#x ecx %#x edx %#x ebx %#x\n",
+	    frame->tf_eax, frame->tf_ecx, frame->tf_edx, frame->tf_ebx);
+	printf("ebp %#x esi %#x edi %#x\n",
+	    frame->tf_ebp, frame->tf_esi, frame->tf_edi);
+
+}
 #endif
 
 void
@@ -2335,10 +2353,10 @@ init386(int first)
 	gdt_segs[GPROC0_SEL].ssd_base = (int)&common_tss0;
 
 	for (x = 0; x < NGDT; x++)
-		ssdtosd(&gdt_segs[x], &gdt[x].sd);
+		ssdtosd(&gdt_segs[x], &gdt0[x].sd);
 
-	r_gdt.rd_limit = NGDT * sizeof(gdt[0]) - 1;
-	r_gdt.rd_base =  (int) gdt;
+	r_gdt.rd_limit = NGDT * sizeof(gdt0[0]) - 1;
+	r_gdt.rd_base =  (int)gdt0;
 	mtx_init(&dt_lock, "descriptor tables", NULL, MTX_SPIN);
 	lgdt(&r_gdt);
 
@@ -2456,6 +2474,7 @@ init386(int first)
 	/* Move esp0 in the tss to its final place. */
 	/* Note: -16 is so we can grow the trapframe if we came from vm86 */
 	common_tss0.tss_esp0 = (vm_offset_t)thread0.td_pcb - VM86_STACK_SPACE;
+	PCPU_SET(kesp0, common_tss0.tss_esp0);
 	gdt[GPROC0_SEL].sd.sd_type = SDT_SYS386TSS;	/* clear busy bit */
 	ltr(gsel_tss);
 

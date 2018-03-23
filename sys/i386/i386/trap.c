@@ -129,7 +129,7 @@ static const struct trap_data trap_data[] = {
 	[T_ARITHTRAP] =	{ .ei = true,	.msg = "arithmetic trap" },
 	[T_PROTFLT] =	{ .ei = true,	.msg = "general protection fault" },
 	[T_TRCTRAP] =	{ .ei = false,	.msg = "trace trap" },
-	[T_PAGEFLT] =	{ .ei = false,	.msg = "page fault" },
+	[T_PAGEFLT] =	{ .ei = true,	.msg = "page fault" },
 	[T_ALIGNFLT] = 	{ .ei = true,	.msg = "alignment fault" },
 	[T_DIVIDE] =	{ .ei = true,	.msg = "integer divide fault" },
 	[T_NMI] =	{ .ei = false,	.msg = "non-maskable interrupt trap" },
@@ -150,6 +150,7 @@ static bool
 trap_enable_intr(int trapno)
 {
 
+	MPASS(trapno > 0);
 	if (trapno < nitems(trap_data) && trap_data[trapno].msg != NULL)
 		return (trap_data[trapno].ei);
 	return (false);
@@ -213,8 +214,9 @@ trap(struct trapframe *frame)
 
 	VM_CNT_INC(v_trap);
 	type = frame->tf_trapno;
-	if (trap_enable_intr(type))
-		enable_intr();
+
+	KASSERT((read_eflags() & PSL_I) == 0,
+	    ("trap: interrupts enaabled, type %d frame %p", type, frame));
 
 #ifdef SMP
 	/* Handler for NMI IPIs used for stopping CPUs. */
@@ -272,53 +274,34 @@ trap(struct trapframe *frame)
 		return;
 #endif
 
-	if ((frame->tf_eflags & PSL_I) == 0) {
-		/*
-		 * Buggy application or kernel code has disabled
-		 * interrupts and then trapped.  Enabling interrupts
-		 * now is wrong, but it is better than running with
-		 * interrupts disabled until they are accidentally
-		 * enabled later.
-		 */
-		if (TRAPF_USERMODE(frame) &&
-		    (curpcb->pcb_flags & PCB_VM86CALL) == 0)
-			uprintf(
-			    "pid %ld (%s): trap %d with interrupts disabled\n",
-			    (long)curproc->p_pid, curthread->td_name, type);
-		else if (type != T_NMI && type != T_BPTFLT &&
-		    type != T_TRCTRAP &&
-		    frame->tf_eip != (int)cpu_switch_load_gs) {
-			/*
-			 * XXX not quite right, since this may be for a
-			 * multiple fault in user mode.
-			 */
-			printf("kernel trap %d with interrupts disabled\n",
-			    type);
-			/*
-			 * Page faults need interrupts disabled until later,
-			 * and we shouldn't enable interrupts while holding
-			 * a spin lock.
-			 */
-			if (type != T_PAGEFLT &&
-			    td->td_md.md_spinlock_count == 0)
-				enable_intr();
-		}
-	}
-	eva = 0;
-	if (type == T_PAGEFLT) {
-		/*
-		 * For some Cyrix CPUs, %cr2 is clobbered by
-		 * interrupts.  This problem is worked around by using
-		 * an interrupt gate for the pagefault handler.  We
-		 * are finally ready to read %cr2 and conditionally
-		 * reenable interrupts.  If we hold a spin lock, then
-		 * we must not reenable interrupts.  This might be a
-		 * spurious page fault.
-		 */
+	/*
+	 * We must not allow context switches until %cr2 is read.
+	 * Also, for some Cyrix CPUs, %cr2 is clobbered by interrupts.
+	 * All faults use interrupt gates, so %cr2 can be safely read
+	 * now, before optional enable of the interrupts below.
+	 */
+	if (type == T_PAGEFLT)
 		eva = rcr2();
-		if (td->td_md.md_spinlock_count == 0)
-			enable_intr();
-	}
+
+	/*
+	 * Buggy application or kernel code has disabled interrupts
+	 * and then trapped.  Enabling interrupts now is wrong, but it
+	 * is better than running with interrupts disabled until they
+	 * are accidentally enabled later.
+	 */
+	if ((frame->tf_eflags & PSL_I) == 0 && TRAPF_USERMODE(frame) &&
+	    (curpcb->pcb_flags & PCB_VM86CALL) == 0)
+		uprintf("pid %ld (%s): trap %d with interrupts disabled\n",
+		    (long)curproc->p_pid, curthread->td_name, type);
+
+	/*
+	 * Conditionally reenable interrupts.  If we hold a spin lock,
+	 * then we must not reenable interrupts.  This might be a
+	 * spurious page fault.
+	 */
+	if (trap_enable_intr(type) && td->td_md.md_spinlock_count == 0 &&
+	    frame->tf_eip != (int)cpu_switch_load_gs)
+		enable_intr();
 
         if (TRAPF_USERMODE(frame) && (curpcb->pcb_flags & PCB_VM86CALL) == 0) {
 		/* user trap */
@@ -1014,6 +997,8 @@ cpu_fetch_syscall_args(struct thread *td)
 	sa = &td->td_sa;
 
 	params = (caddr_t)frame->tf_esp + sizeof(int);
+	if (frame->tf_cs == 0x7)
+		params += 2 * sizeof(int);
 	sa->code = frame->tf_eax;
 
 	/*

@@ -188,7 +188,10 @@
 	.macro	NMOVE_STACKS
 	movl	PCPU(KESP0), %edx
 	movl	$TF_SZ, %ecx
-	subl	%ecx, %edx
+	testl	$PSL_VM, TF_EFLAGS(%esp)
+	jz	1001f
+	addl	$(4*4), %ecx
+1001:	subl	%ecx, %edx
 	movl	%edx, %edi
 	movl	%esp, %esi
 	rep; movsb
@@ -204,11 +207,12 @@
 	.endm
 
 	.macro	KENTER
-/* XXXKIB vm86 */
+	testl	$PSL_VM, TF_EFLAGS(%esp)
+	jnz	2f
 	testb	$SEL_RPL_MASK, TF_CS(%esp)
-	jz	1f
-	MOVE_STACKS
-1:
+	jz	2f
+1:	MOVE_STACKS
+2:
 	.endm
 
 #endif /* LOCORE */

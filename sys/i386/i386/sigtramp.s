@@ -106,30 +106,19 @@ osigcode:
  * executed with the wrong page table and interrupts enabled.
  *
  * Instead, set LDT descriptor 0 as code segment, which reflects
- * the lcall $7,$0 back to ring 3 trampoline.  The trampoline sets up
- * the frame for int $0x80.
+ * the lcall $7,$0 back to ring 3 trampoline.  The trampoline reflects
+ * the call into int $0x80.
  */
 	ALIGN_TEXT
 lcall_tramp:
 	cmpl	$SYS_vfork,%eax
 	je	1f
-	pushl	%ebp
-	movl	%esp,%ebp
-	pushl	0x24(%ebp) /* arg 6 */
-	pushl	0x20(%ebp)
-	pushl	0x1c(%ebp)
-	pushl	0x18(%ebp)
-	pushl	0x14(%ebp)
-	pushl	0x10(%ebp) /* arg 1 */
-	subl	$4,%esp   /* gap */
 	int	$0x80
-	leavel
 	lretl
 1:
 	/*
 	 * vfork handling is special and relies on the libc stub saving
-	 * the return ip in %ecx.  Also, we assume that the call was done
-	 * with ucode32 selector in %cs.
+	 * the return ip in %ecx.
 	 */
 	int	$0x80
 	movl	$0x33,4(%esp)	/* GUCODE32_SEL | SEL_UPL */

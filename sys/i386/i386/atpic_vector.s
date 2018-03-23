@@ -36,6 +36,7 @@
  * master and slave interrupt controllers.
  */
 
+#include <machine/psl.h>
 #include <machine/asmacros.h>
 
 #include "assym.inc"
