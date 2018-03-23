@@ -63,8 +63,7 @@ ipv6_ib_mc_map(const struct in6_addr *addr, const unsigned char *broadcast,
 	memcpy(&buf[10], &addr->s6_addr[6], 10);
 }
 
-static inline void __ipv6_addr_set_half(__be32 *addr,
-					__be32 wh, __be32 wl)
+static inline void __ipv6_addr_set_half(__be32 *addr, __be32 wh, __be32 wl)
 {
 #if BITS_PER_LONG == 64
 #if defined(__BIG_ENDIAN)

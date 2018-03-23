@@ -167,7 +167,7 @@ list_del_init(struct list_head *entry)
 
 #define	list_entry(ptr, type, field)	container_of(ptr, type, field)
 
-#define list_first_entry(ptr, type, member) \
+#define	list_first_entry(ptr, type, member) \
 	list_entry((ptr)->next, type, member)
 
 #define	list_last_entry(ptr, type, member)	\

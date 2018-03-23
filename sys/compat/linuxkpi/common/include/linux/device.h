@@ -533,7 +533,7 @@ class_remove_file(struct class *class, const struct class_attribute *attr)
 static inline int
 dev_to_node(struct device *dev)
 {
-		return -1;
+	return -1;
 }
 
 char *kvasprintf(gfp_t, const char *, va_list);

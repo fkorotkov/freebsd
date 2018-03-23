@@ -683,7 +683,7 @@ enum pci_ers_result {
 /* PCI bus error event callbacks */
 struct pci_error_handlers {
 	pci_ers_result_t (*error_detected)(struct pci_dev *dev,
-			enum pci_channel_state error);
+	    enum pci_channel_state error);
 	pci_ers_result_t (*mmio_enabled)(struct pci_dev *dev);
 	pci_ers_result_t (*link_reset)(struct pci_dev *dev);
 	pci_ers_result_t (*slot_reset)(struct pci_dev *dev);
@@ -745,19 +745,17 @@ static inline bool pcie_cap_has_sltctl(struct pci_dev *dev)
 {
 	int type = pci_pcie_type(dev);
 
-	return pcie_cap_version(dev) > 1 ||
-	       type == PCI_EXP_TYPE_ROOT_PORT ||
-	       (type == PCI_EXP_TYPE_DOWNSTREAM &&
-		pcie_flags_reg(dev) & PCI_EXP_FLAGS_SLOT);
+	return pcie_cap_version(dev) > 1 || type == PCI_EXP_TYPE_ROOT_PORT ||
+	    (type == PCI_EXP_TYPE_DOWNSTREAM &&
+	    pcie_flags_reg(dev) & PCI_EXP_FLAGS_SLOT);
 }
 
 static inline bool pcie_cap_has_rtctl(struct pci_dev *dev)
 {
 	int type = pci_pcie_type(dev);
 
-	return pcie_cap_version(dev) > 1 ||
-	       type == PCI_EXP_TYPE_ROOT_PORT ||
-	       type == PCI_EXP_TYPE_RC_EC;
+	return pcie_cap_version(dev) > 1 || type == PCI_EXP_TYPE_ROOT_PORT ||
+	    type == PCI_EXP_TYPE_RC_EC;
 }
 
 static bool pcie_capability_reg_implemented(struct pci_dev *dev, int pos)

@@ -69,9 +69,9 @@ struct attribute {
 struct kobj_attribute {
 	struct attribute attr;
 	ssize_t (*show)(struct kobject *kobj, struct kobj_attribute *attr,
-			char *buf);
+	    char *buf);
 	ssize_t (*store)(struct kobject *kobj, struct kobj_attribute *attr,
-			 const char *buf, size_t count);
+	    const char *buf, size_t count);
 };
 
 static inline void
