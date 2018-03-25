@@ -977,8 +977,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	 */
 	VOP_UNLOCK(imgp->vp, 0);
 
-	imgp->proc->p_sysent = sv;
-
 	/*
 	 * Decide to enable randomization of user mappings.  First,
 	 * reset user preferences for the setid binaries.  Then,
@@ -1011,6 +1009,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	}
 
 	error = exec_new_vmspace(imgp, sv);
+	imgp->proc->p_sysent = sv;
 	vmspace = imgp->proc->p_vmspace;
 	map = &vmspace->vm_map;
 
