@@ -196,6 +196,7 @@ struct vm_map {
 	vm_flags_t flags;		/* flags for this vm_map */
 	vm_map_entry_t root;		/* Root of a binary search tree */
 	pmap_t pmap;			/* (c) Physical map */
+	vm_offset_t anon_loc;
 	int busy;
 };
 
@@ -204,6 +205,8 @@ struct vm_map {
  */
 #define MAP_WIREFUTURE		0x01	/* wire all future pages */
 #define	MAP_BUSY_WAKEUP		0x02
+#define	MAP_ASLR		0x04	/* enabled ASLR */
+#define	MAP_ASLR_IGNSTART	0x08
 
 #ifdef	_KERNEL
 static __inline vm_offset_t
