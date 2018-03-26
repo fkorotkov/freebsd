@@ -81,3 +81,11 @@ src.conf.5 knobs need documentation:
 * `WITH_TESTS`
 * `WITH_TESTS_SUPPORT`
 
+# ASLR + Linuxulator
+0a541b719b contains a workaround for a panic from the Linuxulator with the
+ASLR patch applied, which probably disables or otherwise renders ASLR
+ineffective.
+
+I find the logic in `linux_proc_exec` and `linux_proc_init` somewhat odd.
+TODO investigate the special cases for handling execing to/from non-FreeBSD
+ABIs in those functions and `__elfN(imgact))`.
