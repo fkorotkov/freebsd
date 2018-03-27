@@ -1009,9 +1009,10 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	}
 
 	error = exec_new_vmspace(imgp, sv);
-	imgp->proc->p_sysent = sv;
 	vmspace = imgp->proc->p_vmspace;
 	map = &vmspace->vm_map;
+
+	imgp->proc->p_sysent = sv;
 
 	maxv = vm_map_max(map) - lim_max(td, RLIMIT_STACK);
 	if (et_dyn_addr == ET_DYN_ADDR_RAND) {
