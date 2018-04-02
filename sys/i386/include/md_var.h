@@ -56,6 +56,7 @@ union savefpu;
 
 void	bcopyb(const void *from, void *to, size_t len);
 void	cpu_switch_load_gs(void) __asm(__STRING(cpu_switch_load_gs));
+void	copyout_init_tramp(void);
 void	doreti_iret(void) __asm(__STRING(doreti_iret));
 void	doreti_iret_fault(void) __asm(__STRING(doreti_iret_fault));
 void	doreti_popl_ds(void) __asm(__STRING(doreti_popl_ds));

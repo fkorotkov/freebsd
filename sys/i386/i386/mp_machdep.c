@@ -140,6 +140,7 @@ static int	start_all_aps(void);
 static int	start_ap(int apic_id);
 
 static u_int	boot_address;
+static char *ap_copyout_buf;
 static char *ap_tramp_stack_base;
 
 /*
@@ -277,6 +278,7 @@ init_secondary(void)
 	ltr(gsel_tss);
 
 	PCPU_SET(fsgs_gdt, &gdt[myid * NGDT + GUFS_SEL].sd);
+	PCPU_SET(copyout_buf, ap_copyout_buf);
 
 	/*
 	 * Set to a known state:
@@ -354,6 +356,7 @@ start_all_aps(void)
 		bootAP = cpu;
 
 		ap_tramp_stack_base = pmap_trm_alloc(TRAMP_STACK_SZ, M_NOWAIT);
+		ap_copyout_buf = pmap_trm_alloc(TRAMP_COPYOUT_SZ, M_NOWAIT);
 
 		/* attempt to start the Application Processor */
 		CHECK_INIT(99);	/* setup checkpoints */

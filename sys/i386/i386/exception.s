@@ -6,6 +6,8 @@
  *
  * Portions of this software were developed by A. Joseph Koshy under
  * sponsorship from the FreeBSD Foundation and Google, Inc.
+ * Portions of this software were developed by Konstantin Belousov
+ * <kib@FreeBSD.org> under sponsorship from the FreeBSD Foundation.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -131,7 +133,14 @@ IDTVEC(prot)
 	pushl	$T_PROTFLT
 	jmp	irettraps
 IDTVEC(page)
-	TRAP(T_PAGEFLT)
+	cmpl	$PMAP_TRM_MIN_ADDRESS, TF_EIP-TF_ERR(%esp)
+	jb	1f
+	movl	%ebx, %cr3
+	movl	%edx, TF_EIP-TF_ERR(%esp)
+	addl	$4, %esp
+	iret
+1:	pushl	$T_PAGEFLT
+	jmp	alltraps
 IDTVEC(rsvd_pti)
 IDTVEC(rsvd)
 	pushl $0; TRAP(T_RESERVED)
@@ -388,6 +397,8 @@ MCOUNT_LABEL(bintr)
 
 	.text
 MCOUNT_LABEL(eintr)
+
+#include <i386/i386/copyout_fast.s>
 
 /*
  * void doreti(struct trapframe)

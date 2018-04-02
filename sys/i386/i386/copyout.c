@@ -38,6 +38,7 @@ __FBSDID("$FreeBSD$");
 #include <sys/pcpu.h>
 #include <sys/proc.h>
 #include <sys/sched.h>
+#include <sys/sysctl.h>
 #include <sys/systm.h>
 #include <vm/vm.h>
 #include <vm/vm_param.h>
@@ -46,8 +47,58 @@ __FBSDID("$FreeBSD$");
 #include <vm/vm_map.h>
 #include <vm/vm_page.h>
 
+#if defined(PAE) || defined(PAE_TABLES)
+#define	KCR3	((u_int)IdlePDPT)
+#else
+#define	KCR3	((u_int)IdlePTD)
+#endif
+
+int copyin_fast(const void *udaddr, void *kaddr, size_t len, u_int);
+static int (*copyin_fast_tramp)(const void *, void *, size_t, u_int);
+int copyout_fast(const void *kaddr, void *udaddr, size_t len, u_int);
+static int (*copyout_fast_tramp)(const void *, void *, size_t, u_int);
+int fubyte_fast(volatile const void *base, u_int kcr3);
+static int (*fubyte_fast_tramp)(volatile const void *, u_int);
+int fuword16_fast(volatile const void *base, u_int kcr3);
+static int (*fuword16_fast_tramp)(volatile const void *, u_int);
+int fueword_fast(volatile const void *base, long *val, u_int kcr3);
+static int (*fueword_fast_tramp)(volatile const void *, long *, u_int);
+int subyte_fast(volatile void *base, int val, u_int kcr3);
+static int (*subyte_fast_tramp)(volatile void *, int, u_int);
+int suword16_fast(volatile void *base, int val, u_int kcr3);
+static int (*suword16_fast_tramp)(volatile void *, int, u_int);
+int suword_fast(volatile void *base, long val, u_int kcr3);
+static int (*suword_fast_tramp)(volatile void *, long, u_int);
+
+static int fast_copyout = 1;
+SYSCTL_INT(_machdep, OID_AUTO, fast_copyout, CTLFLAG_RWTUN,
+    &fast_copyout, 0,
+    "");
+
+void
+copyout_init_tramp(void)
+{
+
+	copyin_fast_tramp = (int (*)(const void *, void *, size_t, u_int))(
+	    (uintptr_t)copyin_fast + setidt_disp);
+	copyout_fast_tramp = (int (*)(const void *, void *, size_t, u_int))(
+	    (uintptr_t)copyout_fast + setidt_disp);
+	fubyte_fast_tramp = (int (*)(volatile const void *, u_int))(
+	    (uintptr_t)fubyte_fast + setidt_disp);
+	fuword16_fast_tramp = (int (*)(volatile const void *, u_int))(
+	    (uintptr_t)fuword16_fast + setidt_disp);
+	fueword_fast_tramp = (int (*)(volatile const void *, long *, u_int))(
+	    (uintptr_t)fueword_fast + setidt_disp);
+	subyte_fast_tramp = (int (*)(volatile void *, int, u_int))(
+	    (uintptr_t)subyte_fast + setidt_disp);
+	suword16_fast_tramp = (int (*)(volatile void *, int, u_int))(
+	    (uintptr_t)suword16_fast + setidt_disp);
+	suword_fast_tramp = (int (*)(volatile void *, long, u_int))(
+	    (uintptr_t)suword_fast + setidt_disp);
+}
+
 static int
-cp_fast0(vm_offset_t uva, size_t len, bool write,
+cp_slow0(vm_offset_t uva, size_t len, bool write,
     void (*f)(vm_offset_t, void *), void *arg)
 {
 	struct pcpu *pc;
@@ -105,7 +156,7 @@ struct copyinstr_arg0 {
 };
 
 static void
-copyinstr_fast0(vm_offset_t kva, void *arg)
+copyinstr_slow0(vm_offset_t kva, void *arg)
 {
 	struct copyinstr_arg0 *ca;
 	char c;
@@ -140,7 +191,7 @@ copyinstr(const void *udaddr, void *kaddr, size_t maxlen, size_t *lencopied)
 		if (plen + ca.len > maxlen)
 			ca.len = maxlen - plen;
 		ca.alen = 0;
-		if (cp_fast0(uc, ca.len, false, copyinstr_fast0, &ca) != 0) {
+		if (cp_slow0(uc, ca.len, false, copyinstr_slow0, &ca) != 0) {
 			error = EFAULT;
 			break;
 		}
@@ -158,7 +209,7 @@ struct copyin_arg0 {
 };
 
 static void
-copyin_fast0(vm_offset_t kva, void *arg)
+copyin_slow0(vm_offset_t kva, void *arg)
 {
 	struct copyin_arg0 *ca;
 
@@ -173,6 +224,12 @@ copyin(const void *udaddr, void *kaddr, size_t len)
 	vm_offset_t uc;
 	size_t plen;
 
+	if ((uintptr_t)udaddr + len < (uintptr_t)udaddr ||
+	    (uintptr_t)udaddr + len > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (len == 0 || (fast_copyout && len <= TRAMP_COPYOUT_SZ &&
+	    copyin_fast_tramp(udaddr, kaddr, len, KCR3) == 0))
+		return (0);
 	for (plen = 0, uc = (vm_offset_t)udaddr, ca.kc = (vm_offset_t)kaddr;
 	    plen < len; uc += ca.len, ca.kc += ca.len, plen += ca.len) {
 		ca.len = round_page(uc) - uc;
@@ -180,14 +237,14 @@ copyin(const void *udaddr, void *kaddr, size_t len)
 			ca.len = PAGE_SIZE;
 		if (plen + ca.len > len)
 			ca.len = len - plen;
-		if (cp_fast0(uc, ca.len, false, copyin_fast0, &ca) != 0)
+		if (cp_slow0(uc, ca.len, false, copyin_slow0, &ca) != 0)
 			return (EFAULT);
 	}
 	return (0);
 }
 
 static void
-copyout_fast0(vm_offset_t kva, void *arg)
+copyout_slow0(vm_offset_t kva, void *arg)
 {
 	struct copyin_arg0 *ca;
 
@@ -202,6 +259,12 @@ copyout(const void *kaddr, void *udaddr, size_t len)
 	vm_offset_t uc;
 	size_t plen;
 
+	if ((uintptr_t)udaddr + len < (uintptr_t)udaddr ||
+	    (uintptr_t)udaddr + len > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (len == 0 || (fast_copyout && len <= TRAMP_COPYOUT_SZ &&
+	    copyout_fast_tramp(kaddr, udaddr, len, KCR3) == 0))
+		return (0);
 	for (plen = 0, uc = (vm_offset_t)udaddr, ca.kc = (vm_offset_t)kaddr;
 	    plen < len; uc += ca.len, ca.kc += ca.len, plen += ca.len) {
 		ca.len = round_page(uc) - uc;
@@ -209,14 +272,19 @@ copyout(const void *kaddr, void *udaddr, size_t len)
 			ca.len = PAGE_SIZE;
 		if (plen + ca.len > len)
 			ca.len = len - plen;
-		if (cp_fast0(uc, ca.len, true, copyout_fast0, &ca) != 0)
+		if (cp_slow0(uc, ca.len, true, copyout_slow0, &ca) != 0)
 			return (EFAULT);
 	}
 	return (0);
 }
 
+/*
+ * Fetch (load) a 32-bit word, a 16-bit word, or an 8-bit byte from user
+ * memory.
+ */
+
 static void
-fubyte_fast0(vm_offset_t kva, void *arg)
+fubyte_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(int *)arg = *(u_char *)kva;
@@ -227,14 +295,22 @@ fubyte(volatile const void *base)
 {
 	int res;
 
-	if (cp_fast0((vm_offset_t)base, sizeof(char), false, fubyte_fast0,
+	if ((uintptr_t)base + sizeof(uint8_t) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(uint8_t) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout) {
+		res = fubyte_fast_tramp(base, KCR3);
+		if (res != -1)
+			return (res);
+	}
+	if (cp_slow0((vm_offset_t)base, sizeof(char), false, fubyte_slow0,
 	    &res) != 0)
 		return (-1);
 	return (res);
 }
 
 static void
-fuword16_fast0(vm_offset_t kva, void *arg)
+fuword16_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(int *)arg = *(uint16_t *)kva;
@@ -245,14 +321,22 @@ fuword16(volatile const void *base)
 {
 	int res;
 
-	if (cp_fast0((vm_offset_t)base, sizeof(uint16_t), false, fuword16_fast0,
-	    &res) != 0)
+	if ((uintptr_t)base + sizeof(uint16_t) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(uint16_t) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout) {
+		res = fuword16_fast_tramp(base, KCR3);
+		if (res != -1)
+			return (res);
+	}
+	if (cp_slow0((vm_offset_t)base, sizeof(uint16_t), false,
+	    fuword16_slow0, &res) != 0)
 		return (-1);
 	return (res);
 }
 
 static void
-fueword_fast0(vm_offset_t kva, void *arg)
+fueword_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(uint32_t *)arg = *(uint32_t *)kva;
@@ -263,7 +347,14 @@ fueword(volatile const void *base, long *val)
 {
 	uint32_t res;
 
-	if (cp_fast0((vm_offset_t)base, sizeof(long), false, fueword_fast0,
+	if ((uintptr_t)base + sizeof(*val) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(*val) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout) {
+		if (fueword_fast_tramp(base, val, KCR3) == 0)
+			return (0);
+	}
+	if (cp_slow0((vm_offset_t)base, sizeof(long), false, fueword_slow0,
 	    &res) != 0)
 		return (-1);
 	*val = res;
@@ -273,17 +364,16 @@ fueword(volatile const void *base, long *val)
 int
 fueword32(volatile const void *base, int32_t *val)
 {
-	uint32_t res;
 
-	if (cp_fast0((vm_offset_t)base, sizeof(int32_t), false, fueword_fast0,
-	    &res) != 0)
-		return (-1);
-	*val = res;
-	return (0);
+	return (fueword(base, (long *)val));
 }
 
+/*
+ * Store a 32-bit word, a 16-bit word, or an 8-bit byte to user memory.
+ */
+
 static void
-subyte_fast0(vm_offset_t kva, void *arg)
+subyte_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(u_char *)kva = *(int *)arg;
@@ -293,12 +383,17 @@ int
 subyte(volatile void *base, int byte)
 {
 
-	return (cp_fast0((vm_offset_t)base, sizeof(u_char), true, subyte_fast0,
+	if ((uintptr_t)base + sizeof(uint8_t) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(uint8_t) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout && subyte_fast_tramp(base, byte, KCR3) == 0)
+		return (0);
+	return (cp_slow0((vm_offset_t)base, sizeof(u_char), true, subyte_slow0,
 	    &byte) != 0 ? -1 : 0);
 }
 
 static void
-suword16_fast0(vm_offset_t kva, void *arg)
+suword16_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(int *)kva = *(uint16_t *)arg;
@@ -308,12 +403,17 @@ int
 suword16(volatile void *base, int word)
 {
 
-	return (cp_fast0((vm_offset_t)base, sizeof(int16_t), true,
-	    suword16_fast0, &word) != 0 ? -1 : 0);
+	if ((uintptr_t)base + sizeof(uint16_t) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(uint16_t) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout && suword16_fast_tramp(base, word, KCR3) == 0)
+		return (0);
+	return (cp_slow0((vm_offset_t)base, sizeof(int16_t), true,
+	    suword16_slow0, &word) != 0 ? -1 : 0);
 }
 
 static void
-suword_fast0(vm_offset_t kva, void *arg)
+suword_slow0(vm_offset_t kva, void *arg)
 {
 
 	*(int *)kva = *(uint32_t *)arg;
@@ -323,17 +423,20 @@ int
 suword(volatile void *base, long word)
 {
 
-	return (cp_fast0((vm_offset_t)base, sizeof(long), true,
-	    suword_fast0, &word) != 0 ? -1 : 0);
+	if ((uintptr_t)base + sizeof(word) < (uintptr_t)base ||
+	    (uintptr_t)base + sizeof(word) > VM_MAXUSER_ADDRESS)
+		return (-1);
+	if (fast_copyout && suword_fast_tramp(base, word, KCR3) == 0)
+		return (0);
+	return (cp_slow0((vm_offset_t)base, sizeof(long), true,
+	    suword_slow0, &word) != 0 ? -1 : 0);
 }
 
 int
 suword32(volatile void *base, int32_t word)
 {
 
-
-	return (cp_fast0((vm_offset_t)base, sizeof(int32_t), true,
-	    suword_fast0, &word) != 0 ? -1 : 0);
+	return (suword(base, word));
 }
 
 struct casueword_arg0 {
@@ -342,7 +445,7 @@ struct casueword_arg0 {
 };
 
 static void
-casueword_fast0(vm_offset_t kva, void *arg)
+casueword_slow0(vm_offset_t kva, void *arg)
 {
 	struct casueword_arg0 *ca;
 
@@ -359,8 +462,8 @@ casueword32(volatile uint32_t *base, uint32_t oldval, uint32_t *oldvalp,
 
 	ca.oldval = oldval;
 	ca.newval = newval;
-	res = cp_fast0((vm_offset_t)base, sizeof(int32_t), true,
-	    casueword_fast0, &ca);
+	res = cp_slow0((vm_offset_t)base, sizeof(int32_t), true,
+	    casueword_slow0, &ca);
 	if (res == 0) {
 		*oldvalp = ca.oldval;
 		return (0);
@@ -376,8 +479,8 @@ casueword(volatile u_long *base, u_long oldval, u_long *oldvalp, u_long newval)
 
 	ca.oldval = oldval;
 	ca.newval = newval;
-	res = cp_fast0((vm_offset_t)base, sizeof(int32_t), true,
-	    casueword_fast0, &ca);
+	res = cp_slow0((vm_offset_t)base, sizeof(int32_t), true,
+	    casueword_slow0, &ca);
 	if (res == 0) {
 		*oldvalp = ca.oldval;
 		return (0);

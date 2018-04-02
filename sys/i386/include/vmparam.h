@@ -170,7 +170,7 @@
 
 /*
  * KVA layout.  The unit of the system allocation is single PDE, which
- * represents NBPDR bytes, algined to NBPDR.  NBPDR is 4M for non-PAE
+ * represents NBPDR bytes, aligned to NBPDR.  NBPDR is 4M for non-PAE
  * page tables, and 2M for PAE.  Addresses below are shown for non-PAE.
  *
  * 0x00000000 - 0x003fffff	Transient identity map of low memory (0-4M),

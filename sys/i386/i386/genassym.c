@@ -221,6 +221,7 @@ ASSYM(PC_CURPMAP, offsetof(struct pcpu, pc_curpmap));
 ASSYM(PC_PRIVATE_TSS, offsetof(struct pcpu, pc_private_tss));
 ASSYM(PC_KESP0, offsetof(struct pcpu, pc_kesp0));
 ASSYM(PC_TRAMPSTK, offsetof(struct pcpu, pc_trampstk));
+ASSYM(PC_COPYOUT_BUF, offsetof(struct pcpu, pc_copyout_buf));
 
 #ifdef DEV_APIC
 ASSYM(LA_EOI, LAPIC_EOI * LAPIC_MEM_MUL);
@@ -237,6 +238,7 @@ ASSYM(VM86_FRAMESIZE, sizeof(struct vm86frame));
 ASSYM(VM86_STACK_SPACE, VM86_STACK_SPACE);
 
 ASSYM(PMAP_TRM_MIN_ADDRESS, PMAP_TRM_MIN_ADDRESS);
+ASSYM(TRAMP_COPYOUT_SZ, TRAMP_COPYOUT_SZ);
 
 #ifdef	HWPMC_HOOKS
 ASSYM(PMC_FN_USER_CALLCHAIN, PMC_FN_USER_CALLCHAIN);

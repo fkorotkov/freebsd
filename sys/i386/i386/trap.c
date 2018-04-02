@@ -47,6 +47,7 @@ __FBSDID("$FreeBSD$");
  */
 
 #include "opt_clock.h"
+#include "opt_compat.h"
 #include "opt_cpu.h"
 #include "opt_hwpmc_hooks.h"
 #include "opt_isa.h"
@@ -992,15 +993,41 @@ cpu_fetch_syscall_args(struct thread *td)
 	caddr_t params;
 	long tmp;
 	int error;
+#ifdef COMPAT_43
+	u_int32_t eip;
+	int cs;
+#endif
 
 	p = td->td_proc;
 	frame = td->td_frame;
 	sa = &td->td_sa;
 
-	params = (caddr_t)frame->tf_esp + sizeof(int);
-	if (frame->tf_cs == 0x7)
-		params += 2 * sizeof(int);
+#ifdef COMPAT_43
+	if (__predict_false(frame->tf_cs == 7 && frame->tf_eip == 2)) {
+		/*
+		 * In lcall $7,$0 after int $0x80.  Convert the user
+		 * frame to what it would be for a direct int 0x80 instead
+		 * of lcall $7,$0, by popping the lcall return address.
+		 */
+		error = fueword32((void *)frame->tf_esp, &eip);
+		if (error == -1)
+			return (EFAULT);
+		cs = fuword16((void *)(frame->tf_esp + sizeof(u_int32_t)));
+		if (cs == -1)
+			return (EFAULT);
+
+		/*
+		 * Unwind in-kernel frame after all stack frame pieces
+		 * were successfully read.
+		 */
+		frame->tf_eip = eip;
+		frame->tf_cs = cs;
+		frame->tf_esp += 2 * sizeof(u_int32_t);
+	}
+#endif
+
 	sa->code = frame->tf_eax;
+	params = (caddr_t)frame->tf_esp + sizeof(uint32_t);
 
 	/*
 	 * Need to check if this is a 32 bit or 64 bit syscall.
@@ -1013,7 +1040,7 @@ cpu_fetch_syscall_args(struct thread *td)
 		if (error == -1)
 			return (EFAULT);
 		sa->code = tmp;
-		params += sizeof(int);
+		params += sizeof(uint32_t);
 	} else if (sa->code == SYS___syscall) {
 		/*
 		 * Like syscall, but code is a quad, so as to maintain
@@ -1036,7 +1063,7 @@ cpu_fetch_syscall_args(struct thread *td)
 
 	if (params != NULL && sa->narg != 0)
 		error = copyin(params, (caddr_t)sa->args,
-		    (u_int)(sa->narg * sizeof(int)));
+		    (u_int)(sa->narg * sizeof(uint32_t)));
 	else
 		error = 0;
 

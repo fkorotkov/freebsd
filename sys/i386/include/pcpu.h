@@ -75,6 +75,7 @@
 	vm_offset_t pc_copyout_saddr;					\
 	struct	mtx pc_copyout_mlock;					\
 	struct	sx pc_copyout_slock;					\
+	char	*pc_copyout_buf;					\
 	uint32_t pc_smp_tlb_done;	/* TLB op acknowledgement */	\
 	char	__pad[550]
 

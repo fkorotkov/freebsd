@@ -2511,7 +2511,7 @@ machdep_init_trampoline(void)
 {
 	struct region_descriptor r_gdt, r_idt;
 	struct i386tss *tss;
-	char *trampoline, *tramp_stack_base;
+	char *copyout_buf, *trampoline, *tramp_stack_base;
 	u_int *tramp_idleptd_reloced;
 	int x;
 
@@ -2598,6 +2598,10 @@ machdep_init_trampoline(void)
 	_default_ldt = GSEL(GLDT_SEL, SEL_KPL);
 	lldt(_default_ldt);
 	PCPU_SET(currentldt, _default_ldt);
+
+	copyout_buf = pmap_trm_alloc(TRAMP_COPYOUT_SZ, M_NOWAIT);
+	PCPU_SET(copyout_buf, copyout_buf);
+	copyout_init_tramp();
 }
 SYSINIT(vm_mem, SI_SUB_VM, SI_ORDER_SECOND, machdep_init_trampoline, NULL);
 
