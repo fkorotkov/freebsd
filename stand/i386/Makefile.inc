@@ -2,9 +2,13 @@
 #
 # $FreeBSD$
 
+.sinclude <bsd.linker.mk>
+
 LOADER_ADDRESS?=0x200000
 LDFLAGS+=	-nostdlib
-LDFLAGS+=	-Wl,-z,norelro
+.if defined(LINKER_TYPE) && ${LINKER_TYPE} == "lld"
+LDFLAGS+=	-Wl,--no-rosegment
+.endif
 
 # BTX components
 BTXDIR=		${BOOTOBJ}/i386/btx
