@@ -32,11 +32,12 @@
 .\"     @(#)fgets.3	8.1 (Berkeley) 6/4/93
 .\" $FreeBSD$
 .\"
-.Dd May 5, 2012
+.Dd April 3, 2018
 .Dt FGETS 3
 .Os
 .Sh NAME
-.Nm fgets
+.Nm fgets ,
+.Nm gets_s
 .Nd get a line from a stream
 .Sh LIBRARY
 .Lb libc
@@ -44,6 +45,8 @@
 .In stdio.h
 .Ft char *
 .Fn fgets "char * restrict str" "int size" "FILE * restrict stream"
+.Ft char *
+.Fn gets_s "char *str" "rsize_t size"
 .Sh DESCRIPTION
 The
 .Fn fgets
@@ -62,26 +65,41 @@ If any characters are read and there is no error, a
 character is appended to end the string.
 .Pp
 The
+.Fn gets_s
+function
+is equivalent to
+.Fn fgets
+with a
+.Fa stream
+of
+.Dv stdin ,
+except that the newline character (if any) is not stored in the string.
+.Pp
+The
 .Fn gets
 function
 was unsafe and is no longer available.
 .Sh RETURN VALUES
 Upon successful completion,
 .Fn fgets
-returns
+and
+.Fn gets_s
+return
 a pointer to the string.
 If end-of-file occurs before any characters are read,
-it returns
+they return
 .Dv NULL
 and the buffer contents remain unchanged.
 If an error occurs,
-it returns
+they return
 .Dv NULL
 and the buffer contents are indeterminate.
 The
 .Fn fgets
-function
-does not distinguish between end-of-file and error, and callers must use
+and
+.Fn gets_s
+functions
+do not distinguish between end-of-file and error, and callers must use
 .Xr feof 3
 and
 .Xr ferror 3
@@ -111,7 +129,15 @@ or
 .Xr fgetws 3 ,
 .Xr getline 3
 .Sh STANDARDS
-The
 .Fn fgets
-function conforms to
+conforms to
 .St -isoC-99 .
+.Fn gets_s
+conforms to
+.St -isoC-2011
+K.3.7.4.1.
+.Fn gets
+has been removed from
+.St -isoC-2011 .
+
+
