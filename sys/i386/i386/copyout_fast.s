@@ -40,7 +40,6 @@
 
 	.text
 
-	ALIGN_TEXT
 ENTRY(copyout_fast)
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -109,7 +108,6 @@ ENTRY(copyout_fast)
 	ret
 END(copyout_fast)
 
-	ALIGN_TEXT
 ENTRY(copyin_fast)
 	pushl	%ebp
 	movl	%esp, %ebp
@@ -185,7 +183,6 @@ copyout_fault:
 	leave
 	ret
 
-	ALIGN_TEXT
 ENTRY(fueword_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
@@ -215,7 +212,6 @@ ENTRY(fueword_fast)
 	ret
 END(fueword_fast)
 
-	ALIGN_TEXT
 ENTRY(fuword16_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
@@ -242,7 +238,6 @@ ENTRY(fuword16_fast)
 	ret
 END(fuword16_fast)
 
-	ALIGN_TEXT
 ENTRY(fubyte_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
@@ -281,7 +276,6 @@ fusufault:
 	leave
 	ret
 
-	ALIGN_TEXT
 ENTRY(suword_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
@@ -310,7 +304,6 @@ ENTRY(suword_fast)
 	ret
 END(suword_fast)
 
-	ALIGN_TEXT
 ENTRY(suword16_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
@@ -339,7 +332,6 @@ ENTRY(suword16_fast)
 	ret
 END(suword16_fast)
 
-	ALIGN_TEXT
 ENTRY(subyte_fast)
 	pushl	%ebp
 	movl	%esp,%ebp
