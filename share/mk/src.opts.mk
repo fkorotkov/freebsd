@@ -124,15 +124,15 @@ __DEFAULT_YES_OPTIONS = \
     LIBPTHREAD \
     LIBTHR \
     LLVM_COV \
+    LOADER_GELI \
     LOADER_LUA \
+    LOADER_OFW \
+    LOADER_UBOOT \
     LOCALES \
     LOCATE \
     LPR \
     LS_COLORS \
     LZMA_SUPPORT \
-    LOADER_GELI \
-    LOADER_OFW \
-    LOADER_UBOOT \
     MAIL \
     MAILWRAPPER \
     MAKE \
