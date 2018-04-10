@@ -141,8 +141,13 @@ acpi_wakeup_ap(struct acpi_softc *sc, int cpu)
 }
 
 #define	WARMBOOT_TARGET		0
+#ifdef __amd64__
 #define	WARMBOOT_OFF		(KERNBASE + 0x0467)
 #define	WARMBOOT_SEG		(KERNBASE + 0x0469)
+#else /* __i386__ */
+#define	WARMBOOT_OFF		(PMAP_MAP_LOW + 0x0467)
+#define	WARMBOOT_SEG		(PMAP_MAP_LOW + 0x0469)
+#endif
 
 #define	CMOS_REG		(0x70)
 #define	CMOS_DATA		(0x71)

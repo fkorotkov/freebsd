@@ -1866,9 +1866,8 @@ getmemsize(int first)
 	 * the kernel page table so we can use it as a buffer.  The
 	 * kernel will unmap this page later.
 	 */
-	pmap_kenter(1 << PAGE_SHIFT, 1 << PAGE_SHIFT);
 	vmc.npages = 0;
-	smap = (void *)vm86_addpage(&vmc, 1, 1 << PAGE_SHIFT);
+	smap = (void *)vm86_addpage(&vmc, 1, PMAP_MAP_LOW + ptoa(1));
 	res = vm86_getptr(&vmc, (vm_offset_t)smap, &vmf.vmf_es, &vmf.vmf_di);
 	KASSERT(res != 0, ("vm86_getptr() failed: address not found"));
 

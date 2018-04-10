@@ -555,7 +555,7 @@ doreti_popl_es_kfault:
 doreti_popl_fs_kfault:
 	movl	$0,(%esp)
 	jmp	doreti_popl_fs
-	
+
 #ifdef HWPMC_HOOKS
 doreti_nmi:
 	/*

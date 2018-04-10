@@ -483,6 +483,9 @@ pmap_cold(void)
 #endif
 	pmap_cold_mapident((u_long)IdlePTD, NPGPTD);
 
+	/* Map early KPTmap.  It is really pmap_cold_mapident. */
+	pmap_cold_map(KPTphys, (u_long)KPTmap, NKPT);
+
 	/* Map proc0kstack */
 	pmap_cold_mapident(proc0kstack, TD0_KSTACK_PAGES);
 	/* ISA hole already mapped */
