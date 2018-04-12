@@ -38,6 +38,9 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20180409: remove FDDI support
+OLD_FILES+=usr/include/net/fddi.h
+OLD_FILES+=usr/share/man/man4/fpa.4.gz
 # 20180319: remove /boot/overlays, replaced by /boot/dtb/overlays
 OLD_DIRS+=boot/overlays
 # 20180311: remove sys/sys/i386/include/pcaudioio.h
