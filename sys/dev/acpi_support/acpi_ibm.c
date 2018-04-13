@@ -1018,14 +1018,14 @@ acpi_ibm_sysctl_set(struct acpi_ibm_softc *sc, int method, int arg)
 	case ACPI_IBM_METHOD_KBD_BL_LEDON:
 		if (arg < 0 || arg > 2)
 			return (EINVAL);
-			
+
 		sc->kbd_backlight_ledon = arg;
 		break;
 
 	case ACPI_IBM_METHOD_KBD_BL_LEDOFF:
 		if (arg < 0 || arg > 2)
 			return (EINVAL);
-			
+
 		sc->kbd_backlight_ledoff = arg;
 		break;
 	case ACPI_IBM_METHOD_MICMUTE_LED:
