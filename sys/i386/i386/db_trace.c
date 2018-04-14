@@ -418,7 +418,7 @@ db_nextframe(struct i386_frame **fp, db_addr_t *ip, struct thread *td)
 		ebp = 0;
 		break;
 	}
-
+	
 	*ip = (db_addr_t) eip;
 	*fp = (struct i386_frame *) ebp;
 }

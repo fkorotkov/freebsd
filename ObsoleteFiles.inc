@@ -38,6 +38,9 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20180413: remove Arcnet support
+OLD_FILES+=usr/include/net/if_arc.h
+OLD_FILES+=usr/share/man/man4/cm.4
 # 20180409: remove FDDI support
 OLD_FILES+=usr/include/net/fddi.h
 OLD_FILES+=usr/share/man/man4/fpa.4.gz
@@ -1715,7 +1718,6 @@ OLD_FILES+=usr/share/man/man7/mm.7.gz
 OLD_FILES+=usr/share/man/man7/mmse.7.gz
 OLD_FILES+=usr/share/man/man7/ms.7.gz
 OLD_FILES+=usr/share/man/man7/orig_me.7.gz
-OLD_FILES+=usr/share/man/man7/roff.7.gz
 OLD_FILES+=usr/share/me/acm.me
 OLD_FILES+=usr/share/me/chars.me
 OLD_FILES+=usr/share/me/deltext.me
