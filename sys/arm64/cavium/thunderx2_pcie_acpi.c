@@ -124,6 +124,9 @@ thunderx2_pcie_acpi_attach(device_t dev)
 	int rid;
 	int error;
 
+	if (device_get_unit(dev) == 16)
+		return (ENXIO);
+
 	sc = device_get_softc(dev);
 
 	handle = acpi_get_handle(dev);
