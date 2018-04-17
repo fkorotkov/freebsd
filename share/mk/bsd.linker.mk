@@ -66,6 +66,10 @@ _v=	2.17.50
 .endif
 ${X_}LINKER_VERSION!=	echo "${_v:M[1-9].[0-9]*}" | \
 			  awk -F. '{print $$1 * 10000 + $$2 * 100 + $$3;}'
+.if !defined(${X_}LINKER_FREEBSD_VERSION)
+${X_}LINKER_FREEBSD_VERSION!=	echo "${_ld_version}" | \
+    sed -E -n 's/^.*\(FreeBSD ([0-9-]*)\).*$$/\1/p'
+.endif
 .undef _ld_version
 .undef _v
 ${X_}LINKER_FEATURES=
