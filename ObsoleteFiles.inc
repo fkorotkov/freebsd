@@ -40,7 +40,7 @@
 
 # 20180413: remove Arcnet support
 OLD_FILES+=usr/include/net/if_arc.h
-OLD_FILES+=usr/share/man/man4/cm.4
+OLD_FILES+=usr/share/man/man4/cm.4.gz
 # 20180409: remove FDDI support
 OLD_FILES+=usr/include/net/fddi.h
 OLD_FILES+=usr/share/man/man4/fpa.4.gz
@@ -1062,7 +1062,7 @@ OLD_FILES+=usr/libexec/kgdb
 OLD_FILES+=usr/lib/libstand.a
 OLD_FILES+=usr/lib/libstand_p.a
 OLD_FILES+=usr/include/stand.h
-OLD_FILES+=usr/share/man/man3/libstand.3
+OLD_FILES+=usr/share/man/man3/libstand.3.gz
 # 20171003: remove RCMDS
 OLD_FILES+=bin/rcp
 OLD_FILES+=rescue/rcp
