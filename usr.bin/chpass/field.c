@@ -172,8 +172,7 @@ p_class(char *p, struct passwd *pw, ENTRY *ep __unused)
 int
 p_change(char *p, struct passwd *pw, ENTRY *ep __unused)
 {
-	/* PR227589: pwd_mkdb and getpwent not y2038 compliant */
-	if (!atot(p, &pw->pw_change) && pw->pw_change <= INT_MAX)
+	if (!atot(p, &pw->pw_change))
 		return (0);
 	warnx("illegal date for change field");
 	return (-1);
@@ -183,8 +182,7 @@ p_change(char *p, struct passwd *pw, ENTRY *ep __unused)
 int
 p_expire(char *p, struct passwd *pw, ENTRY *ep __unused)
 {
-	/* PR227589: pwd_mkdb and getpwent not y2038 compliant */
-	if (!atot(p, &pw->pw_expire) && pw->pw_expire <= INT_MAX)
+	if (!atot(p, &pw->pw_expire))
 		return (0);
 	warnx("illegal date for expire field");
 	return (-1);
