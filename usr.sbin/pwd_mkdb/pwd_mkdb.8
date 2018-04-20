@@ -36,7 +36,7 @@
 .Nd "generate the password databases"
 .Sh SYNOPSIS
 .Nm
-.Op Fl BCiLNp
+.Op Fl CiNp
 .Op Fl d Ar directory
 .Op Fl s Ar cachesize
 .Op Fl u Ar username
@@ -124,15 +124,6 @@ The
 option is deprecated and is not present in
 .Fx 12.0
 and later.
-.Pp
-The following options may be specified and will affect the
-generation of legacy entries.
-.Bl -tag -width flag
-.It Fl B
-Store data in big-endian format.
-.It Fl L
-Store data in little-endian format.
-.El
 .Pp
 The
 .Nm
