@@ -36,7 +36,7 @@
 .Nd "generate the password databases"
 .Sh SYNOPSIS
 .Nm
-.Op Fl BCilLNp
+.Op Fl BCiLNp
 .Op Fl d Ar directory
 .Op Fl s Ar cachesize
 .Op Fl u Ar username
@@ -119,16 +119,6 @@ utility generates new,
 machine independent format
 .Pq v4
 entries only.
-For compatibility with
-.Fx 5.0
-and earlier releases,
-the
-.Fl l
-option may be specified,
-which enables generation of legacy format
-.Pq v3
-entries.
-The legacy format entries are endianness dependent.
 The
 .Fl l
 option is deprecated and is not present in
