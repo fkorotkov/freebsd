@@ -1,14 +1,6 @@
 /*-
- * Copyright (c) 2015-2017 Ruslan Bukin <br@bsdpad.com>
+ * Copyright (c) 2018 Thomas Munro
  * All rights reserved.
- *
- * Portions of this software were developed by SRI International and the
- * University of Cambridge Computer Laboratory under DARPA/AFRL contract
- * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.
- *
- * Portions of this software were developed by the University of Cambridge
- * Computer Laboratory as part of the CTSRD Project, with support from the
- * UK Higher Education Innovation Fund (HEIF).
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,12 +24,27 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/asm.h>
+#include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
-#ifdef __riscv_float_abi_double
-ENTRY(fabs)
-	fabs.d	fa0, fa0
-	ret
-END(fabs)
-#endif
+#include <assert.h>
+#include <signal.h>
+#include <sys/procctl.h>
+
+int main(int argc, char **argv)
+{
+        int signum;
+        int rc;
+
+	/*
+	 * This program is executed by the pdeathsig test
+	 * to check if the PROC_PDEATHSIG_SET setting was
+	 * inherited.
+	 */
+        signum = 0xdeadbeef;
+        rc = procctl(P_PID, 0, PROC_PDEATHSIG_GET, &signum);
+        assert(rc == 0);
+        assert(signum == SIGINFO);
+
+        return 0;
+}

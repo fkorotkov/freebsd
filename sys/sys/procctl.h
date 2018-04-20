@@ -51,8 +51,10 @@
 #define	PROC_TRACE_STATUS	8	/* query tracing status */
 #define	PROC_TRAPCAP_CTL	9	/* trap capability errors */
 #define	PROC_TRAPCAP_STATUS	10	/* query trap capability status */
-#define	PROC_ASLR_CTL		11	/* en/dis ASLR */
-#define	PROC_ASLR_STATUS	12	/* query ASLR status */
+#define	PROC_PDEATHSIG_SET	11	/* set parent death signal */
+#define	PROC_PDEATHSIG_GET	12	/* get parent death signal */
+#define	PROC_ASLR_CTL		13	/* en/dis ASLR */
+#define	PROC_ASLR_STATUS	14	/* query ASLR status */
 
 /* Operations for PROC_SPROTECT (passed in integer arg). */
 #define	PPROT_OP(x)	((x) & 0xf)
