@@ -84,6 +84,8 @@ struct mprintc {
 	bool		same_file;	/* Same file as previously printed? */
 };
 
+static void procmatch_match(struct mprintc *mc, struct parsec *pc);
+static void procmatch_nomatch(struct mprintc *mc, struct parsec *pc);
 static bool procmatches(struct mprintc *mc, struct parsec *pc, bool matched);
 #ifdef WITH_INTERNAL_NOSPEC
 static int litexec(const struct pat *pat, const char *string,
@@ -107,13 +109,12 @@ file_matching(const char *fname)
 
 	for (unsigned int i = 0; i < fpatterns; ++i) {
 		if (fnmatch(fpattern[i].pat, fname, 0) == 0 ||
-		    fnmatch(fpattern[i].pat, fname_base, 0) == 0) {
-			if (fpattern[i].mode == EXCL_PAT) {
-				ret = false;
-				break;
-			} else
-				ret = true;
-		}
+		    fnmatch(fpattern[i].pat, fname_base, 0) == 0)
+			/*
+			 * The last pattern matched wins exclusion/inclusion
+			 * rights, so we can't reasonably bail out early here.
+			 */
+			ret = (fpattern[i].mode != EXCL_PAT);
 	}
 	free(fname_buf);
 	return (ret);
@@ -127,13 +128,12 @@ dir_matching(const char *dname)
 	ret = dinclude ? false : true;
 
 	for (unsigned int i = 0; i < dpatterns; ++i) {
-		if (dname != NULL &&
-		    fnmatch(dpattern[i].pat, dname, 0) == 0) {
-			if (dpattern[i].mode == EXCL_PAT)
-				return (false);
-			else
-				ret = true;
-		}
+		if (dname != NULL && fnmatch(dpattern[i].pat, dname, 0) == 0)
+			/*
+			 * The last pattern matched wins exclusion/inclusion
+			 * rights, so we can't reasonably bail out early here.
+			 */
+			ret = (dpattern[i].mode != EXCL_PAT);
 	}
 	return (ret);
 }
@@ -162,7 +162,6 @@ grep_tree(char **argv)
 		break;
 	default:
 		fts_flags = FTS_LOGICAL;
-			
 	}
 
 	fts_flags |= FTS_NOSTAT | FTS_NOCHDIR;
@@ -191,7 +190,7 @@ grep_tree(char **argv)
 		case FTS_DC:
 			/* Print a warning for recursive directory loop */
 			warnx("warning: %s: recursive directory loop",
-				p->fts_path);
+			    p->fts_path);
 			break;
 		default:
 			/* Check for file exclusion/inclusion */
@@ -209,6 +208,55 @@ grep_tree(char **argv)
 	return (c);
 }
 
+static void
+procmatch_match(struct mprintc *mc, struct parsec *pc)
+{
+
+	if (mc->doctx) {
+		if (!first_match && (!mc->same_file || mc->last_outed > 0))
+			printf("--\n");
+		if (Bflag > 0)
+			printqueue();
+		mc->tail = Aflag;
+	}
+
+	/* Print the matching line, but only if not quiet/binary */
+	if (mc->printmatch) {
+		printline(pc, ':');
+		while (pc->matchidx >= MAX_MATCHES) {
+			/* Reset matchidx and try again */
+			pc->matchidx = 0;
+			if (procline(pc) == 0)
+				printline(pc, ':');
+			else
+				break;
+		}
+		first_match = false;
+		mc->same_file = true;
+		mc->last_outed = 0;
+	}
+}
+
+static void
+procmatch_nomatch(struct mprintc *mc, struct parsec *pc)
+{
+
+	/* Deal with any -A context as needed */
+	if (mc->tail > 0) {
+		grep_printline(&pc->ln, '-');
+		mc->tail--;
+		if (Bflag > 0)
+			clearqueue();
+	} else if (Bflag == 0 || (Bflag > 0 && enqueue(&pc->ln)))
+		/*
+		 * Enqueue non-matching lines for -B context. If we're not
+		 * actually doing -B context or if the enqueue resulted in a
+		 * line being rotated out, then go ahead and increment
+		 * last_outed to signify a gap between context/match.
+		 */
+		++mc->last_outed;
+}
+
 /*
  * Process any matches in the current parsing context, return a boolean
  * indicating whether we should halt any further processing or not. 'true' to
@@ -224,30 +272,7 @@ procmatches(struct mprintc *mc, struct parsec *pc, bool matched)
 	 */
 	/* Deal with any -B context or context separators */
 	if (matched) {
-		if (mc->doctx) {
-			if (!first_match &&
-			    (!mc->same_file || mc->last_outed > 0))
-				printf("--\n");
-			if (Bflag > 0)
-				printqueue();
-			mc->tail = Aflag;
-		}
-
-		/* Print the matching line, but only if not quiet/binary */
-		if (mc->printmatch) {
-			printline(pc, ':');
-			while (pc->matchidx >= MAX_MATCHES) {
-				/* Reset matchidx and try again */
-				pc->matchidx = 0;
-				if (procline(pc) == 0)
-					printline(pc, ':');
-				else
-					break;
-			}
-			first_match = false;
-			mc->same_file = true;
-			mc->last_outed = 0;
-		}
+		procmatch_match(mc, pc);
 
 		/* Count the matches if we have a match limit */
 		if (mflag) {
@@ -256,25 +281,8 @@ procmatches(struct mprintc *mc, struct parsec *pc, bool matched)
 			if (mflag && mcount <= 0)
 				return (false);
 		}
-	} else if (mc->doctx) {
-		/* Not matching, deal with any -A context as needed */
-		if (mc->tail > 0) {
-			grep_printline(&pc->ln, '-');
-			mc->tail--;
-			if (Bflag > 0)
-				clearqueue();
-		} else {
-			/*
-			 * Enqueue non-matching lines for -B context.
-			 * If we're not actually doing -B context or if
-			 * the enqueue resulted in a line being rotated
-			 * out, then go ahead and increment last_outed
-			 * to signify a gap between context/match.
-			 */
-			if (Bflag == 0 || (Bflag > 0 && enqueue(&pc->ln)))
-				++mc->last_outed;
-		}
-	}
+	} else if (mc->doctx)
+		procmatch_nomatch(mc, pc);
 
 	return (true);
 }
@@ -297,14 +305,14 @@ procfile(const char *fn)
 		fn = label != NULL ? label : getstr(1);
 		f = grep_open(NULL);
 	} else {
-		if (!stat(fn, &sb)) {
+		if (stat(fn, &sb) == 0) {
 			/* Check if we need to process the file */
 			s = sb.st_mode & S_IFMT;
-			if (s == S_IFDIR && dirbehave == DIR_SKIP)
+			if (dirbehave == DIR_SKIP && s == S_IFDIR)
 				return (0);
-			if ((s == S_IFIFO || s == S_IFCHR || s == S_IFBLK
-				|| s == S_IFSOCK) && devbehave == DEV_SKIP)
-					return (0);
+			if (devbehave == DEV_SKIP && (s == S_IFIFO ||
+			    s == S_IFCHR || s == S_IFBLK || s == S_IFSOCK))
+				return (0);
 		}
 		f = grep_open(fn);
 	}
@@ -315,8 +323,7 @@ procfile(const char *fn)
 		return (0);
 	}
 
-	pc.ln.file = grep_malloc(strlen(fn) + 1);
-	strcpy(pc.ln.file, fn);
+	pc.ln.file = grep_strdup(fn);
 	pc.ln.line_no = 0;
 	pc.ln.len = 0;
 	pc.ln.boff = 0;
