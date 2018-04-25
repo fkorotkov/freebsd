@@ -155,6 +155,7 @@ newstat_copyout(struct stat *buf, void *ubuf)
 	return (copyout(&tbuf, ubuf, sizeof(tbuf)));
 }
 
+#ifdef LINUX_LEGACY_SYSCALLS
 int
 linux_newstat(struct thread *td, struct linux_newstat_args *args)
 {
@@ -196,6 +197,7 @@ linux_newlstat(struct thread *td, struct linux_newlstat_args *args)
 		return (error);
 	return (newstat_copyout(&sb, args->buf));
 }
+#endif
 
 int
 linux_newfstat(struct thread *td, struct linux_newfstat_args *args)
@@ -509,6 +511,7 @@ struct l_ustat
 	char		f_fpack[6];
 };
 
+#ifdef LINUX_LEGACY_SYSCALLS
 int
 linux_ustat(struct thread *td, struct linux_ustat_args *args)
 {
@@ -519,6 +522,7 @@ linux_ustat(struct thread *td, struct linux_ustat_args *args)
 
 	return (EOPNOTSUPP);
 }
+#endif
 
 #if defined(__i386__) || (defined(__amd64__) && defined(COMPAT_LINUX32))
 
