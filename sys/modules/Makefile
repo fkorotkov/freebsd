@@ -350,6 +350,7 @@ SUBDIR=	\
 	siis \
 	sis \
 	sk \
+	${_smartpqi} \
 	smbfs \
 	sn \
 	snp \
@@ -732,6 +733,7 @@ _qlnx=		qlnx
 _sfxge=		sfxge
 _sgx=		sgx
 _sgx_linux=	sgx_linux
+_smartpqi=	smartpqi
 
 .if ${MK_BHYVE} != "no" || defined(ALL_MODULES)
 _vmm=		vmm
