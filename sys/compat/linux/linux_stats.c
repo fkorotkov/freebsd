@@ -81,6 +81,7 @@ linux_kern_statat(struct thread *td, int flag, int fd, char *path,
 	    translate_vnhook_major_minor));
 }
 
+#ifdef LINUX_LEGACY_SYSCALLS
 static int
 linux_kern_stat(struct thread *td, char *path, enum uio_seg pathseg,
     struct stat *sbp)
@@ -97,6 +98,7 @@ linux_kern_lstat(struct thread *td, char *path, enum uio_seg pathseg,
 	return (linux_kern_statat(td, AT_SYMLINK_NOFOLLOW, AT_FDCWD, path,
 	    pathseg, sbp));
 }
+#endif
 
 static void
 translate_fd_major_minor(struct thread *td, int fd, struct stat *buf)
