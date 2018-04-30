@@ -221,7 +221,6 @@ SUBDIR=	\
 	libmchain \
 	linuxkpi \
 	${_lio} \
-	lmc \
 	lpt \
 	mac_biba \
 	mac_bsdextended \
