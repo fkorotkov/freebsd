@@ -39,6 +39,8 @@
 # done
 
 # 2018xxxx: retire lmc
+OLD_FILES+=usr/include/dev/lmc/if_lmc.h
+OLD_DIRS+=usr/include/dev/lmc
 OLD_FILES+=usr/sbin/lmcconfig
 OLD_FILES+=usr/share/man/man4/lmc.4.gz
 OLD_FILES+=usr/share/man/man4/if_lmc.4.gz
