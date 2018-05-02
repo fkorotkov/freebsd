@@ -28,7 +28,7 @@
 .\"	@(#)pwd_mkdb.8	8.1 (Berkeley) 6/6/93
 .\" $FreeBSD$
 .\"
-.Dd April 22, 2018
+.Dd April 30, 2018
 .Dt PWD_MKDB 8
 .Os
 .Sh NAME
@@ -111,19 +111,6 @@ encrypted password and the insecure version has an asterisk (``*'')
 .Pp
 The databases are used by the C library password routines (see
 .Xr getpwent 3 ) .
-.Pp
-By default,
-the
-.Nm
-utility generates new,
-machine independent format
-.Pq v4
-entries only.
-The
-.Fl l
-option is deprecated and is not present in
-.Fx 12.0
-and later.
 .Pp
 The
 .Nm

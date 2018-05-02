@@ -38,7 +38,7 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
-# 2018xxxx: retire lmc
+# 20180501: retire lmc
 OLD_FILES+=usr/include/dev/lmc/if_lmc.h
 OLD_DIRS+=usr/include/dev/lmc
 OLD_FILES+=usr/sbin/lmcconfig
