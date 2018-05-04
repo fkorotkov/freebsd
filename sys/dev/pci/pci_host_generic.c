@@ -71,8 +71,6 @@ __FBSDID("$FreeBSD$");
 
 /* Forward prototypes */
 
-static uint32_t generic_pcie_read_config(device_t dev, u_int bus, u_int slot,
-    u_int func, u_int reg, int bytes);
 static void generic_pcie_write_config(device_t dev, u_int bus, u_int slot,
     u_int func, u_int reg, uint32_t val, int bytes);
 static int generic_pcie_maxslots(device_t dev);
@@ -107,7 +105,7 @@ pci_host_generic_core_attach(device_t dev)
 		return (error);
 
 	rid = 0;
-	sc->res = bus_alloc_resource_any(dev, SYS_RES_MEMORY, &rid, RF_ACTIVE);
+	sc->res = bus_alloc_resource_any(dev, SYS_RES_MEMORY, &rid, RF_ACTIVE | RF_SHAREABLE);
 	if (sc->res == NULL) {
 		device_printf(dev, "could not map memory.\n");
 		return (ENXIO);
@@ -137,7 +135,7 @@ pci_host_generic_core_attach(device_t dev)
 	return (0);
 }
 
-static uint32_t
+uint32_t
 generic_pcie_read_config(device_t dev, u_int bus, u_int slot,
     u_int func, u_int reg, int bytes)
 {

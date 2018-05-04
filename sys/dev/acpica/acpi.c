@@ -1897,6 +1897,8 @@ acpi_enable_pcie(device_t child, int segment)
 
 	end = (ACPI_MCFG_ALLOCATION *)((char *)hdr + hdr->Length);
 	alloc = (ACPI_MCFG_ALLOCATION *)((ACPI_TABLE_MCFG *)hdr + 1);
+
+
 	while (alloc < end) {
 		if (alloc->PciSegment == segment) {
 			bus_set_resource(child, SYS_RES_MEMORY, 0,
@@ -2085,15 +2087,6 @@ acpi_probe_child(ACPI_HANDLE handle, UINT32 level, void *context, void **status)
 		break;
 	    }
 
-	    /*
-	     * Get the device's resource settings and attach them.
-	     * Note that if the device has _PRS but no _CRS, we need
-	     * to decide when it's appropriate to try to configure the
-	     * device.  Ignore the return value here; it's OK for the
-	     * device not to have any resources.
-	     */
-	    acpi_parse_resources(child, handle, &acpi_res_parse_set, NULL);
-
 	    ad = device_get_ivars(child);
 	    ad->ad_cls_class = 0xffffff;
 	    if (ACPI_SUCCESS(AcpiGetObjectInfo(handle, &devinfo))) {
@@ -2111,6 +2104,14 @@ acpi_probe_child(ACPI_HANDLE handle, UINT32 level, void *context, void **status)
 #endif
 		AcpiOsFree(devinfo);
 	    }
+	    /*
+	     * Get the device's resource settings and attach them.
+	     * Note that if the device has _PRS but no _CRS, we need
+	     * to decide when it's appropriate to try to configure the
+	     * device.  Ignore the return value here; it's OK for the
+	     * device not to have any resources.
+	     */
+	    acpi_parse_resources(child, handle, &acpi_res_parse_set, NULL);
 	    break;
 	}
     }

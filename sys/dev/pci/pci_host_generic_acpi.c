@@ -56,6 +56,7 @@ __FBSDID("$FreeBSD$");
 #include <dev/pci/pcireg.h>
 #include <dev/pci/pcib_private.h>
 #include <dev/pci/pci_host_generic.h>
+#include <dev/pci/pci_host_generic_acpi.h>
 
 #include <machine/cpu.h>
 #include <machine/bus.h>
@@ -88,16 +89,9 @@ int pci_host_generic_acpi_attach(device_t);
 #define	PROPS_CELL_SIZE		1
 #define	PCI_ADDR_CELL_SIZE	2
 
-struct generic_pcie_acpi_softc {
-	struct generic_pcie_core_softc base;
-	ACPI_BUFFER		ap_prt;		/* interrupt routing table */
-};
-
 /* Forward prototypes */
 
 static int generic_pcie_acpi_probe(device_t dev);
-static uint32_t generic_pcie_read_config(device_t dev, u_int bus, u_int slot,
-    u_int func, u_int reg, int bytes);
 static void generic_pcie_write_config(device_t dev, u_int bus, u_int slot,
     u_int func, u_int reg, uint32_t val, int bytes);
 static int generic_pcie_release_resource(device_t dev, device_t child,

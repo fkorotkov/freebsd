@@ -79,6 +79,7 @@
 #define	CPU_IMPL_INTEL		0x69
 
 #define	CPU_PART_THUNDER	0x0A1
+#define	CPU_PART_THUNDERX2	0x0AF
 #define	CPU_PART_FOUNDATION	0xD00
 #define	CPU_PART_CORTEX_A35	0xD04
 #define	CPU_PART_CORTEX_A53	0xD03
@@ -90,6 +91,8 @@
 
 #define	CPU_REV_THUNDER_1_0	0x00
 #define	CPU_REV_THUNDER_1_1	0x01
+
+#define	CPU_REV_THUNDERX2_0	0x00
 
 #define	CPU_IMPL(midr)	(((midr) >> 24) & 0xff)
 #define	CPU_PART(midr)	(((midr) >> 4) & 0xfff)

@@ -71,5 +71,7 @@ struct resource *pci_host_generic_core_alloc_resource(device_t, device_t, int,
     int *, rman_res_t, rman_res_t, rman_res_t, u_int);
 int pci_host_generic_core_release_resource(device_t, device_t, int, int,
     struct resource *);
+uint32_t generic_pcie_read_config(device_t, u_int, u_int,
+    u_int, u_int, int);
 
 #endif /* __PCI_HOST_GENERIC_H_ */

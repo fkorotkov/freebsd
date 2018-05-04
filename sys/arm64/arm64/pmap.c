@@ -217,6 +217,21 @@ __FBSDID("$FreeBSD$");
 
 struct pmap kernel_pmap_store;
 
+/* Used for mapping ACPI memory before VM is initialized */
+#define	PMAP_PREINIT_MAPPING_COUNT	8
+#define PMAP_PREINIT_MAPPING_SIZE	(PMAP_PREINIT_MAPPING_COUNT * L2_SIZE)
+static vm_offset_t preinit_map_va;	/* Start VA of pre-init mapping space */
+static int vm_initialized = 0;		/* No need to use pre-init maps when set */
+
+/*
+ * Reserve a few L2 blocks starting from 'preinit_map_va' pointer.
+ * Always map entire L2 block for simplicity.
+ * VA = preinit_mapv + i * L2_SIZE
+ */
+static struct pmap_preinit_mapping {
+	vm_paddr_t	pa;	/* Aligned to L2_SIZE */
+} pmap_preinit_mapping[PMAP_PREINIT_MAPPING_COUNT];
+
 vm_offset_t virtual_avail;	/* VA of first avail page (after kernel bss) */
 vm_offset_t virtual_end;	/* VA of last avail page (end of kernel AS) */
 vm_offset_t kernel_vm_end = 0;
@@ -564,31 +579,98 @@ pmap_early_vtophys(vm_offset_t l1pt, vm_offset_t va)
 	return ((l2[l2_slot] & ~ATTR_MASK) + (va & L2_OFFSET));
 }
 
-static void
-pmap_bootstrap_dmap(vm_offset_t kern_l1, vm_paddr_t min_pa, vm_paddr_t max_pa)
+static vm_offset_t
+pmap_bootstrap_dmap(vm_offset_t kern_l1, vm_paddr_t min_pa,
+    vm_offset_t freemempos)
 {
+	pt_entry_t *l2;
 	vm_offset_t va;
-	vm_paddr_t pa;
-	u_int l1_slot;
+	vm_paddr_t l2_pa, pa;
+	u_int l1_slot, l2_slot, prev_l1_slot;
 	int i;
 
 	dmap_phys_base = min_pa & ~L1_OFFSET;
 	dmap_phys_max = 0;
 	dmap_max_addr = 0;
+	l2 = NULL;
+	prev_l1_slot = -1;
+
+#define	DMAP_TABLES	((DMAP_MAX_ADDRESS - DMAP_MIN_ADDRESS) >> L0_SHIFT)
+	memset(pagetable_dmap, 0, PAGE_SIZE * DMAP_TABLES);
 
 	for (i = 0; i < (physmap_idx * 2); i += 2) {
-		pa = physmap[i] & ~L1_OFFSET;
+		pa = physmap[i] & ~L2_OFFSET;
 		va = pa - dmap_phys_base + DMAP_MIN_ADDRESS;
 
-		for (; va < DMAP_MAX_ADDRESS && pa < physmap[i + 1];
+		/* Create L2 mappings at the start of the region */
+		if ((pa & L1_OFFSET) != 0) {
+			l1_slot = ((va - DMAP_MIN_ADDRESS) >> L1_SHIFT);
+			if (l1_slot != prev_l1_slot) {
+				prev_l1_slot = l1_slot;
+				l2 = (pt_entry_t *)freemempos;
+				l2_pa = pmap_early_vtophys(kern_l1,
+				    (vm_offset_t)l2);
+				freemempos += PAGE_SIZE;
+
+				pmap_load_store(&pagetable_dmap[l1_slot],
+				    (l2_pa & ~Ln_TABLE_MASK) | L1_TABLE);
+
+				memset(l2, 0, PAGE_SIZE);
+			}
+			KASSERT(l2 != NULL,
+			    ("pmap_bootstrap_dmap: NULL l2 map"));
+			for (; va < DMAP_MAX_ADDRESS && pa < physmap[i + 1];
+			    pa += L2_SIZE, va += L2_SIZE) {
+				/*
+				 * We are on a boundary, stop to
+				 * create a level 1 block
+				 */
+				if ((pa & L1_OFFSET) == 0)
+					break;
+
+				l2_slot = pmap_l2_index(va);
+				KASSERT(l2_slot != 0, ("..."));
+				pmap_load_store(&l2[l2_slot],
+				    (pa & ~L2_OFFSET) | ATTR_DEFAULT | ATTR_XN |
+				    ATTR_IDX(CACHED_MEMORY) | L2_BLOCK);
+			}
+			KASSERT(va == (pa - dmap_phys_base + DMAP_MIN_ADDRESS),
+			    ("..."));
+		}
+
+		for (; va < DMAP_MAX_ADDRESS && pa < physmap[i + 1] &&
+		    (physmap[i + 1] - pa) >= L1_SIZE;
 		    pa += L1_SIZE, va += L1_SIZE) {
 			l1_slot = ((va - DMAP_MIN_ADDRESS) >> L1_SHIFT);
-			/* We already have an entry */
-			if (pagetable_dmap[l1_slot] != 0)
-				continue;
 			pmap_load_store(&pagetable_dmap[l1_slot],
 			    (pa & ~L1_OFFSET) | ATTR_DEFAULT | ATTR_XN |
 			    ATTR_IDX(CACHED_MEMORY) | L1_BLOCK);
+		}
+
+		/* Create L2 mappings at the end of the region */
+		if (pa < physmap[i + 1]) {
+			l1_slot = ((va - DMAP_MIN_ADDRESS) >> L1_SHIFT);
+			if (l1_slot != prev_l1_slot) {
+				prev_l1_slot = l1_slot;
+				l2 = (pt_entry_t *)freemempos;
+				l2_pa = pmap_early_vtophys(kern_l1,
+				    (vm_offset_t)l2);
+				freemempos += PAGE_SIZE;
+
+				pmap_load_store(&pagetable_dmap[l1_slot],
+				    (l2_pa & ~Ln_TABLE_MASK) | L1_TABLE);
+
+				memset(l2, 0, PAGE_SIZE);
+			}
+			KASSERT(l2 != NULL,
+			    ("pmap_bootstrap_dmap: NULL l2 map"));
+			for (; va < DMAP_MAX_ADDRESS && pa < physmap[i + 1];
+			    pa += L2_SIZE, va += L2_SIZE) {
+				l2_slot = pmap_l2_index(va);
+				pmap_load_store(&l2[l2_slot],
+				    (pa & ~L2_OFFSET) | ATTR_DEFAULT | ATTR_XN |
+				    ATTR_IDX(CACHED_MEMORY) | L2_BLOCK);
+			}
 		}
 
 		if (pa > dmap_phys_max) {
@@ -598,6 +680,8 @@ pmap_bootstrap_dmap(vm_offset_t kern_l1, vm_paddr_t min_pa, vm_paddr_t max_pa)
 	}
 
 	cpu_tlb_flushID();
+
+	return (freemempos);
 }
 
 static vm_offset_t
@@ -701,8 +785,11 @@ pmap_bootstrap(vm_offset_t l0pt, vm_offset_t l1pt, vm_paddr_t kernstart,
 			max_pa = physmap[i + 1];
 	}
 
+	freemempos = KERNBASE + kernlen;
+	freemempos = roundup2(freemempos, PAGE_SIZE);
+
 	/* Create a direct map region early so we can use it for pa -> va */
-	pmap_bootstrap_dmap(l1pt, min_pa, max_pa);
+	freemempos = pmap_bootstrap_dmap(l1pt, min_pa, freemempos);
 
 	va = KERNBASE;
 	pa = KERNBASE - kern_delta;
@@ -765,8 +852,6 @@ pmap_bootstrap(vm_offset_t l0pt, vm_offset_t l1pt, vm_paddr_t kernstart,
 
 	va = roundup2(va, L1_SIZE);
 
-	freemempos = KERNBASE + kernlen;
-	freemempos = roundup2(freemempos, PAGE_SIZE);
 	/* Create the l2 tables up to VM_MAX_KERNEL_ADDRESS */
 	freemempos = pmap_bootstrap_l2(l1pt, va, freemempos);
 	/* And the l3 tables for the early devmap */
@@ -788,7 +873,11 @@ pmap_bootstrap(vm_offset_t l0pt, vm_offset_t l1pt, vm_paddr_t kernstart,
 	alloc_pages(msgbufpv, round_page(msgbufsize) / PAGE_SIZE);
 	msgbufp = (void *)msgbufpv;
 
-	virtual_avail = roundup2(freemempos, L1_SIZE);
+	/* Reserve some VA space for early BIOS/ACPI mapping */
+	preinit_map_va = roundup2(freemempos, L2_SIZE);
+
+	virtual_avail = preinit_map_va + PMAP_PREINIT_MAPPING_SIZE;
+	virtual_avail = roundup2(virtual_avail, L1_SIZE);
 	virtual_end = VM_MAX_KERNEL_ADDRESS - L2_SIZE;
 	kernel_vm_end = virtual_avail;
 
@@ -884,6 +973,8 @@ pmap_init(void)
 	for (i = 0; i < pv_npg; i++)
 		TAILQ_INIT(&pv_table[i].pv_list);
 	TAILQ_INIT(&pv_dummy.pv_list);
+
+	vm_initialized = 1;
 }
 
 static SYSCTL_NODE(_vm_pmap, OID_AUTO, l2, CTLFLAG_RD, 0,
@@ -4251,13 +4342,114 @@ pmap_clear_modify(vm_page_t m)
 void *
 pmap_mapbios(vm_paddr_t pa, vm_size_t size)
 {
+	struct pmap_preinit_mapping *ppim;
+	vm_offset_t va, offset;
+	pd_entry_t *pde;
+	pt_entry_t *l2;
+	int i, lvl;
 
-        return ((void *)PHYS_TO_DMAP(pa));
+	if (!vm_initialized) {
+		if (size > L2_SIZE) {
+			if (bootverbose)
+				printf("%s: mapping size=%lx too big!\n",
+				    __func__, size);
+			return (NULL);
+		}
+		if ((pa & L2_OFFSET) != 0 &&
+			size > (roundup2(pa, L2_SIZE) - pa)) {
+			if (bootverbose)
+				printf("%s: mapping pa=%lx size=%lx crosses L2 boundary!\n",
+				    __func__, pa, size);
+			return (NULL);
+		}
+
+		/* Map 2MiB L2 blocks from reserved VA space */
+		offset = pa & L2_OFFSET;
+		pa = rounddown2(pa, L2_SIZE);
+
+		/* If we have a preinit mapping, re-use it */
+		for (i = 0; i < PMAP_PREINIT_MAPPING_COUNT; i++) {
+			ppim = pmap_preinit_mapping + i;
+			if (ppim->pa == pa) {
+				va = preinit_map_va + (i * L2_SIZE);
+				return ((void *)(va + offset));
+			}
+		}
+		if (preinit_map_va == 0)
+			return (NULL);
+
+		va = 0;
+		for (i = 0; i < PMAP_PREINIT_MAPPING_COUNT; i++) {
+			ppim = pmap_preinit_mapping + i;
+			if (ppim->pa == 0) {
+				ppim->pa = pa;
+				va = preinit_map_va + (i * L2_SIZE);
+				break;
+			}
+		}
+		if (va == 0)
+			panic("%s: too many preinit mappings", __func__);
+
+		pde = pmap_pde(kernel_pmap, va, &lvl);
+		KASSERT(pde != NULL,
+		    ("pmap_mapbios: Invalid page entry, va: 0x%lx", va));
+		KASSERT(lvl == 1, ("pmap_mapbios: Invalid level %d", lvl));
+
+		/* Insert L2_BLOCK */
+		l2 = pmap_l1_to_l2(pde, va);
+		pmap_load_store(l2,
+		    pa | ATTR_DEFAULT | ATTR_XN |
+		    ATTR_IDX(CACHED_MEMORY) | L2_BLOCK);
+		pmap_invalidate_range(kernel_pmap, va, va + L2_SIZE);
+
+	} else {
+		/* kva_alloc may be used to map the pages */
+		offset = pa & PAGE_MASK;
+		size = round_page(offset + size);
+
+		va = kva_alloc(size);
+		if (va == 0)
+			panic("%s: Couldn't allocate KVA", __func__);
+
+		pde = pmap_pde(kernel_pmap, va, &lvl);
+		KASSERT(lvl == 2, ("pmap_mapbios: Invalid level %d", lvl));
+
+		/* L3 table is linked */
+		va = trunc_page(va);
+		pa = trunc_page(pa);
+		pmap_kenter(va, size, pa, CACHED_MEMORY);
+	}
+
+	return ((void *)(va + offset));
 }
 
 void
-pmap_unmapbios(vm_paddr_t pa, vm_size_t size)
+pmap_unmapbios(vm_offset_t va, vm_size_t size)
 {
+	vm_offset_t offset, tmpsize;
+	pd_entry_t *pde;
+	int lvl;
+
+	/*
+	 * No need to unmap early L2 block mappings.
+	 * Only unmap the pages reserved with kva_alloc.
+	 */
+	if (vm_initialized) {
+		offset = va & PAGE_MASK;
+		size = round_page(offset + size);
+		va = trunc_page(va);
+
+		kva_free(va, size);
+
+		pde = pmap_pde(kernel_pmap, va, &lvl);
+		KASSERT(pde != NULL,
+		    ("pmap_unmapbios: Invalid page entry, va: 0x%lx", va));
+		KASSERT(lvl == 2, ("pmap_unmapbios: Invalid level %d", lvl));
+
+		/* Unmap and invalidate the pages */
+                for (tmpsize = 0; tmpsize < size; tmpsize += PAGE_SIZE)
+			pmap_kremove(va + tmpsize);
+	}
 }
 
 /*

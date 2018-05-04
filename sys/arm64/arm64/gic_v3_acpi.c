@@ -129,6 +129,9 @@ rdist_map(ACPI_SUBTABLE_HEADER *entry, void *arg)
 	case ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR:
 		redist = (ACPI_MADT_GENERIC_REDISTRIBUTOR *)entry;
 
+		/* Hack to get the GIC to attach on ThunderX2 */
+		redist->Length = MIN(redist->Length, 0x1000000);
+
 		madt_data->count++;
 		BUS_SET_RESOURCE(madt_data->parent, madt_data->dev,
 		    SYS_RES_MEMORY, madt_data->count, redist->BaseAddress,
@@ -311,6 +314,9 @@ gic_v3_add_children(ACPI_SUBTABLE_HEADER *entry, void *arg)
 		gict = (ACPI_MADT_GENERIC_TRANSLATOR *)entry;
 		dev = arg;
 		sc = device_get_softc(dev);
+
+		if (sc->gic_nchildren > 0)
+			return;
 
 		child = device_add_child(dev, "its", -1);
 		if (child == NULL)
