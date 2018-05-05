@@ -144,6 +144,7 @@ typedef teken_color_t term_color_t;
 typedef teken_pos_t term_pos_t;
 typedef teken_rect_t term_rect_t;
 
+typedef void tc_prepare_t(struct terminal *tm);
 typedef void tc_cursor_t(struct terminal *tm, const term_pos_t *p);
 typedef void tc_putchar_t(struct terminal *tm, const term_pos_t *p,
     term_char_t c);
@@ -169,6 +170,7 @@ typedef void tc_bell_t(struct terminal *tm);
 
 struct terminal_class {
 	/* Terminal emulator. */
+	tc_prepare_t	*tc_prepare;
 	tc_cursor_t	*tc_cursor;
 	tc_putchar_t	*tc_putchar;
 	tc_fill_t	*tc_fill;

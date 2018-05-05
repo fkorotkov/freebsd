@@ -392,17 +392,18 @@ termtty_outwakeup(struct tty *tp)
 	size_t olen;
 	unsigned int flags = 0;
 
+	TERMINAL_LOCK_TTY(tm);
+	if (!(tm->tm_flags & TF_MUTE))
+		tm->tm_class->tc_prepare(tm);
+
 	while ((olen = ttydisc_getc(tp, obuf, sizeof obuf)) > 0) {
-		TERMINAL_LOCK_TTY(tm);
 		if (!(tm->tm_flags & TF_MUTE)) {
 			tm->tm_flags &= ~TF_BELL;
 			teken_input(&tm->tm_emulator, obuf, olen);
 			flags |= tm->tm_flags;
 		}
-		TERMINAL_UNLOCK_TTY(tm);
 	}
 
-	TERMINAL_LOCK_TTY(tm);
 	if (!(tm->tm_flags & TF_MUTE))
 		tm->tm_class->tc_done(tm);
 	TERMINAL_UNLOCK_TTY(tm);
@@ -571,6 +572,7 @@ termcn_cnputc(struct consdev *cp, int c)
 
 	TERMINAL_LOCK_CONS(tm);
 	if (!(tm->tm_flags & TF_MUTE)) {
+		tm->tm_class->tc_prepare(tm);
 		backup = *teken_get_curattr(&tm->tm_emulator);
 		teken_set_curattr(&tm->tm_emulator, &kernel_message);
 		teken_input(&tm->tm_emulator, &cv, 1);

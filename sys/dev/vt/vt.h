@@ -172,7 +172,7 @@ struct vt_device {
 #define	VT_LOCK_ASSERT(vd, what)	mtx_assert(&(vd)->vd_lock, what)
 
 void vt_resume(struct vt_device *vd);
-void vt_resume_flush_timer(struct vt_device *vd, int ms);
+void vt_resume_flush_timer(struct vt_window *vw, int ms);
 void vt_suspend(struct vt_device *vd);
 
 /*
@@ -213,16 +213,18 @@ struct vt_buf {
 #define	VBF_DEFAULT_HISTORY_SIZE	500
 #endif
 
-void vtbuf_copy(struct vt_buf *, const term_rect_t *, const term_pos_t *);
+void vtbuf_lock(struct vt_buf *);
+void vtbuf_unlock(struct vt_buf *);
+void vtbuf_copy_locked(struct vt_buf *, const term_rect_t *, const term_pos_t *);
 void vtbuf_fill_locked(struct vt_buf *, const term_rect_t *, term_char_t);
 void vtbuf_init_early(struct vt_buf *);
 void vtbuf_init(struct vt_buf *, const term_pos_t *);
 void vtbuf_grow(struct vt_buf *, const term_pos_t *, unsigned int);
-void vtbuf_putchar(struct vt_buf *, const term_pos_t *, term_char_t);
-void vtbuf_cursor_position(struct vt_buf *, const term_pos_t *);
+void vtbuf_putchar_locked(struct vt_buf *, const term_pos_t *, term_char_t);
+void vtbuf_cursor_position_locked(struct vt_buf *, const term_pos_t *);
 void vtbuf_scroll_mode(struct vt_buf *vb, int yes);
-void vtbuf_dirty(struct vt_buf *vb, const term_rect_t *area);
-void vtbuf_undirty(struct vt_buf *, term_rect_t *);
+void vtbuf_dirty_locked(struct vt_buf *vb, const term_rect_t *area);
+void vtbuf_undirty_locked(struct vt_buf *, term_rect_t *);
 void vtbuf_sethistory_size(struct vt_buf *, unsigned int);
 int vtbuf_iscursor(const struct vt_buf *vb, int row, int col);
 void vtbuf_cursor_visibility(struct vt_buf *, int);
