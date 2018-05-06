@@ -1461,7 +1461,7 @@ t4fw.fwo		optional cxgbe					\
 	no-implicit-rule						\
 	clean		"t4fw.fwo"
 t4fw.fw			optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t4fw-1.16.63.0.bin.uu"	\
+	dependency	"$S/dev/cxgbe/firmware/t4fw-1.19.1.0.bin.uu"	\
 	compile-with	"${NORMAL_FW}"					\
 	no-obj no-implicit-rule						\
 	clean		"t4fw.fw"
@@ -1495,7 +1495,7 @@ t5fw.fwo		optional cxgbe					\
 	no-implicit-rule						\
 	clean		"t5fw.fwo"
 t5fw.fw			optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t5fw-1.16.63.0.bin.uu"	\
+	dependency	"$S/dev/cxgbe/firmware/t5fw-1.19.1.0.bin.uu"	\
 	compile-with	"${NORMAL_FW}"					\
 	no-obj no-implicit-rule						\
 	clean		"t5fw.fw"
@@ -1529,7 +1529,7 @@ t6fw.fwo		optional cxgbe					\
 	no-implicit-rule						\
 	clean		"t6fw.fwo"
 t6fw.fw			optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t6fw-1.16.63.0.bin.uu"	\
+	dependency	"$S/dev/cxgbe/firmware/t6fw-1.19.1.0.bin.uu"	\
 	compile-with	"${NORMAL_FW}"					\
 	no-obj no-implicit-rule						\
 	clean		"t6fw.fw"
@@ -4372,6 +4372,7 @@ netinet/libalias/alias_mod.c	optional libalias | netgraph_nat
 netinet/libalias/alias_proxy.c	optional libalias inet | netgraph_nat inet
 netinet/libalias/alias_util.c	optional libalias inet | netgraph_nat inet
 netinet/libalias/alias_sctp.c	optional libalias inet | netgraph_nat inet
+netinet/netdump/netdump_client.c optional inet netdump
 netinet6/dest6.c		optional inet6
 netinet6/frag6.c		optional inet6
 netinet6/icmp6.c		optional inet6
