@@ -285,7 +285,6 @@ SUBDIR=	\
 	${_nvd} \
 	${_nvme} \
 	${_nvram} \
-	${_nxge} \
 	oce \
 	${_ocs_fc} \
 	otus \
@@ -693,7 +692,6 @@ _nfe=		nfe
 _nvd=		nvd
 _nvme=		nvme
 _nvram=		nvram
-_nxge=		nxge
 .if ${MK_CRYPT} != "no" || defined(ALL_MODULES)
 _padlock=	padlock
 _padlock_rng=	padlock_rng
