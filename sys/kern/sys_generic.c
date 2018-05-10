@@ -281,10 +281,9 @@ int
 kern_readv(struct thread *td, int fd, struct uio *auio)
 {
 	struct file *fp;
-	cap_rights_t rights;
 	int error;
 
-	error = fget_read(td, fd, cap_rights_init(&rights, CAP_READ), &fp);
+	error = fget_read(td, fd, &cap_read_rights, &fp);
 	if (error)
 		return (error);
 	error = dofileread(td, fd, fp, auio, (off_t)-1, 0);
@@ -321,10 +320,9 @@ int
 kern_preadv(struct thread *td, int fd, struct uio *auio, off_t offset)
 {
 	struct file *fp;
-	cap_rights_t rights;
 	int error;
 
-	error = fget_read(td, fd, cap_rights_init(&rights, CAP_PREAD), &fp);
+	error = fget_read(td, fd, &cap_pread_rights, &fp);
 	if (error)
 		return (error);
 	if (!(fp->f_ops->fo_flags & DFLAG_SEEKABLE))
@@ -485,10 +483,9 @@ int
 kern_writev(struct thread *td, int fd, struct uio *auio)
 {
 	struct file *fp;
-	cap_rights_t rights;
 	int error;
 
-	error = fget_write(td, fd, cap_rights_init(&rights, CAP_WRITE), &fp);
+	error = fget_write(td, fd, &cap_write_rights, &fp);
 	if (error)
 		return (error);
 	error = dofilewrite(td, fd, fp, auio, (off_t)-1, 0);
@@ -525,10 +522,9 @@ int
 kern_pwritev(struct thread *td, int fd, struct uio *auio, off_t offset)
 {
 	struct file *fp;
-	cap_rights_t rights;
 	int error;
 
-	error = fget_write(td, fd, cap_rights_init(&rights, CAP_PWRITE), &fp);
+	error = fget_write(td, fd, &cap_pwrite_rights, &fp);
 	if (error)
 		return (error);
 	if (!(fp->f_ops->fo_flags & DFLAG_SEEKABLE))
@@ -600,13 +596,12 @@ int
 kern_ftruncate(struct thread *td, int fd, off_t length)
 {
 	struct file *fp;
-	cap_rights_t rights;
 	int error;
 
 	AUDIT_ARG_FD(fd);
 	if (length < 0)
 		return (EINVAL);
-	error = fget(td, fd, cap_rights_init(&rights, CAP_FTRUNCATE), &fp);
+	error = fget(td, fd, &cap_ftruncate_rights, &fp);
 	if (error)
 		return (error);
 	AUDIT_ARG_FILE(td->td_proc, fp);
@@ -730,9 +725,6 @@ kern_ioctl(struct thread *td, int fd, u_long com, caddr_t data)
 {
 	struct file *fp;
 	struct filedesc *fdp;
-#ifndef CAPABILITIES
-	cap_rights_t rights;
-#endif
 	int error, tmp, locked;
 
 	AUDIT_ARG_FD(fd);
@@ -771,7 +763,7 @@ kern_ioctl(struct thread *td, int fd, u_long com, caddr_t data)
 		locked = LA_UNLOCKED;
 	}
 #else
-	error = fget(td, fd, cap_rights_init(&rights, CAP_IOCTL), &fp);
+	error = fget(td, fd, &cap_ioctl_rights, &fp);
 	if (error != 0) {
 		fp = NULL;
 		goto out;
@@ -1209,11 +1201,8 @@ selsetbits(fd_mask **ibits, fd_mask **obits, int idx, fd_mask bit, int events)
 static __inline int
 getselfd_cap(struct filedesc *fdp, int fd, struct file **fpp)
 {
-	cap_rights_t rights;
 
-	cap_rights_init(&rights, CAP_EVENT);
-
-	return (fget_unlocked(fdp, fd, &rights, fpp, NULL));
+	return (fget_unlocked(fdp, fd, &cap_event_rights, fpp, NULL));
 }
 
 /*
@@ -1448,9 +1437,6 @@ pollrescan(struct thread *td)
 	struct filedesc *fdp;
 	struct file *fp;
 	struct pollfd *fd;
-#ifdef CAPABILITIES
-	cap_rights_t rights;
-#endif
 	int n;
 
 	n = 0;
@@ -1467,8 +1453,7 @@ pollrescan(struct thread *td)
 		fp = fdp->fd_ofiles[fd->fd].fde_file;
 #ifdef CAPABILITIES
 		if (fp == NULL ||
-		    cap_check(cap_rights(fdp, fd->fd),
-		    cap_rights_init(&rights, CAP_EVENT)) != 0)
+		    cap_check(cap_rights(fdp, fd->fd), &cap_event_rights) != 0)
 #else
 		if (fp == NULL)
 #endif
@@ -1519,9 +1504,6 @@ pollscan(struct thread *td, struct pollfd *fds, u_int nfd)
 {
 	struct filedesc *fdp = td->td_proc->p_fd;
 	struct file *fp;
-#ifdef CAPABILITIES
-	cap_rights_t rights;
-#endif
 	int i, n = 0;
 
 	FILEDESC_SLOCK(fdp);
@@ -1535,8 +1517,7 @@ pollscan(struct thread *td, struct pollfd *fds, u_int nfd)
 			fp = fdp->fd_ofiles[fds->fd].fde_file;
 #ifdef CAPABILITIES
 			if (fp == NULL ||
-			    cap_check(cap_rights(fdp, fds->fd),
-			    cap_rights_init(&rights, CAP_EVENT)) != 0)
+			    cap_check(cap_rights(fdp, fds->fd), &cap_event_rights) != 0)
 #else
 			if (fp == NULL)
 #endif
