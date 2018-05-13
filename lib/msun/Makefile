@@ -101,7 +101,8 @@ COMMON_SRCS+=	catrigl.c \
 	e_lgammal.c e_lgammal_r.c \
 	e_remainderl.c e_sinhl.c e_sqrtl.c \
 	invtrig.c k_cosl.c k_sinl.c k_tanl.c \
-	s_asinhl.c s_atanl.c s_cbrtl.c s_ceill.c s_clogl.c s_cosl.c s_cprojl.c \
+	s_asinhl.c s_atanl.c s_cbrtl.c s_ceill.c \
+	s_clogl.c s_cosl.c s_cprojl.c \
 	s_csqrtl.c s_erfl.c s_exp2l.c s_expl.c s_floorl.c s_fmal.c \
 	s_fmaxl.c s_fminl.c s_frexpl.c s_logbl.c s_logl.c s_nanl.c \
 	s_nextafterl.c s_nexttoward.c s_remquol.c s_rintl.c s_roundl.c \
