@@ -1419,10 +1419,6 @@ digest_phdr(const Elf_Phdr *phdr, int phnum, caddr_t entry, const char *path)
 	    break;
 
 	case PT_NOTE:
-	    if ((Elf_Addr)obj->relocbase + ph->p_vaddr == 0) {
-		dbg("PT_NOTE at p_vaddr 0");
-		break;
-	    }
 	    note_start = (Elf_Addr)obj->relocbase + ph->p_vaddr;
 	    note_end = note_start + ph->p_filesz;
 	    digest_notes(obj, note_start, note_end);
