@@ -61,12 +61,13 @@ __FBSDID("$FreeBSD$");
 #include <machine/frame.h>
 #endif
 
-static tc_prepare_t	vtterm_prepare;
 static tc_bell_t	vtterm_bell;
 static tc_cursor_t	vtterm_cursor;
 static tc_putchar_t	vtterm_putchar;
 static tc_fill_t	vtterm_fill;
 static tc_copy_t	vtterm_copy;
+static tc_pre_input_t	vtterm_pre_input;
+static tc_post_input_t	vtterm_post_input;
 static tc_param_t	vtterm_param;
 static tc_done_t	vtterm_done;
 
@@ -81,12 +82,13 @@ static tc_ioctl_t	vtterm_ioctl;
 static tc_mmap_t	vtterm_mmap;
 
 const struct terminal_class vt_termclass = {
-	.tc_prepare	= vtterm_prepare,
 	.tc_bell	= vtterm_bell,
 	.tc_cursor	= vtterm_cursor,
 	.tc_putchar	= vtterm_putchar,
 	.tc_fill	= vtterm_fill,
 	.tc_copy	= vtterm_copy,
+	.tc_pre_input	= vtterm_pre_input,
+	.tc_post_input	= vtterm_post_input,
 	.tc_param	= vtterm_param,
 	.tc_done	= vtterm_done,
 
@@ -1041,7 +1043,7 @@ vtterm_cursor(struct terminal *tm, const term_pos_t *p)
 {
 	struct vt_window *vw = tm->tm_softc;
 
-	vtbuf_cursor_position_locked(&vw->vw_buf, p);
+	vtbuf_cursor_position(&vw->vw_buf, p);
 }
 
 static void
@@ -1049,7 +1051,7 @@ vtterm_putchar(struct terminal *tm, const term_pos_t *p, term_char_t c)
 {
 	struct vt_window *vw = tm->tm_softc;
 
-	vtbuf_putchar_locked(&vw->vw_buf, p, c);
+	vtbuf_putchar(&vw->vw_buf, p, c);
 }
 
 static void
@@ -1057,7 +1059,7 @@ vtterm_fill(struct terminal *tm, const term_rect_t *r, term_char_t c)
 {
 	struct vt_window *vw = tm->tm_softc;
 
-	vtbuf_fill_locked(&vw->vw_buf, r, c);
+	vtbuf_fill(&vw->vw_buf, r, c);
 }
 
 static void
@@ -1066,7 +1068,7 @@ vtterm_copy(struct terminal *tm, const term_rect_t *r,
 {
 	struct vt_window *vw = tm->tm_softc;
 
-	vtbuf_copy_locked(&vw->vw_buf, r, p);
+	vtbuf_copy(&vw->vw_buf, r, p);
 }
 
 static void
@@ -1179,7 +1181,7 @@ vt_mark_mouse_position_as_dirty(struct vt_device *vd, int locked)
 
 	if (!locked)
 		vtbuf_lock(&vw->vw_buf);
-	vtbuf_dirty_locked(&vw->vw_buf, &area);
+	vtbuf_dirty(&vw->vw_buf, &area);
 	if (!locked)
 		vtbuf_unlock(&vw->vw_buf);
 }
@@ -1276,7 +1278,7 @@ vt_flush(struct vt_device *vd)
 		vt_mark_mouse_position_as_dirty(vd, true);
 #endif
 
-	vtbuf_undirty_locked(&vw->vw_buf, &tarea);
+	vtbuf_undirty(&vw->vw_buf, &tarea);
 
 	/* Force a full redraw when the screen contents are invalid. */
 	if (vd->vd_flags & VDF_INVALID) {
@@ -1316,13 +1318,20 @@ vt_timer(void *arg)
 }
 
 static void
-vtterm_prepare(struct terminal *tm)
+vtterm_pre_input(struct terminal *tm)
 {
 	struct vt_window *vw = tm->tm_softc;
 
-	if (!kdb_active && panicstr == NULL) {
-		vtbuf_lock(&vw->vw_buf);
-	}
+	vtbuf_lock(&vw->vw_buf);
+}
+
+static void
+vtterm_post_input(struct terminal *tm)
+{
+	struct vt_window *vw = tm->tm_softc;
+
+	vtbuf_unlock(&vw->vw_buf);
+	vt_resume_flush_timer(vw, 0);
 }
 
 static void
@@ -1342,11 +1351,7 @@ vtterm_done(struct terminal *tm)
 		vd->vd_flags &= ~VDF_SPLASH;
 		vt_flush(vd);
 	} else if (!(vd->vd_flags & VDF_ASYNC)) {
-		vtbuf_unlock(&vw->vw_buf);
 		vt_flush(vd);
-	} else {
-		vtbuf_unlock(&vw->vw_buf);
-		vt_resume_flush_timer(vw, 0);
 	}
 }
 
@@ -2274,7 +2279,7 @@ skip_thunk:
 		/* XXX */
 		*(int *)data = M_CG640x480;
 		return (0);
-	case CONS_BELLTYPE: 	/* set bell type sound */
+	case CONS_BELLTYPE:	/* set bell type sound */
 		if ((*(int *)data) & CONS_QUIET_BELL)
 			vd->vd_flags |= VDF_QUIET_BELL;
 		else
@@ -2378,7 +2383,7 @@ skip_thunk:
 			break;
 		}
 		return (0);
-	case KDENABIO:      	/* allow io operations */
+	case KDENABIO:		/* allow io operations */
 		error = priv_check(td, PRIV_IO);
 		if (error != 0)
 			return (error);
@@ -2391,20 +2396,20 @@ skip_thunk:
 		td->td_frame->tf_rflags |= PSL_IOPL;
 #endif
 		return (0);
-	case KDDISABIO:     	/* disallow io operations (default) */
+	case KDDISABIO:		/* disallow io operations (default) */
 #if defined(__i386__)
 		td->td_frame->tf_eflags &= ~PSL_IOPL;
 #elif defined(__amd64__)
 		td->td_frame->tf_rflags &= ~PSL_IOPL;
 #endif
 		return (0);
-	case KDMKTONE:      	/* sound the bell */
+	case KDMKTONE:		/* sound the bell */
 		vtterm_beep(tm, *(u_int *)data);
 		return (0);
-	case KIOCSOUND:     	/* make tone (*data) hz */
+	case KIOCSOUND:		/* make tone (*data) hz */
 		/* TODO */
 		return (0);
-	case CONS_SETKBD: 		/* set the new keyboard */
+	case CONS_SETKBD:	/* set the new keyboard */
 		mtx_lock(&Giant);
 		error = 0;
 		if (vd->vd_keyboard != *(int *)data) {
@@ -2432,7 +2437,7 @@ skip_thunk:
 		}
 		mtx_unlock(&Giant);
 		return (error);
-	case CONS_RELKBD: 		/* release the current keyboard */
+	case CONS_RELKBD:	/* release the current keyboard */
 		mtx_lock(&Giant);
 		error = 0;
 		if (vd->vd_keyboard != -1) {
@@ -2504,7 +2509,7 @@ skip_thunk:
 		VT_UNLOCK(vd);
 		return (error);
 	}
-	case VT_SETMODE: {    	/* set screen switcher mode */
+	case VT_SETMODE: {	/* set screen switcher mode */
 		struct vt_mode *mode;
 		struct proc *p1;
 
