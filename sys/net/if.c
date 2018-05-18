@@ -104,8 +104,8 @@
 _Static_assert(sizeof(((struct ifreq *)0)->ifr_name) ==
     offsetof(struct ifreq, ifr_ifru), "gap between ifr_name and ifr_ifru");
 
-epoch_t net_epoch_preempt;
-epoch_t net_epoch;
+__read_mostly epoch_t net_epoch_preempt;
+__read_mostly epoch_t net_epoch;
 #ifdef COMPAT_FREEBSD32
 #include <sys/mount.h>
 #include <compat/freebsd32/freebsd32.h>
@@ -900,12 +900,20 @@ if_attach_internal(struct ifnet *ifp, int vmove, struct if_clone *ifc)
 }
 
 static void
+if_epochalloc(void *dummy __unused)
+{
+
+	net_epoch_preempt = epoch_alloc(EPOCH_PREEMPT);
+	net_epoch = epoch_alloc(0);
+}
+SYSINIT(ifepochalloc, SI_SUB_TASKQ + 1, SI_ORDER_ANY,
+    if_epochalloc, NULL);
+
+static void
 if_attachdomain(void *dummy)
 {
 	struct ifnet *ifp;
 
-	net_epoch_preempt = epoch_alloc(EPOCH_PREEMPT);
-	net_epoch = epoch_alloc(0);
 	TAILQ_FOREACH(ifp, &V_ifnet, if_link)
 		if_attachdomain1(ifp);
 }
