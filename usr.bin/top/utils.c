@@ -1,7 +1,4 @@
 /*
- *  Top users/processes display for Unix
- *  Version 3
- *
  *  This program may be freely redistributed,
  *  but this entire comment MUST remain intact.
  *
@@ -16,14 +13,16 @@
  */
 
 #include "top.h"
-#include "os.h"
+#include "utils.h"
 
-int atoiwi(str)
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-char *str;
-
+int
+atoiwi(char *str)
 {
-    register int len;
+    int len;
 
     len = strlen(str);
     if (len != 0)
@@ -62,10 +61,10 @@ _Static_assert(sizeof(int) <= 4, "buffer too small for this sized int");
 
 char *itoa(val)
 
-register int val;
+int val;
 
 {
-    register char *ptr;
+    char *ptr;
     static char buffer[16];	/* result is built here */
     				/* 16 is sufficient since the largest number
 				   we will ever convert will be 2^32-1,
@@ -93,10 +92,10 @@ register int val;
 
 char *itoa7(val)
 
-register int val;
+int val;
 
 {
-    register char *ptr;
+    char *ptr;
     static char buffer[16];	/* result is built here */
     				/* 16 is sufficient since the largest number
 				   we will ever convert will be 2^32-1,
@@ -130,7 +129,7 @@ int digits(val)
 int val;
 
 {
-    register int cnt = 0;
+    int cnt = 0;
 
     while (val > 0)
     {
@@ -145,11 +144,8 @@ int val;
  *	to the END of the string "to".
  */
 
-char *strecpy(to, from)
-
-register char *to;
-register char *from;
-
+char *
+strecpy(char *to, char *from)
 {
     while ((*to++ = *from++) != '\0');
     return(--to);
@@ -165,7 +161,7 @@ char *string;
 char **array;
 
 {
-    register int i = 0;
+    int i = 0;
 
     while (*array != NULL)
     {
@@ -192,13 +188,13 @@ char *line;
 int *cntp;
 
 {
-    register char *from;
-    register char *to;
-    register int cnt;
-    register int ch;
+    char *from;
+    char *to;
+    int cnt;
+    int ch;
     int length;
     int lastch;
-    register char **argv;
+    char **argv;
     char **argarray;
     char *args;
 
@@ -275,15 +271,15 @@ long percentages(cnt, out, new, old, diffs)
 
 int cnt;
 int *out;
-register long *new;
-register long *old;
+long *new;
+long *old;
 long *diffs;
 
 {
-    register int i;
-    register long change;
-    register long total_change;
-    register long *dp;
+    int i;
+    long change;
+    long total_change;
+    long *dp;
     long half_total;
 
     /* initialization */
@@ -324,33 +320,6 @@ long *diffs;
     return(total_change);
 }
 
-/*
- * errmsg(errnum) - return an error message string appropriate to the
- *           error number "errnum".  This is a substitute for the System V
- *           function "strerror".  There appears to be no reliable way to
- *           determine if "strerror" exists at compile time, so I make do
- *           by providing something of similar functionality.  For those
- *           systems that have strerror and NOT errlist, define
- *           -DHAVE_STRERROR in the module file and this function will
- *           use strerror.
- */
-
-/* externs referenced by errmsg */
-
-
-char *errmsg(errnum)
-
-int errnum;
-
-{
-    char *msg = strerror(errnum);
-    if (msg != NULL)
-    {
-	return msg;
-    }
-    return("No error");
-}
-
 /* format_time(seconds) - format number of seconds into a suitable
  *		display that will fit within 6 characters.  Note that this
  *		routine builds its string in a static area.  If it needs
@@ -372,9 +341,6 @@ char *format_time(seconds)
 long seconds;
 
 {
-    register int value;
-    register int digit;
-    register char *ptr;
     static char result[10];
 
     /* sanity protection */
@@ -428,16 +394,13 @@ long seconds;
 
 #define NUM_STRINGS 8
 
-char *format_k(amt)
-
-int amt;
-
+char *format_k(int amt)
 {
     static char retarray[NUM_STRINGS][16];
     static int index = 0;
-    register char *p;
-    register char *ret;
-    register char tag = 'K';
+    char *p;
+    char *ret;
+    char tag = 'K';
 
     p = ret = retarray[index];
     index = (index + 1) % NUM_STRINGS;
@@ -460,16 +423,14 @@ int amt;
     return(ret);
 }
 
-char *format_k2(amt)
-
-unsigned long long amt;
-
+char *
+format_k2(unsigned long long amt)
 {
     static char retarray[NUM_STRINGS][16];
     static int index = 0;
-    register char *p;
-    register char *ret;
-    register char tag = 'K';
+    char *p;
+    char *ret;
+    char tag = 'K';
 
     p = ret = retarray[index];
     index = (index + 1) % NUM_STRINGS;
