@@ -974,22 +974,6 @@ lan78xx_chip_init(struct muge_softc *sc)
 		goto init_failed;
 	}
 
-	/* Read and display the revision register. */
-	if ((err = lan78xx_read_reg(sc, ETH_ID_REV, &buf)) < 0) {
-		muge_warn_printf(sc, "failed to read ETH_ID_REV (err = %d)\n",
-		    err);
-		goto init_failed;
-	}
-	sc->chipid = (buf & ETH_ID_REV_CHIP_ID_MASK_) >> 16;
-	sc->chiprev = buf & ETH_ID_REV_CHIP_REV_MASK_;
-	if (sc->chipid != ETH_ID_REV_CHIP_ID_7800_) {
-		muge_warn_printf(sc, "Chip ID 0x%04x not yet supported\n",
-		    sc->chipid);
-		goto init_failed;
-	}
-	device_printf(sc->sc_ue.ue_dev, "Chip ID 0x%04x rev %04x\n", sc->chipid,
-	    sc->chiprev);
-
 	/* Respond to BULK-IN tokens with a NAK when RX FIFO is empty. */
 	if ((err = lan78xx_read_reg(sc, ETH_USB_CFG0, &buf)) != 0) {
 		muge_warn_printf(sc, "failed to read ETH_USB_CFG0 (err=%d)\n", err);
@@ -2101,6 +2085,7 @@ muge_attach(device_t dev)
 	struct usb_attach_arg *uaa = device_get_ivars(dev);
 	struct muge_softc *sc = device_get_softc(dev);
 	struct usb_ether *ue = &sc->sc_ue;
+	uint32_t idrev;
 	uint8_t iface_index;
 	int err;
 
@@ -2116,7 +2101,7 @@ muge_attach(device_t dev)
 	    muge_config, MUGE_N_TRANSFER, sc, &sc->sc_mtx);
 	if (err) {
 		device_printf(dev, "error: allocating USB transfers failed\n");
-		goto detach;
+		goto err;
 	}
 
 	ue->ue_sc = sc;
@@ -2128,12 +2113,36 @@ muge_attach(device_t dev)
 	err = uether_ifattach(ue);
 	if (err) {
 		device_printf(dev, "error: could not attach interface\n");
-		goto detach;
+		goto err_usbd;
 	}
+
+	/* Read and display the revision register. */
+	MUGE_LOCK(sc);
+	if ((err = lan78xx_read_reg(sc, ETH_ID_REV, &idrev)) < 0) {
+		muge_warn_printf(sc, "failed to read ETH_ID_REV (err = %d)\n",
+		    err);
+		goto err_ue_locked;
+	}
+	sc->chipid = (idrev & ETH_ID_REV_CHIP_ID_MASK_) >> 16;
+	sc->chiprev = idrev & ETH_ID_REV_CHIP_REV_MASK_;
+	if (sc->chipid != ETH_ID_REV_CHIP_ID_7800_) {
+		muge_warn_printf(sc, "Chip ID 0x%04x not yet supported\n",
+		    sc->chipid);
+		goto err_ue_locked;
+	}
+	device_printf(sc->sc_ue.ue_dev, "Chip ID 0x%04x rev %04x\n", sc->chipid,
+	    sc->chiprev);
+	MUGE_UNLOCK(sc);
+
 	return (0);
 
-detach:
-	muge_detach(dev);
+err_ue_locked:
+	MUGE_UNLOCK(sc);
+	uether_ifdetach(ue);
+err_usbd:
+	usbd_transfer_unsetup(sc->sc_xfer, MUGE_N_TRANSFER);
+err:
+	mtx_destroy(&sc->sc_mtx);
 	return (ENXIO);
 }
 
