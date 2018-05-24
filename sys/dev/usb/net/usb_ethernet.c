@@ -193,6 +193,7 @@ error:
 void
 uether_ifattach_wait(struct usb_ether *ue)
 {
+
 	UE_LOCK(ue);
 	usb_proc_mwait(&ue->ue_tq,
 	    &ue->ue_sync_task[0].hdr,
