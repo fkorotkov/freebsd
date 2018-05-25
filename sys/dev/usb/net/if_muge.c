@@ -944,13 +944,10 @@ static int
 lan78xx_chip_init(struct muge_softc *sc)
 {
 	int err;
-	int locked;
 	uint32_t buf;
 	uint32_t burst_cap;
 
-	locked = mtx_owned(&sc->sc_mtx);
-	if (!locked)
-		MUGE_LOCK(sc);
+	MUGE_LOCK_ASSERT(sc, MA_OWNED);
 
 	/* Enter H/W config mode. */
 	lan78xx_write_reg(sc, ETH_HW_CFG, ETH_HW_CFG_LRST_);
@@ -1130,9 +1127,6 @@ lan78xx_chip_init(struct muge_softc *sc)
 	return (0);
 
 init_failed:
-	if (!locked)
-		MUGE_UNLOCK(sc);
-
 	muge_err_printf(sc, "lan78xx_chip_init failed (err=%d)\n", err);
 	return (err);
 }
