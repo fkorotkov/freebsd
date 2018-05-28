@@ -40,6 +40,7 @@ mkimg -s mbr \
     -b ${1}/boot/mbr \
     -p efi:=${1}/boot/boot1.efifat \
     -p freebsd:-"mkimg -s bsd -b ${1}/boot/boot -p freebsd-ufs:=${2}.part" \
+    -a 2 \
     -o ${2}
 rm ${2}.part
 
