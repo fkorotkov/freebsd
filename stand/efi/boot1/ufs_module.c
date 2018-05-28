@@ -36,12 +36,16 @@
 #include <stdbool.h>
 #include <sys/cdefs.h>
 #include <sys/param.h>
+#include <sys/disk/bsd.h>
 #include <efi.h>
 
 #include "boot_module.h"
 
+#define BSD_LABEL_OFFSET	DEV_BSIZE
+
 static dev_info_t *devinfo;
 static dev_info_t *devices;
+static uint64_t partoff;
 
 static int
 dskread(void *buf, uint64_t lba, int nblk)
@@ -49,6 +53,7 @@ dskread(void *buf, uint64_t lba, int nblk)
 	int size;
 	EFI_STATUS status;
 
+	lba += partoff;
 	lba = lba / (devinfo->dev->Media->BlockSize / DEV_BSIZE);
 	size = nblk * DEV_BSIZE;
 
@@ -73,11 +78,34 @@ static struct dmadat __dmadat;
 static int
 init_dev(dev_info_t* dev)
 {
+	int ok;
+	char *buffer[DEV_BSIZE];
+	struct disklabel *dl;
 
 	devinfo = dev;
 	dmadat = &__dmadat;
 
-	return fsread(0, NULL, 0);
+	/*
+	 * First try offset 0. This is the normal GPT case where we have
+	 * no further partitioning.
+	 */
+	partoff = 0;
+	ok = fsread(0, NULL, 0);
+	if (ok >= 0)
+		return (ok);
+
+	/*
+	 * Now try to read a bsdlabel at offset 512. There's others that are
+	 * historic, but we don't probe those. UEFI is little endian only,
+	 * as are BSD labels.
+	 */
+	if (dskread(buffer, BSD_LABEL_OFFSET / DEV_BSIZE, 1) != 0)
+		return (-1);
+	dl = (struct disklabel *)buffer;
+	if (dl->d_magic != BSD_MAGIC || dl->d_magic2 != BSD_MAGIC)
+		return -1;
+	partoff = dl->d_partitions[0].p_offset;
+	return (fsread(0, NULL, 0));
 }
 
 static EFI_STATUS
