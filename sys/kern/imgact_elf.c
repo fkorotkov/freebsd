@@ -137,7 +137,12 @@ SYSCTL_INT(_kern_elf32, OID_AUTO, read_exec, CTLFLAG_RW, &i386_read_exec, 0,
 #endif
 #endif
 
+#ifdef __i386__
+// panic: res 0x6d963000 > maxv 0xde0b800, minv 0x20017000 base 0x20017000 rbase 0x4d94cde8
+static int __elfN(aslr_enabled) = 0;
+#else
 static int __elfN(aslr_enabled) = 1;
+#endif
 SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
     aslr_enabled, CTLFLAG_RWTUN, &__elfN(aslr_enabled), 0,
     __XSTRING(__CONCAT(ELF, __ELF_WORD_SIZE))
@@ -797,6 +802,7 @@ __CONCAT(rnd_, __elfN(base))(u_long base, u_long minv, u_long maxv,
 	u_long rbase, res;
 
 	arc4rand(&rbase, sizeof(rbase), 0);
+	KASSERT(maxv > minv, ("maxv %#lx < minv %#lx", maxv, minv));
 	res = base + rbase % (maxv - minv);
 	res &= ~((u_long)align - 1);
 	KASSERT(res >= base,
