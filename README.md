@@ -34,6 +34,9 @@ integrated assembler.
 | i386    | Clang + LLD  | Working                             |
 | armv7   | Clang + LLD  | Working (not recently tested)       |
 | mips64  | Clang + LLD  | Builds (excluding some kernels)     |
+| mipsn32 | Clang + LLD  | Buildworld fails                    |
+| armv6   |              |                                     |
+| arm     |              |                                     |
 | riscv64 | External GCC | Untested                            |
 
 MIPS64 broken options w/ Clang+LLD:
