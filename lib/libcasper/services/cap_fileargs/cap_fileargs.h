@@ -29,6 +29,9 @@
 #ifndef _FILEARGS_H_
 #define	_FILEARGS_H_
 
+#include <sys/dnv.h>
+#include <sys/nv.h>
+
 #include <stdbool.h>
 
 #ifdef WITH_CASPER
@@ -45,7 +48,6 @@ int fileargs_open(fileargs_t *fa, const char *name);
 void fileargs_free(fileargs_t *fa);
 FILE *fileargs_fopen(fileargs_t *fa, const char *name, const char *mode);
 #else
-#include <sys/dnv.h>
 typedef struct fileargs {
 	int	fa_flags;
 	mode_t	fa_mode;
