@@ -136,7 +136,7 @@ pmclog_get_record(struct pmclog_parse_state *ps, char **data, ssize_t *len)
 		return (ps->ps_state = PL_STATE_ERROR);
 
 	src = *data;
-	h = used = 0;
+	used = 0;
 
 	if (ps->ps_state == PL_STATE_NEW_RECORD)
 		ps->ps_svcount = 0;
@@ -368,7 +368,7 @@ pmclog_get_event(void *cookie, char **data, ssize_t *len,
 		PMCLOG_READ32(le,ev->pl_u.pl_a.pl_event);
 		PMCLOG_READ32(le,ev->pl_u.pl_a.pl_flags);
 		PMCLOG_READ32(le,noop);
-		ev->pl_u.pl_a.pl_evname = pmu_event_get_by_idx(ev->pl_u.pl_a.pl_event);
+		ev->pl_u.pl_a.pl_evname = pmc_pmu_event_get_by_idx(ev->pl_u.pl_a.pl_event);
 		if (ev->pl_u.pl_a.pl_evname != NULL)
 			break;
 		else if ((ev->pl_u.pl_a.pl_evname =
