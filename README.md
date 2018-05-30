@@ -31,7 +31,7 @@ integrated assembler.
 | ------- | ------------ | --------                            |
 | amd64   | Clang + LLD  | Working                             |
 | arm64   | Clang + LLD  | Working                             |
-| i386    | Clang + LLD  | Working, except VIMAGE              |
+| i386    | Clang + LLD  | Working                             |
 | armv7   | Clang + LLD  | Working (not recently tested)       |
 | mips64  | Clang + LLD  | Builds (excluding some kernels)     |
 | riscv64 | External GCC | Untested                            |
