@@ -21,6 +21,8 @@ An armeb build also emits many times
 ```
 subsection length greater than section length
 ```
+which comes from `ARMAttributeParser::ParseSubsection()` in
+_contrib/llvm/lib/Support/ARMAttributeParser.cpp_.
 
 ## powerpc buildworld
 All powerpc build worlds fail.
