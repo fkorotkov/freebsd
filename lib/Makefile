@@ -198,7 +198,7 @@ _librtld_db=	librtld_db
 .endif
 
 SUBDIR.${MK_OPENSSL}+=	libmp
-.if (${COMPILER_TYPE} == "clang" || (${COMPILER_TYPE} == "gcc" && ${COMPILER_VERSION} >= 60100))
+.if (${COMPILER_TYPE} == "clang" || (${COMPILER_TYPE} == "gcc" && ${COMPILER_VERSION} >= 60100 && ${MACHINE_CPUARCH} != "riscv"))
 SUBDIR.${MK_PMC}+=	libpmc libpmcstat
 .endif
 SUBDIR.${MK_RADIUS_SUPPORT}+=	libradius
