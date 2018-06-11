@@ -1,25 +1,23 @@
 /*-
- * SPDX-License-Identifier: BSD-3-Clause
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
  *
- * Copyright (c) 1992, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2016 Jakub Klama <jceel@FreeBSD.org>.
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer
+ *    in this position and unchanged.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
@@ -27,30 +25,19 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ *
+ * $FreeBSD$
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-__SCCSID("@(#)cuserid.c	8.1 (Berkeley) 6/4/93");
+#ifndef _IOV_H_
+#define	_IOV_H_
 
-#include <pwd.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+void seek_iov(struct iovec *iov1, size_t niov1, struct iovec *iov2,
+    size_t *niov2, size_t seek);
+size_t truncate_iov(struct iovec *iov, size_t niov, size_t length);
+size_t count_iov(struct iovec *iov, size_t niov);
+ssize_t iov_to_buf(struct iovec *iov, size_t niov, void **buf);
+ssize_t buf_to_iov(void *buf, size_t buflen, struct iovec *iov, size_t niov,
+    size_t seek);
 
-char *
-cuserid(char *s)
-{
-	struct passwd *pwd;
-
-	if ((pwd = getpwuid(geteuid())) == NULL) {
-		if (s)
-			*s = '\0';
-		return (s);
-	}
-	if (s) {
-		(void)strncpy(s, pwd->pw_name, L_cuserid);
-		return (s);
-	}
-	return (pwd->pw_name);
-}
+#endif	/* _IOV_H_ */
