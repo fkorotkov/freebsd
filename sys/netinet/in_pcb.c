@@ -2209,7 +2209,14 @@ found:
 		locked = INP_TRY_RLOCK(inp);
 	else
 		panic("%s: locking bug", __func__);
-	if (!locked)
+	if (__predict_false(locked && (inp->inp_flags2 & INP_FREED))) {
+		if (lookupflags & INPLOOKUP_WLOCKPCB)
+			INP_WUNLOCK(inp);
+		else
+			INP_RUNLOCK(inp);
+		INP_HASH_RUNLOCK(pcbinfo);
+		return (NULL);
+	} else if (!locked)
 		in_pcbref(inp);
 	INP_GROUP_UNLOCK(pcbgroup);
 	if (!locked) {
@@ -2680,7 +2687,7 @@ in_pcbremlists(struct inpcb *inp)
 		CK_LIST_REMOVE(inp, inp_portlist);
 		if (CK_LIST_FIRST(&phd->phd_pcblist) == NULL) {
 			CK_LIST_REMOVE(phd, phd_hash);
-			free(phd, M_PCB);
+			epoch_call(net_epoch_preempt, &phd->phd_epoch_ctx, inpcbport_free);
 		}
 		INP_HASH_WUNLOCK(pcbinfo);
 		inp->inp_flags &= ~INP_INHASHLIST;
