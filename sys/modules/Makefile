@@ -326,6 +326,7 @@ SUBDIR=	\
 	${_rdrand_rng} \
 	re \
 	rl \
+	${_rockchip} \
 	rtwn \
 	rtwn_pci \
 	rtwn_usb \
@@ -571,6 +572,7 @@ _allwinner=	allwinner
 _armv8crypto=	armv8crypto
 _efirt=		efirt
 _em=		em
+_rockchip=	rockchip
 .endif
 
 .if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"

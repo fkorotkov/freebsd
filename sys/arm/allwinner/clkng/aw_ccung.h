@@ -38,6 +38,8 @@ enum aw_ccung_type {
 	A13_CCU,
 	A83T_CCU,
 	A83T_R_CCU,
+	A10_CCU,
+	A20_CCU,
 };
 
 struct aw_ccung_softc {
