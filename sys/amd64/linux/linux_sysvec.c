@@ -869,7 +869,7 @@ linux64_elf_modevent(module_t mod, int type, void *data)
 	switch(type) {
 	case MOD_LOAD:
 		for (brandinfo = &linux_brandlist[0]; *brandinfo != NULL;
-		     ++brandinfo)
+		    ++brandinfo)
 			if (elf64_insert_brand_entry(*brandinfo) < 0)
 				error = EINVAL;
 		if (error == 0) {
@@ -885,12 +885,12 @@ linux64_elf_modevent(module_t mod, int type, void *data)
 		break;
 	case MOD_UNLOAD:
 		for (brandinfo = &linux_brandlist[0]; *brandinfo != NULL;
-		     ++brandinfo)
+		    ++brandinfo)
 			if (elf64_brand_inuse(*brandinfo))
 				error = EBUSY;
 		if (error == 0) {
 			for (brandinfo = &linux_brandlist[0];
-			     *brandinfo != NULL; ++brandinfo)
+			    *brandinfo != NULL; ++brandinfo)
 				if (elf64_remove_brand_entry(*brandinfo) < 0)
 					error = EINVAL;
 		}
