@@ -98,13 +98,13 @@ struct l_old_select_argv {
 
 
 int
-linux_execve(struct thread *td, struct linux_execve_args *args)
+linux_execve(struct thread *td, struct linux_execve_args *uap)
 {
 	struct image_args eargs;
 	char *newpath;
 	int error;
 
-	LCONVPATHEXIST(td, args->path, &newpath);
+	LCONVPATHEXIST(td, uap->path, &newpath);
 
 #ifdef DEBUG
 	if (ldebug(execve))
@@ -112,7 +112,7 @@ linux_execve(struct thread *td, struct linux_execve_args *args)
 #endif
 
 	error = exec_copyin_args(&eargs, newpath, UIO_SYSSPACE,
-	    args->argp, args->envp);
+	    uap->argp, uap->envp);
 	free(newpath, M_TEMP);
 	if (error == 0)
 		error = linux_common_execve(td, &eargs);
@@ -125,34 +125,34 @@ struct l_ipc_kludge {
 };
 
 int
-linux_ipc(struct thread *td, struct linux_ipc_args *args)
+linux_ipc(struct thread *td, struct linux_ipc_args *uap)
 {
 
-	switch (args->what & 0xFFFF) {
+	switch (uap->what & 0xFFFF) {
 	case LINUX_SEMOP: {
 		struct linux_semop_args a;
 
-		a.semid = args->arg1;
-		a.tsops = args->ptr;
-		a.nsops = args->arg2;
+		a.semid = uap->arg1;
+		a.tsops = uap->ptr;
+		a.nsops = uap->arg2;
 		return (linux_semop(td, &a));
 	}
 	case LINUX_SEMGET: {
 		struct linux_semget_args a;
 
-		a.key = args->arg1;
-		a.nsems = args->arg2;
-		a.semflg = args->arg3;
+		a.key = uap->arg1;
+		a.nsems = uap->arg2;
+		a.semflg = uap->arg3;
 		return (linux_semget(td, &a));
 	}
 	case LINUX_SEMCTL: {
 		struct linux_semctl_args a;
 		int error;
 
-		a.semid = args->arg1;
-		a.semnum = args->arg2;
-		a.cmd = args->arg3;
-		error = copyin(args->ptr, &a.arg, sizeof(a.arg));
+		a.semid = uap->arg1;
+		a.semnum = uap->arg2;
+		a.cmd = uap->arg3;
+		error = copyin(uap->ptr, &a.arg, sizeof(a.arg));
 		if (error)
 			return (error);
 		return (linux_semctl(td, &a));
@@ -160,79 +160,79 @@ linux_ipc(struct thread *td, struct linux_ipc_args *args)
 	case LINUX_MSGSND: {
 		struct linux_msgsnd_args a;
 
-		a.msqid = args->arg1;
-		a.msgp = args->ptr;
-		a.msgsz = args->arg2;
-		a.msgflg = args->arg3;
+		a.msqid = uap->arg1;
+		a.msgp = uap->ptr;
+		a.msgsz = uap->arg2;
+		a.msgflg = uap->arg3;
 		return (linux_msgsnd(td, &a));
 	}
 	case LINUX_MSGRCV: {
 		struct linux_msgrcv_args a;
 
-		a.msqid = args->arg1;
-		a.msgsz = args->arg2;
-		a.msgflg = args->arg3;
-		if ((args->what >> 16) == 0) {
+		a.msqid = uap->arg1;
+		a.msgsz = uap->arg2;
+		a.msgflg = uap->arg3;
+		if ((uap->what >> 16) == 0) {
 			struct l_ipc_kludge tmp;
 			int error;
 
-			if (args->ptr == NULL)
+			if (uap->ptr == NULL)
 				return (EINVAL);
-			error = copyin(args->ptr, &tmp, sizeof(tmp));
+			error = copyin(uap->ptr, &tmp, sizeof(tmp));
 			if (error)
 				return (error);
 			a.msgp = tmp.msgp;
 			a.msgtyp = tmp.msgtyp;
 		} else {
-			a.msgp = args->ptr;
-			a.msgtyp = args->arg5;
+			a.msgp = uap->ptr;
+			a.msgtyp = uap->arg5;
 		}
 		return (linux_msgrcv(td, &a));
 	}
 	case LINUX_MSGGET: {
 		struct linux_msgget_args a;
 
-		a.key = args->arg1;
-		a.msgflg = args->arg2;
+		a.key = uap->arg1;
+		a.msgflg = uap->arg2;
 		return (linux_msgget(td, &a));
 	}
 	case LINUX_MSGCTL: {
 		struct linux_msgctl_args a;
 
-		a.msqid = args->arg1;
-		a.cmd = args->arg2;
-		a.buf = args->ptr;
+		a.msqid = uap->arg1;
+		a.cmd = uap->arg2;
+		a.buf = uap->ptr;
 		return (linux_msgctl(td, &a));
 	}
 	case LINUX_SHMAT: {
 		struct linux_shmat_args a;
 
-		a.shmid = args->arg1;
-		a.shmaddr = args->ptr;
-		a.shmflg = args->arg2;
-		a.raddr = (l_ulong *)args->arg3;
+		a.shmid = uap->arg1;
+		a.shmaddr = uap->ptr;
+		a.shmflg = uap->arg2;
+		a.raddr = (l_ulong *)uap->arg3;
 		return (linux_shmat(td, &a));
 	}
 	case LINUX_SHMDT: {
 		struct linux_shmdt_args a;
 
-		a.shmaddr = args->ptr;
+		a.shmaddr = uap->ptr;
 		return (linux_shmdt(td, &a));
 	}
 	case LINUX_SHMGET: {
 		struct linux_shmget_args a;
 
-		a.key = args->arg1;
-		a.size = args->arg2;
-		a.shmflg = args->arg3;
+		a.key = uap->arg1;
+		a.size = uap->arg2;
+		a.shmflg = uap->arg3;
 		return (linux_shmget(td, &a));
 	}
 	case LINUX_SHMCTL: {
 		struct linux_shmctl_args a;
 
-		a.shmid = args->arg1;
-		a.cmd = args->arg2;
-		a.buf = args->ptr;
+		a.shmid = uap->arg1;
+		a.cmd = uap->arg2;
+		a.buf = uap->ptr;
 		return (linux_shmctl(td, &a));
 	}
 	default:
@@ -243,7 +243,7 @@ linux_ipc(struct thread *td, struct linux_ipc_args *args)
 }
 
 int
-linux_old_select(struct thread *td, struct linux_old_select_args *args)
+linux_old_select(struct thread *td, struct linux_old_select_args *uap)
 {
 	struct l_old_select_argv linux_args;
 	struct linux_select_args newsel;
@@ -251,7 +251,7 @@ linux_old_select(struct thread *td, struct linux_old_select_args *args)
 
 #ifdef DEBUG
 	if (ldebug(old_select))
-		printf(ARGS(old_select, "%p"), args->ptr);
+		printf(ARGS(old_select, "%p"), uap->ptr);
 #endif
 
 	error = copyin(args->ptr, &linux_args, sizeof(linux_args));
@@ -293,7 +293,8 @@ linux_set_cloned_tls(struct thread *td, void *desc)
 		if (idx == 6) {
 			/* we might copy out the entry_number as 3 */
 			info.entry_number = 3;
-			error = copyout(&info, desc, sizeof(struct l_user_desc));
+			error = copyout(&info, desc,
+			    sizeof(struct l_user_desc));
 			if (error)
 				printf(LMSG("copyout failed!"));
 		}
@@ -338,28 +339,28 @@ linux_set_upcall_kse(struct thread *td, register_t stack)
 }
 
 int
-linux_mmap2(struct thread *td, struct linux_mmap2_args *args)
+linux_mmap2(struct thread *td, struct linux_mmap2_args *uap)
 {
 
 #ifdef DEBUG
 	if (ldebug(mmap2))
 		printf(ARGS(mmap2, "%p, %d, %d, 0x%08x, %d, %d"),
-		    (void *)args->addr, args->len, args->prot,
-		    args->flags, args->fd, args->pgoff);
+		    (void *)uap->addr, uap->len, uap->prot,
+		    uap->flags, uap->fd, uap->pgoff);
 #endif
 
-	return (linux_mmap_common(td, args->addr, args->len, args->prot,
-		args->flags, args->fd, (uint64_t)(uint32_t)args->pgoff *
+	return (linux_mmap_common(td, uap->addr, uap->len, uap->prot,
+		uap->flags, uap->fd, (uint64_t)(uint32_t)uap->pgoff *
 		PAGE_SIZE));
 }
 
 int
-linux_mmap(struct thread *td, struct linux_mmap_args *args)
+linux_mmap(struct thread *td, struct linux_mmap_args *uap)
 {
 	int error;
 	struct l_mmap_argv linux_args;
 
-	error = copyin(args->ptr, &linux_args, sizeof(linux_args));
+	error = copyin(uap->ptr, &linux_args, sizeof(linux_args));
 	if (error)
 		return (error);
 
@@ -379,35 +380,36 @@ int
 linux_mprotect(struct thread *td, struct linux_mprotect_args *uap)
 {
 
-	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len, uap->prot));
+	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len,
+	    uap->prot));
 }
 
 int
-linux_ioperm(struct thread *td, struct linux_ioperm_args *args)
+linux_ioperm(struct thread *td, struct linux_ioperm_args *uap)
 {
 	int error;
 	struct i386_ioperm_args iia;
 
-	iia.start = args->start;
-	iia.length = args->length;
-	iia.enable = args->enable;
+	iia.start = uap->start;
+	iia.length = uap->length;
+	iia.enable = uap->enable;
 	error = i386_set_ioperm(td, &iia);
 	return (error);
 }
 
 int
-linux_iopl(struct thread *td, struct linux_iopl_args *args)
+linux_iopl(struct thread *td, struct linux_iopl_args *uap)
 {
 	int error;
 
-	if (args->level < 0 || args->level > 3)
+	if (uap->level < 0 || uap->level > 3)
 		return (EINVAL);
 	if ((error = priv_check(td, PRIV_IO)) != 0)
 		return (error);
 	if ((error = securelevel_gt(td->td_ucred, 0)) != 0)
 		return (error);
 	td->td_frame->tf_eflags = (td->td_frame->tf_eflags & ~PSL_IOPL) |
-	    (args->level * (PSL_IOPL / 3));
+	    (uap->level * (PSL_IOPL / 3));
 	return (0);
 }
 
@@ -432,7 +434,8 @@ linux_modify_ldt(struct thread *td, struct linux_modify_ldt_args *uap)
 		size = 5*sizeof(struct l_desc_struct);
 		if (size > uap->bytecount)
 			size = uap->bytecount;
-		for (written = error = 0; written < size && error == 0; written++)
+		for (written = error = 0; written < size && error == 0;
+		    written++)
 			error = subyte((char *)uap->ptr + written, 0);
 		td->td_retval[0] = written;
 		break;
@@ -475,7 +478,7 @@ linux_modify_ldt(struct thread *td, struct linux_modify_ldt_args *uap)
 }
 
 int
-linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
+linux_sigaction(struct thread *td, struct linux_sigaction_args *uap)
 {
 	l_osigaction_t osa;
 	l_sigaction_t act, oact;
@@ -484,11 +487,11 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
 #ifdef DEBUG
 	if (ldebug(sigaction))
 		printf(ARGS(sigaction, "%d, %p, %p"),
-		    args->sig, (void *)args->nsa, (void *)args->osa);
+		    uap->sig, (void *)uap->nsa, (void *)uap->osa);
 #endif
 
-	if (args->nsa != NULL) {
-		error = copyin(args->nsa, &osa, sizeof(l_osigaction_t));
+	if (uap->nsa != NULL) {
+		error = copyin(uap->nsa, &osa, sizeof(l_osigaction_t));
 		if (error)
 			return (error);
 		act.lsa_handler = osa.lsa_handler;
@@ -498,15 +501,15 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
 		act.lsa_mask.__mask = osa.lsa_mask;
 	}
 
-	error = linux_do_sigaction(td, args->sig, args->nsa ? &act : NULL,
-	    args->osa ? &oact : NULL);
+	error = linux_do_sigaction(td, uap->sig, uap->nsa ? &act : NULL,
+	    uap->osa ? &oact : NULL);
 
-	if (args->osa != NULL && !error) {
+	if (uap->osa != NULL && !error) {
 		osa.lsa_handler = oact.lsa_handler;
 		osa.lsa_flags = oact.lsa_flags;
 		osa.lsa_restorer = oact.lsa_restorer;
 		osa.lsa_mask = oact.lsa_mask.__mask;
-		error = copyout(&osa, args->osa, sizeof(l_osigaction_t));
+		error = copyout(&osa, uap->osa, sizeof(l_osigaction_t));
 	}
 
 	return (error);
@@ -518,18 +521,18 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
  * enables the signal to happen with a different register set.
  */
 int
-linux_sigsuspend(struct thread *td, struct linux_sigsuspend_args *args)
+linux_sigsuspend(struct thread *td, struct linux_sigsuspend_args *uap)
 {
 	sigset_t sigmask;
 	l_sigset_t mask;
 
 #ifdef DEBUG
 	if (ldebug(sigsuspend))
-		printf(ARGS(sigsuspend, "%08lx"), (unsigned long)args->mask);
+		printf(ARGS(sigsuspend, "%08lx"), (unsigned long)uap->mask);
 #endif
 
 	LINUX_SIGEMPTYSET(mask);
-	mask.__mask = args->mask;
+	mask.__mask = uap->mask;
 	linux_to_bsd_sigset(&mask, &sigmask);
 	return (kern_sigsuspend(td, sigmask));
 }
@@ -559,7 +562,7 @@ linux_rt_sigsuspend(struct thread *td, struct linux_rt_sigsuspend_args *uap)
 }
 
 int
-linux_pause(struct thread *td, struct linux_pause_args *args)
+linux_pause(struct thread *td, struct linux_pause_args *uap)
 {
 	struct proc *p = td->td_proc;
 	sigset_t sigmask;
@@ -609,20 +612,20 @@ linux_sigaltstack(struct thread *td, struct linux_sigaltstack_args *uap)
 }
 
 int
-linux_ftruncate64(struct thread *td, struct linux_ftruncate64_args *args)
+linux_ftruncate64(struct thread *td, struct linux_ftruncate64_args *uap)
 {
 
 #ifdef DEBUG
 	if (ldebug(ftruncate64))
-		printf(ARGS(ftruncate64, "%u, %jd"), args->fd,
-		    (intmax_t)args->length);
+		printf(ARGS(ftruncate64, "%u, %jd"), uap->fd,
+		    (intmax_t)uap->length);
 #endif
 
-	return (kern_ftruncate(td, args->fd, args->length));
+	return (kern_ftruncate(td, uap->fd, uap->length));
 }
 
 int
-linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args)
+linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *uap)
 {
 	struct l_user_desc info;
 	int error;
@@ -630,22 +633,23 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 	int a[2];
 	struct segment_descriptor sd;
 
-	error = copyin(args->desc, &info, sizeof(struct l_user_desc));
+	error = copyin(uap->desc, &info, sizeof(struct l_user_desc));
 	if (error)
 		return (error);
 
 #ifdef DEBUG
 	if (ldebug(set_thread_area))
-		printf(ARGS(set_thread_area, "%i, %x, %x, %i, %i, %i, %i, %i, %i\n"),
-		      info.entry_number,
-		      info.base_addr,
-		      info.limit,
-		      info.seg_32bit,
-		      info.contents,
-		      info.read_exec_only,
-		      info.limit_in_pages,
-		      info.seg_not_present,
-		      info.useable);
+		printf(ARGS(set_thread_area,
+		    "%i, %x, %x, %i, %i, %i, %i, %i, %i\n"),
+		    info.entry_number,
+		    info.base_addr,
+		    info.limit,
+		    info.seg_32bit,
+		    info.contents,
+		    info.read_exec_only,
+		    info.limit_in_pages,
+		    info.seg_not_present,
+		    info.useable);
 #endif
 
 	idx = info.entry_number;
@@ -683,7 +687,7 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 	 * to use 6, 7 or 8?
 	 */
 	idx = info.entry_number = 3;
-	error = copyout(&info, args->desc, sizeof(struct l_user_desc));
+	error = copyout(&info, uap->desc, sizeof(struct l_user_desc));
 	if (error)
 		return (error);
 
@@ -698,16 +702,17 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 	memcpy(&sd, &a, sizeof(a));
 #ifdef DEBUG
 	if (ldebug(set_thread_area))
-		printf("Segment created in set_thread_area: lobase: %x, hibase: %x, lolimit: %x, hilimit: %x, type: %i, dpl: %i, p: %i, xx: %i, def32: %i, gran: %i\n", sd.sd_lobase,
-			sd.sd_hibase,
-			sd.sd_lolimit,
-			sd.sd_hilimit,
-			sd.sd_type,
-			sd.sd_dpl,
-			sd.sd_p,
-			sd.sd_xx,
-			sd.sd_def32,
-			sd.sd_gran);
+		printf("Segment created in set_thread_area: lobase: %x, hibase: %x, lolimit: %x, hilimit: %x, type: %i, dpl: %i, p: %i, xx: %i, def32: %i, gran: %i\n",
+		    sd.sd_lobase,
+		    sd.sd_hibase,
+		    sd.sd_lolimit,
+		    sd.sd_hilimit,
+		    sd.sd_type,
+		    sd.sd_dpl,
+		    sd.sd_p,
+		    sd.sd_xx,
+		    sd.sd_def32,
+		    sd.sd_gran);
 #endif
 
 	/* this is taken from i386 version of cpu_set_user_tls() */
@@ -722,7 +727,7 @@ linux_set_thread_area(struct thread *td, struct linux_set_thread_area_args *args
 }
 
 int
-linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args)
+linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *uap)
 {
 
 	struct l_user_desc info;
@@ -733,10 +738,10 @@ linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args
 
 #ifdef DEBUG
 	if (ldebug(get_thread_area))
-		printf(ARGS(get_thread_area, "%p"), args->desc);
+		printf(ARGS(get_thread_area, "%p"), uap->desc);
 #endif
 
-	error = copyin(args->desc, &info, sizeof(struct l_user_desc));
+	error = copyin(uap->desc, &info, sizeof(struct l_user_desc));
 	if (error)
 		return (error);
 
@@ -763,7 +768,7 @@ linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args
 	info.seg_not_present = !LINUX_GET_PRESENT(&desc);
 	info.useable = LINUX_GET_USEABLE(&desc);
 
-	error = copyout(&info, args->desc, sizeof(struct l_user_desc));
+	error = copyout(&info, uap->desc, sizeof(struct l_user_desc));
 	if (error)
 		return (EFAULT);
 
@@ -772,60 +777,60 @@ linux_get_thread_area(struct thread *td, struct linux_get_thread_area_args *args
 
 /* XXX: this wont work with module - convert it */
 int
-linux_mq_open(struct thread *td, struct linux_mq_open_args *args)
+linux_mq_open(struct thread *td, struct linux_mq_open_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_open(td, (struct kmq_open_args *)args));
+	return (sys_kmq_open(td, (struct kmq_open_args *)uap));
 #else
 	return (ENOSYS);
 #endif
 }
 
 int
-linux_mq_unlink(struct thread *td, struct linux_mq_unlink_args *args)
+linux_mq_unlink(struct thread *td, struct linux_mq_unlink_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_unlink(td, (struct kmq_unlink_args *)args));
+	return (sys_kmq_unlink(td, (struct kmq_unlink_args *)uap));
 #else
 	return (ENOSYS);
 #endif
 }
 
 int
-linux_mq_timedsend(struct thread *td, struct linux_mq_timedsend_args *args)
+linux_mq_timedsend(struct thread *td, struct linux_mq_timedsend_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_timedsend(td, (struct kmq_timedsend_args *)args));
+	return (sys_kmq_timedsend(td, (struct kmq_timedsend_args *)uap));
 #else
 	return (ENOSYS);
 #endif
 }
 
 int
-linux_mq_timedreceive(struct thread *td, struct linux_mq_timedreceive_args *args)
+linux_mq_timedreceive(struct thread *td, struct linux_mq_timedreceive_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_timedreceive(td, (struct kmq_timedreceive_args *)args));
+	return (sys_kmq_timedreceive(td, (struct kmq_timedreceive_args *)uap));
 #else
 	return (ENOSYS);
 #endif
 }
 
 int
-linux_mq_notify(struct thread *td, struct linux_mq_notify_args *args)
+linux_mq_notify(struct thread *td, struct linux_mq_notify_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_notify(td, (struct kmq_notify_args *)args));
+	return (sys_kmq_notify(td, (struct kmq_notify_args *)uap));
 #else
 	return (ENOSYS);
 #endif
 }
 
 int
-linux_mq_getsetattr(struct thread *td, struct linux_mq_getsetattr_args *args)
+linux_mq_getsetattr(struct thread *td, struct linux_mq_getsetattr_args *uap)
 {
 #ifdef P1003_1B_MQUEUE
-	return (sys_kmq_setattr(td, (struct kmq_setattr_args *)args));
+	return (sys_kmq_setattr(td, (struct kmq_setattr_args *)uap));
 #else
 	return (ENOSYS);
 #endif

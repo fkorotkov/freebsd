@@ -91,18 +91,18 @@ __FBSDID("$FreeBSD$");
 #include <x86/include/sysarch.h>
 
 int
-linux_execve(struct thread *td, struct linux_execve_args *args)
+linux_execve(struct thread *td, struct linux_execve_args *uap)
 {
 	struct image_args eargs;
 	char *path;
 	int error;
 
-	LCONVPATHEXIST(td, args->path, &path);
+	LCONVPATHEXIST(td, uap->path, &path);
 
 	LINUX_CTR(execve);
 
-	error = exec_copyin_args(&eargs, path, UIO_SYSSPACE, args->argp,
-	    args->envp);
+	error = exec_copyin_args(&eargs, path, UIO_SYSSPACE, uap->argp,
+	    uap->envp);
 	free(path, M_TEMP);
 	if (error == 0)
 		error = linux_common_execve(td, &eargs);
@@ -125,35 +125,36 @@ linux_set_upcall_kse(struct thread *td, register_t stack)
 }
 
 int
-linux_mmap2(struct thread *td, struct linux_mmap2_args *args)
+linux_mmap2(struct thread *td, struct linux_mmap2_args *uap)
 {
 
-	return (linux_mmap_common(td, PTROUT(args->addr), args->len, args->prot,
-	    args->flags, args->fd, args->pgoff));
+	return (linux_mmap_common(td, PTROUT(uap->addr), uap->len, uap->prot,
+	    uap->flags, uap->fd, uap->pgoff));
 }
 
 int
 linux_mprotect(struct thread *td, struct linux_mprotect_args *uap)
 {
 
-	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len, uap->prot));
+	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len,
+	    uap->prot));
 }
 
 int
-linux_iopl(struct thread *td, struct linux_iopl_args *args)
+linux_iopl(struct thread *td, struct linux_iopl_args *uap)
 {
 	int error;
 
 	LINUX_CTR(iopl);
 
-	if (args->level > 3)
+	if (uap->level > 3)
 		return (EINVAL);
 	if ((error = priv_check(td, PRIV_IO)) != 0)
 		return (error);
 	if ((error = securelevel_gt(td->td_ucred, 0)) != 0)
 		return (error);
 	td->td_frame->tf_rflags = (td->td_frame->tf_rflags & ~PSL_IOPL) |
-	    (args->level * (PSL_IOPL / 3));
+	    (uap->level * (PSL_IOPL / 3));
 
 	return (0);
 }
@@ -180,7 +181,7 @@ linux_rt_sigsuspend(struct thread *td, struct linux_rt_sigsuspend_args *uap)
 }
 
 int
-linux_pause(struct thread *td, struct linux_pause_args *args)
+linux_pause(struct thread *td, struct linux_pause_args *uap)
 {
 	struct proc *p = td->td_proc;
 	sigset_t sigmask;
@@ -224,36 +225,36 @@ linux_sigaltstack(struct thread *td, struct linux_sigaltstack_args *uap)
 }
 
 int
-linux_arch_prctl(struct thread *td, struct linux_arch_prctl_args *args)
+linux_arch_prctl(struct thread *td, struct linux_arch_prctl_args *uap)
 {
 	int error;
 	struct sysarch_args bsd_args;
 
-	LINUX_CTR2(arch_prctl, "0x%x, %p", args->code, args->addr);
+	LINUX_CTR2(arch_prctl, "0x%x, %p", uap->code, uap->addr);
 
-	switch (args->code) {
+	switch (uap->code) {
 	case LINUX_ARCH_SET_GS:
 		bsd_args.op = AMD64_SET_GSBASE;
-		bsd_args.parms = (void *)args->addr;
+		bsd_args.parms = (void *)uap->addr;
 		error = sysarch(td, &bsd_args);
 		if (error == EINVAL)
 			error = EPERM;
 		break;
 	case LINUX_ARCH_SET_FS:
 		bsd_args.op = AMD64_SET_FSBASE;
-		bsd_args.parms = (void *)args->addr;
+		bsd_args.parms = (void *)uap->addr;
 		error = sysarch(td, &bsd_args);
 		if (error == EINVAL)
 			error = EPERM;
 		break;
 	case LINUX_ARCH_GET_FS:
 		bsd_args.op = AMD64_GET_FSBASE;
-		bsd_args.parms = (void *)args->addr;
+		bsd_args.parms = (void *)uap->addr;
 		error = sysarch(td, &bsd_args);
 		break;
 	case LINUX_ARCH_GET_GS:
 		bsd_args.op = AMD64_GET_GSBASE;
-		bsd_args.parms = (void *)args->addr;
+		bsd_args.parms = (void *)uap->addr;
 		error = sysarch(td, &bsd_args);
 		break;
 	default:

@@ -123,13 +123,13 @@ linux_copyout_rusage(struct rusage *ru, void *uaddr)
 }
 
 int
-linux_execve(struct thread *td, struct linux_execve_args *args)
+linux_execve(struct thread *td, struct linux_execve_args *uap)
 {
 	struct image_args eargs;
 	char *path;
 	int error;
 
-	LCONVPATHEXIST(td, args->path, &path);
+	LCONVPATHEXIST(td, uap->path, &path);
 
 #ifdef DEBUG
 	if (ldebug(execve))
@@ -137,7 +137,7 @@ linux_execve(struct thread *td, struct linux_execve_args *args)
 #endif
 
 	error = freebsd32_exec_copyin_args(&eargs, path, UIO_SYSSPACE,
-	    args->argp, args->envp);
+	    uap->argp, uap->envp);
 	free(path, M_TEMP);
 	if (error == 0)
 		error = linux_common_execve(td, &eargs);
@@ -249,34 +249,34 @@ struct l_ipc_kludge {
 } __packed;
 
 int
-linux_ipc(struct thread *td, struct linux_ipc_args *args)
+linux_ipc(struct thread *td, struct linux_ipc_args *uap)
 {
 
-	switch (args->what & 0xFFFF) {
+	switch (uap->what & 0xFFFF) {
 	case LINUX_SEMOP: {
 		struct linux_semop_args a;
 
-		a.semid = args->arg1;
-		a.tsops = args->ptr;
-		a.nsops = args->arg2;
+		a.semid = uap->arg1;
+		a.tsops = uap->ptr;
+		a.nsops = uap->arg2;
 		return (linux_semop(td, &a));
 	}
 	case LINUX_SEMGET: {
 		struct linux_semget_args a;
 
-		a.key = args->arg1;
-		a.nsems = args->arg2;
-		a.semflg = args->arg3;
+		a.key = uap->arg1;
+		a.nsems = uap->arg2;
+		a.semflg = uap->arg3;
 		return (linux_semget(td, &a));
 	}
 	case LINUX_SEMCTL: {
 		struct linux_semctl_args a;
 		int error;
 
-		a.semid = args->arg1;
-		a.semnum = args->arg2;
-		a.cmd = args->arg3;
-		error = copyin(args->ptr, &a.arg, sizeof(a.arg));
+		a.semid = uap->arg1;
+		a.semnum = uap->arg2;
+		a.cmd = uap->arg3;
+		error = copyin(uap->ptr, &a.arg, sizeof(a.arg));
 		if (error)
 			return (error);
 		return (linux_semctl(td, &a));
@@ -284,79 +284,79 @@ linux_ipc(struct thread *td, struct linux_ipc_args *args)
 	case LINUX_MSGSND: {
 		struct linux_msgsnd_args a;
 
-		a.msqid = args->arg1;
-		a.msgp = args->ptr;
-		a.msgsz = args->arg2;
-		a.msgflg = args->arg3;
+		a.msqid = uap->arg1;
+		a.msgp = uap->ptr;
+		a.msgsz = uap->arg2;
+		a.msgflg = uap->arg3;
 		return (linux_msgsnd(td, &a));
 	}
 	case LINUX_MSGRCV: {
 		struct linux_msgrcv_args a;
 
-		a.msqid = args->arg1;
-		a.msgsz = args->arg2;
-		a.msgflg = args->arg3;
-		if ((args->what >> 16) == 0) {
+		a.msqid = uap->arg1;
+		a.msgsz = uap->arg2;
+		a.msgflg = uap->arg3;
+		if ((uap->what >> 16) == 0) {
 			struct l_ipc_kludge tmp;
 			int error;
 
-			if (args->ptr == 0)
+			if (uap->ptr == 0)
 				return (EINVAL);
-			error = copyin(args->ptr, &tmp, sizeof(tmp));
+			error = copyin(uap->ptr, &tmp, sizeof(tmp));
 			if (error)
 				return (error);
 			a.msgp = PTRIN(tmp.msgp);
 			a.msgtyp = tmp.msgtyp;
 		} else {
-			a.msgp = args->ptr;
-			a.msgtyp = args->arg5;
+			a.msgp = uap->ptr;
+			a.msgtyp = uap->arg5;
 		}
 		return (linux_msgrcv(td, &a));
 	}
 	case LINUX_MSGGET: {
 		struct linux_msgget_args a;
 
-		a.key = args->arg1;
-		a.msgflg = args->arg2;
+		a.key = uap->arg1;
+		a.msgflg = uap->arg2;
 		return (linux_msgget(td, &a));
 	}
 	case LINUX_MSGCTL: {
 		struct linux_msgctl_args a;
 
-		a.msqid = args->arg1;
-		a.cmd = args->arg2;
-		a.buf = args->ptr;
+		a.msqid = uap->arg1;
+		a.cmd = uap->arg2;
+		a.buf = uap->ptr;
 		return (linux_msgctl(td, &a));
 	}
 	case LINUX_SHMAT: {
 		struct linux_shmat_args a;
 
-		a.shmid = args->arg1;
-		a.shmaddr = args->ptr;
-		a.shmflg = args->arg2;
-		a.raddr = PTRIN((l_uint)args->arg3);
+		a.shmid = uap->arg1;
+		a.shmaddr = uap->ptr;
+		a.shmflg = uap->arg2;
+		a.raddr = PTRIN((l_uint)uap->arg3);
 		return (linux_shmat(td, &a));
 	}
 	case LINUX_SHMDT: {
 		struct linux_shmdt_args a;
 
-		a.shmaddr = args->ptr;
+		a.shmaddr = uap->ptr;
 		return (linux_shmdt(td, &a));
 	}
 	case LINUX_SHMGET: {
 		struct linux_shmget_args a;
 
-		a.key = args->arg1;
-		a.size = args->arg2;
-		a.shmflg = args->arg3;
+		a.key = uap->arg1;
+		a.size = uap->arg2;
+		a.shmflg = uap->arg3;
 		return (linux_shmget(td, &a));
 	}
 	case LINUX_SHMCTL: {
 		struct linux_shmctl_args a;
 
-		a.shmid = args->arg1;
-		a.cmd = args->arg2;
-		a.buf = args->ptr;
+		a.shmid = uap->arg1;
+		a.cmd = uap->arg2;
+		a.buf = uap->ptr;
 		return (linux_shmctl(td, &a));
 	}
 	default:
@@ -367,7 +367,7 @@ linux_ipc(struct thread *td, struct linux_ipc_args *args)
 }
 
 int
-linux_old_select(struct thread *td, struct linux_old_select_args *args)
+linux_old_select(struct thread *td, struct linux_old_select_args *uap)
 {
 	struct l_old_select_argv linux_args;
 	struct linux_select_args newsel;
@@ -375,10 +375,10 @@ linux_old_select(struct thread *td, struct linux_old_select_args *args)
 
 #ifdef DEBUG
 	if (ldebug(old_select))
-		printf(ARGS(old_select, "%p"), args->ptr);
+		printf(ARGS(old_select, "%p"), uap->ptr);
 #endif
 
-	error = copyin(args->ptr, &linux_args, sizeof(linux_args));
+	error = copyin(uap->ptr, &linux_args, sizeof(linux_args));
 	if (error)
 		return (error);
 
@@ -449,28 +449,28 @@ linux_set_upcall_kse(struct thread *td, register_t stack)
 }
 
 int
-linux_mmap2(struct thread *td, struct linux_mmap2_args *args)
+linux_mmap2(struct thread *td, struct linux_mmap2_args *uap)
 {
 
 #ifdef DEBUG
 	if (ldebug(mmap2))
 		printf(ARGS(mmap2, "0x%08x, %d, %d, 0x%08x, %d, %d"),
-		    args->addr, args->len, args->prot,
-		    args->flags, args->fd, args->pgoff);
+		    uap->addr, uap->len, uap->prot,
+		    uap->flags, uap->fd, uap->pgoff);
 #endif
 
-	return (linux_mmap_common(td, PTROUT(args->addr), args->len, args->prot,
-		args->flags, args->fd, (uint64_t)(uint32_t)args->pgoff *
+	return (linux_mmap_common(td, PTROUT(uap->addr), uap->len, uap->prot,
+		uap->flags, uap->fd, (uint64_t)(uint32_t)uap->pgoff *
 		PAGE_SIZE));
 }
 
 int
-linux_mmap(struct thread *td, struct linux_mmap_args *args)
+linux_mmap(struct thread *td, struct linux_mmap_args *uap)
 {
 	int error;
 	struct l_mmap_argv linux_args;
 
-	error = copyin(args->ptr, &linux_args, sizeof(linux_args));
+	error = copyin(uap->ptr, &linux_args, sizeof(linux_args));
 	if (error)
 		return (error);
 
@@ -490,28 +490,29 @@ int
 linux_mprotect(struct thread *td, struct linux_mprotect_args *uap)
 {
 
-	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len, uap->prot));
+	return (linux_mprotect_common(td, PTROUT(uap->addr), uap->len,
+	    uap->prot));
 }
 
 int
-linux_iopl(struct thread *td, struct linux_iopl_args *args)
+linux_iopl(struct thread *td, struct linux_iopl_args *uap)
 {
 	int error;
 
-	if (args->level < 0 || args->level > 3)
+	if (uap->level < 0 || uap->level > 3)
 		return (EINVAL);
 	if ((error = priv_check(td, PRIV_IO)) != 0)
 		return (error);
 	if ((error = securelevel_gt(td->td_ucred, 0)) != 0)
 		return (error);
 	td->td_frame->tf_rflags = (td->td_frame->tf_rflags & ~PSL_IOPL) |
-	    (args->level * (PSL_IOPL / 3));
+	    (uap->level * (PSL_IOPL / 3));
 
 	return (0);
 }
 
 int
-linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
+linux_sigaction(struct thread *td, struct linux_sigaction_args *uap)
 {
 	l_osigaction_t osa;
 	l_sigaction_t act, oact;
@@ -520,11 +521,11 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
 #ifdef DEBUG
 	if (ldebug(sigaction))
 		printf(ARGS(sigaction, "%d, %p, %p"),
-		    args->sig, (void *)args->nsa, (void *)args->osa);
+		    uap->sig, (void *)uap->nsa, (void *)uap->osa);
 #endif
 
-	if (args->nsa != NULL) {
-		error = copyin(args->nsa, &osa, sizeof(l_osigaction_t));
+	if (uap->nsa != NULL) {
+		error = copyin(uap->nsa, &osa, sizeof(l_osigaction_t));
 		if (error)
 			return (error);
 		act.lsa_handler = osa.lsa_handler;
@@ -534,15 +535,15 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
 		act.lsa_mask.__mask = osa.lsa_mask;
 	}
 
-	error = linux_do_sigaction(td, args->sig, args->nsa ? &act : NULL,
-	    args->osa ? &oact : NULL);
+	error = linux_do_sigaction(td, uap->sig, uap->nsa ? &act : NULL,
+	    uap->osa ? &oact : NULL);
 
-	if (args->osa != NULL && !error) {
+	if (uap->osa != NULL && !error) {
 		osa.lsa_handler = oact.lsa_handler;
 		osa.lsa_flags = oact.lsa_flags;
 		osa.lsa_restorer = oact.lsa_restorer;
 		osa.lsa_mask = oact.lsa_mask.__mask;
-		error = copyout(&osa, args->osa, sizeof(l_osigaction_t));
+		error = copyout(&osa, uap->osa, sizeof(l_osigaction_t));
 	}
 
 	return (error);
@@ -554,18 +555,18 @@ linux_sigaction(struct thread *td, struct linux_sigaction_args *args)
  * enables the signal to happen with a different register set.
  */
 int
-linux_sigsuspend(struct thread *td, struct linux_sigsuspend_args *args)
+linux_sigsuspend(struct thread *td, struct linux_sigsuspend_args *uap)
 {
 	sigset_t sigmask;
 	l_sigset_t mask;
 
 #ifdef DEBUG
 	if (ldebug(sigsuspend))
-		printf(ARGS(sigsuspend, "%08lx"), (unsigned long)args->mask);
+		printf(ARGS(sigsuspend, "%08lx"), (unsigned long)uap->mask);
 #endif
 
 	LINUX_SIGEMPTYSET(mask);
-	mask.__mask = args->mask;
+	mask.__mask = uap->mask;
 	linux_to_bsd_sigset(&mask, &sigmask);
 	return (kern_sigsuspend(td, sigmask));
 }
@@ -595,7 +596,7 @@ linux_rt_sigsuspend(struct thread *td, struct linux_rt_sigsuspend_args *uap)
 }
 
 int
-linux_pause(struct thread *td, struct linux_pause_args *args)
+linux_pause(struct thread *td, struct linux_pause_args *uap)
 {
 	struct proc *p = td->td_proc;
 	sigset_t sigmask;
@@ -645,16 +646,16 @@ linux_sigaltstack(struct thread *td, struct linux_sigaltstack_args *uap)
 }
 
 int
-linux_ftruncate64(struct thread *td, struct linux_ftruncate64_args *args)
+linux_ftruncate64(struct thread *td, struct linux_ftruncate64_args *uap)
 {
 
 #ifdef DEBUG
 	if (ldebug(ftruncate64))
-		printf(ARGS(ftruncate64, "%u, %jd"), args->fd,
-		    (intmax_t)args->length);
+		printf(ARGS(ftruncate64, "%u, %jd"), uap->fd,
+		    (intmax_t)uap->length);
 #endif
 
-	return (kern_ftruncate(td, args->fd, args->length));
+	return (kern_ftruncate(td, uap->fd, uap->length));
 }
 
 int
@@ -722,7 +723,7 @@ linux_getrusage(struct thread *td, struct linux_getrusage_args *uap)
 
 int
 linux_set_thread_area(struct thread *td,
-    struct linux_set_thread_area_args *args)
+    struct linux_set_thread_area_args *uap)
 {
 	struct l_user_desc info;
 	struct user_segment_descriptor sd;
@@ -730,7 +731,7 @@ linux_set_thread_area(struct thread *td,
 	int a[2];
 	int error;
 
-	error = copyin(args->desc, &info, sizeof(struct l_user_desc));
+	error = copyin(uap->desc, &info, sizeof(struct l_user_desc));
 	if (error)
 		return (error);
 
@@ -783,7 +784,7 @@ linux_set_thread_area(struct thread *td,
 	 * XXX: What if a user space program does not check the return value
 	 * and tries to use 6, 7 or 8?
 	 */
-	error = copyout(&info, args->desc, sizeof(struct l_user_desc));
+	error = copyout(&info, uap->desc, sizeof(struct l_user_desc));
 	if (error)
 		return (error);
 
