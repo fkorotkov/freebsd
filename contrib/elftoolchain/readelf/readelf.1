@@ -24,7 +24,7 @@
 .\"
 .\" $Id: readelf.1 3486 2016-08-22 14:10:05Z emaste $
 .\"
-.Dd September 13, 2012
+.Dd June 19, 2018
 .Os
 .Dt READELF 1
 .Sh NAME
@@ -57,6 +57,7 @@
 .Op Fl S | Fl -sections | Fl -section-headers
 .Op Fl V | Fl -version-info
 .Op Fl W | Fl -wide
+.Op Fl -print-file-name
 .Ar file...
 .Sh DESCRIPTION
 The
@@ -183,6 +184,8 @@ If this option is not specified,
 .Nm
 will list information in the headers of 64 bit ELF objects on two
 separate lines.
+.It Fl -print-file-name
+Always print the file name header.
 .El
 .Sh EXIT STATUS
 .Ex -std

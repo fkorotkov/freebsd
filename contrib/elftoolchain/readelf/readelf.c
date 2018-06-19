@@ -176,7 +176,8 @@ struct readelf {
 
 enum options
 {
-	OPTION_DEBUG_DUMP
+	OPTION_DEBUG_DUMP,
+	OPTION_PRINT_FILE_NAME,
 };
 
 static struct option longopts[] = {
@@ -184,6 +185,7 @@ static struct option longopts[] = {
 	{"arch-specific", no_argument, NULL, 'A'},
 	{"archive-index", no_argument, NULL, 'c'},
 	{"debug-dump", optional_argument, NULL, OPTION_DEBUG_DUMP},
+	{"print-file-name", no_argument, NULL, OPTION_PRINT_FILE_NAME},
 	{"dynamic", no_argument, NULL, 'd'},
 	{"file-header", no_argument, NULL, 'h'},
 	{"full-section-name", no_argument, NULL, 'N'},
@@ -7263,7 +7265,8 @@ Usage: %s [options] file...\n\
   -S | --sections | --section-headers\n\
                            Print information about section headers.\n\
   -V | --version-info      Print symbol versoning information.\n\
-  -W | --wide              Print information without wrapping long lines.\n"
+  -W | --wide              Print information without wrapping long lines.\n\
+  --print-file-name        Always print file name\n"
 
 
 static void
@@ -7385,6 +7388,10 @@ main(int argc, char **argv)
 		case OPTION_DEBUG_DUMP:
 			re->options |= RE_W;
 			parse_dwarf_op_long(re, optarg);
+			break;
+		case OPTION_PRINT_FILE_NAME:
+			re->flags |= DISPLAY_FILENAME;
+			break;
 		}
 	}
 
