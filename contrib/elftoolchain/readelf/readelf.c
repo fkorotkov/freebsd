@@ -185,7 +185,6 @@ static struct option longopts[] = {
 	{"arch-specific", no_argument, NULL, 'A'},
 	{"archive-index", no_argument, NULL, 'c'},
 	{"debug-dump", optional_argument, NULL, OPTION_DEBUG_DUMP},
-	{"print-file-name", no_argument, NULL, OPTION_PRINT_FILE_NAME},
 	{"dynamic", no_argument, NULL, 'd'},
 	{"file-header", no_argument, NULL, 'h'},
 	{"full-section-name", no_argument, NULL, 'N'},
@@ -194,6 +193,7 @@ static struct option longopts[] = {
 	{"hex-dump", required_argument, NULL, 'x'},
 	{"histogram", no_argument, NULL, 'I'},
 	{"notes", no_argument, NULL, 'n'},
+	{"print-file-name", no_argument, NULL, OPTION_PRINT_FILE_NAME},
 	{"program-headers", no_argument, NULL, 'l'},
 	{"relocs", no_argument, NULL, 'r'},
 	{"sections", no_argument, NULL, 'S'},
@@ -7266,7 +7266,7 @@ Usage: %s [options] file...\n\
                            Print information about section headers.\n\
   -V | --version-info      Print symbol versoning information.\n\
   -W | --wide              Print information without wrapping long lines.\n\
-  --print-file-name        Always print file name\n"
+       --print-file-name   Always print file name\n"
 
 
 static void
