@@ -164,6 +164,7 @@ __DEFAULT_YES_OPTIONS = \
     SVNLITE \
     SYSCONS \
     SYSTEM_COMPILER \
+    SYSTEM_LINKER \
     TALK \
     TCSH \
     TELNET \
