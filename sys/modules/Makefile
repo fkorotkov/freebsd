@@ -232,6 +232,12 @@ SUBDIR=	\
 	mac_seeotheruids \
 	mac_stub \
 	mac_test \
+	mac_veriexec \
+	mac_veriexec_rmd160 \
+	mac_veriexec_sha1 \
+	mac_veriexec_sha256 \
+	mac_veriexec_sha384 \
+	mac_veriexec_sha512 \
 	malo \
 	md \
 	mdio \
@@ -383,6 +389,7 @@ SUBDIR=	\
 	uinput \
 	unionfs \
 	usb \
+	veriexec \
 	${_vesa} \
 	${_virtio} \
 	vge \
