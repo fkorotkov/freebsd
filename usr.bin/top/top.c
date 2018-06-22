@@ -281,7 +281,7 @@ main(int argc, char *argv[])
     /* get our name */
     /* initialize some selection options */
     ps.idle    = true;
-    ps.self    = false;
+    ps.self    = true;
     ps.system  = false;
     reset_uids();
     ps.thread  = false;
@@ -852,13 +852,6 @@ restart:
 				break;
 
 			    case CMD_update:	/* merely update display */
-				/* is the load average high? */
-				if (system_info.load_avg[0] > LoadMax)
-				{
-				    /* yes, go home for visual feedback */
-				    go_home();
-				    fflush(stdout);
-				}
 				break;
 
 			    case CMD_quit:
