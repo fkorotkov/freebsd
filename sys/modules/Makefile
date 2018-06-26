@@ -492,11 +492,14 @@ SUBDIR+=	iscsi_initiator
 .if ${MACHINE_CPUARCH} == "amd64"
 SUBDIR+=	linux64
 SUBDIR+=	linux_common
+
+.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} != "amd64" || \
+    ${MACHINE_CPUARCH} == "i386"
+SUBDIR+=	linprocfs
+SUBDIR+=	linsysfs
 .endif
 
 .if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
-SUBDIR+=	linprocfs
-SUBDIR+=	linsysfs
 SUBDIR+=	linux
 .endif
 .endif
