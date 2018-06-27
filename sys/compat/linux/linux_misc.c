@@ -240,10 +240,10 @@ linux_brk(struct thread *td, struct linux_brk_args *args)
 #endif
 	old = (uintptr_t)vm->vm_daddr + ctob(vm->vm_dsize);
 	new = (uintptr_t)args->dsend;
-	if (((caddr_t)new > vm->vm_daddr) && !kern_break(td, &new))
-		td->td_retval[0] = (long)new;
+	if ((caddr_t)new > vm->vm_daddr && !kern_break(td, &new))
+		td->td_retval[0] = (register_t)new;
 	else
-		td->td_retval[0] = (long)old;
+		td->td_retval[0] = (register_t)old;
 
 	return (0);
 }

@@ -73,7 +73,7 @@ sys_break(struct thread *td, struct break_args *uap)
 	uintptr_t addr;
 	int error;
 
-	addr = (uintptr_t)(uap->nsize);
+	addr = (uintptr_t)uap->nsize;
 	error = kern_break(td, &addr);
 	if (error == 0)
 		td->td_retval[0] = addr;
@@ -84,7 +84,7 @@ sys_break(struct thread *td, struct break_args *uap)
 }
 
 int
-kern_break(struct thread *td, vm_offset_t *addr)
+kern_break(struct thread *td, uintptr_t *addr)
 {
 	struct vmspace *vm = td->td_proc->p_vmspace;
 	vm_map_t map = &vm->vm_map;
