@@ -232,12 +232,6 @@ SUBDIR=	\
 	mac_seeotheruids \
 	mac_stub \
 	mac_test \
-	mac_veriexec \
-	mac_veriexec_rmd160 \
-	mac_veriexec_sha1 \
-	mac_veriexec_sha256 \
-	mac_veriexec_sha384 \
-	mac_veriexec_sha512 \
 	malo \
 	md \
 	mdio \
@@ -389,7 +383,6 @@ SUBDIR=	\
 	uinput \
 	unionfs \
 	usb \
-	veriexec \
 	${_vesa} \
 	${_virtio} \
 	vge \
@@ -488,12 +481,12 @@ SUBDIR+=	iscsi
 SUBDIR+=	iscsi_initiator
 .endif
 
-.if ${MK_LINUX_EMULATION} != "no" || defined(ALL_MODULES)
 .if ${MACHINE_CPUARCH} == "amd64"
 SUBDIR+=	linux64
 SUBDIR+=	linux_common
+.endif
 
-.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} != "amd64" || \
+.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "amd64" || \
     ${MACHINE_CPUARCH} == "i386"
 SUBDIR+=	linprocfs
 SUBDIR+=	linsysfs
@@ -501,7 +494,6 @@ SUBDIR+=	linsysfs
 
 .if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 SUBDIR+=	linux
-.endif
 .endif
 
 .if ${MK_NAND} != "no" || defined(ALL_MODULES)
