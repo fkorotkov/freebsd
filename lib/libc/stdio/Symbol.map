@@ -49,6 +49,7 @@ FBSD_1.0 {
 	fwscanf;
 	getc;
 	getchar;
+	gets;
 	getw;
 	getwc;
 	getwchar;
