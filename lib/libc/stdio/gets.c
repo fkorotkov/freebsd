@@ -45,7 +45,7 @@ __FBSDID("$FreeBSD$");
 #include "libc_private.h"
 #include "local.h"
 
-static char *
+char *
 __gets_unsafe(char *buf)
 {
 	int c;
