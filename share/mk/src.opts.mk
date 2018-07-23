@@ -142,6 +142,7 @@ __DEFAULT_YES_OPTIONS = \
     NLS_CATALOGS \
     NS_CACHING \
     NTP \
+    OFED \
     OPENSSL \
     PAM \
     PC_SYSINSTALL \
@@ -194,7 +195,7 @@ __DEFAULT_NO_OPTIONS = \
     LOADER_FIREWIRE \
     LOADER_FORCE_LE \
     NAND \
-    OFED \
+    OFED_EXTRA \
     OPENLDAP \
     RPCBIND_WARMSTART_SUPPORT \
     SENDMAIL \
@@ -307,11 +308,6 @@ BROKEN_OPTIONS+=BINUTILS_BOOTSTRAP
 .if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
 BROKEN_OPTIONS+=BINUTILS
 .endif
-.if ${__T:Mriscv*} != ""
-BROKEN_OPTIONS+=PROFILE # "sorry, unimplemented: profiler support for RISC-V"
-BROKEN_OPTIONS+=TESTS   # "undefined reference to `_Unwind_Resume'"
-BROKEN_OPTIONS+=CXX     # "libcxxrt.so: undefined reference to `_Unwind_Resume_or_Rethrow'"
-.endif
 .if ${__T} == "aarch64" || ${__T} == "amd64" || ${__T} == "i386" || \
     ${__T:Mriscv*} != "" || ${__TT} == "mips"
 __DEFAULT_YES_OPTIONS+=LLVM_LIBUNWIND
@@ -324,7 +320,7 @@ __DEFAULT_YES_OPTIONS+=LLDB
 __DEFAULT_NO_OPTIONS+=LLDB
 .endif
 # LLVM lacks support for FreeBSD 64-bit atomic operations for ARMv4/ARMv5
-.if ${__T} == "arm" || ${__T} == "armeb"
+.if ${__T} == "arm"
 BROKEN_OPTIONS+=LLDB
 .endif
 # Only doing soft float API stuff on armv6 and armv7
@@ -461,6 +457,10 @@ MK_KERBEROS:=	no
 
 .if ${MK_PF} == "no"
 MK_AUTHPF:=	no
+.endif
+
+.if ${MK_OFED} == "no"
+MK_OFED_EXTRA:=	no
 .endif
 
 .if ${MK_PORTSNAP} == "no"

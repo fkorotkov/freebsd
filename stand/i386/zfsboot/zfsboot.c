@@ -708,7 +708,9 @@ main(void)
     setheap(heap_next, heap_end);
 
     zdsk = malloc(sizeof(struct zfsdsk));
+#ifdef LOADER_GELI_SUPPORT
     zdsk->gdev = NULL;
+#endif
     zdsk->dsk.drive = *(uint8_t *)PTOV(ARGS);
     zdsk->dsk.type = zdsk->dsk.drive & DRV_HARD ? TYPE_AD : TYPE_FD;
     zdsk->dsk.unit = zdsk->dsk.drive & DRV_MASK;
@@ -846,7 +848,7 @@ main(void)
      */
 
     if (autoboot && !*kname) {
-	memcpy(kname, PATH_LOADER_ZFS, sizeof(PATH_LOADER_ZFS));
+	memcpy(kname, PATH_LOADER, sizeof(PATH_LOADER));
 	if (!keyhit(3)) {
 	    load();
 	    memcpy(kname, PATH_KERNEL, sizeof(PATH_KERNEL));
