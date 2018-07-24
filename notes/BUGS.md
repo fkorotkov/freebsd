@@ -8,7 +8,7 @@ lld uses extended branch encoding, no object with architecture supporting featur
 lld may use movt/movw, no object with architecture supporting feature detected.
 ```
 
-arm and armeb reports one additional error:
+arm reports one additional error:
 ```
 lld uses blx instruction, no object with architecture supporting feature detected.
 ```
@@ -22,13 +22,6 @@ ld: error: xxhash.c:(.ARM.exidx+0x68): relocation R_ARM_PREL31 out of range: -10
 See also a
 [mailing list post about movt/movw](https://lists.freebsd.org/pipermail/freebsd-arm/2018-January/017389.html)
 concerning armv7, although in practice it seems we do not emit movt/movw.
-
-An armeb build also emits many times
-```
-subsection length greater than section length
-```
-which comes from `ARMAttributeParser::ParseSubsection()` in
-_contrib/llvm/lib/Support/ARMAttributeParser.cpp_.
 
 ## powerpc buildworld
 All powerpc build worlds fail.
