@@ -254,7 +254,7 @@ linux_old_select(struct thread *td, struct linux_old_select_args *uap)
 		printf(ARGS(old_select, "%p"), uap->ptr);
 #endif
 
-	error = copyin(args->ptr, &linux_args, sizeof(linux_args));
+	error = copyin(uap->ptr, &linux_args, sizeof(linux_args));
 	if (error)
 		return (error);
 
