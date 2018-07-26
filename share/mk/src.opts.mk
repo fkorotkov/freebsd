@@ -308,6 +308,9 @@ BROKEN_OPTIONS+=BINUTILS_BOOTSTRAP
 .if ${__T} == "aarch64" || ${__T:Mriscv*} != ""
 BROKEN_OPTIONS+=BINUTILS
 .endif
+.if ${__T:Mriscv*} != ""
+BROKEN_OPTIONS+=OFED
+.endif
 .if ${__T} == "aarch64" || ${__T} == "amd64" || ${__T} == "i386" || \
     ${__T:Mriscv*} != "" || ${__TT} == "mips"
 __DEFAULT_YES_OPTIONS+=LLVM_LIBUNWIND
