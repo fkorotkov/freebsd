@@ -213,10 +213,25 @@ struct denode {
 	     ((dep)->de_Attributes & ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \
 	 putushort((dp)->deHighClust, (dep)->de_StartCluster >> 16))
 
-#ifdef _KERNEL
+#if defined(_KERNEL) || defined(MAKEFS)
 
 #define	VTODE(vp)	((struct denode *)(vp)->v_data)
 #define	DETOV(de)	((de)->de_vnode)
+
+#endif
+
+#ifdef MAKEFS
+
+struct buf;
+struct componentname;
+struct denode;
+struct direntry;
+struct msdosfsmount;
+struct ucred;
+
+#endif
+
+#ifdef _KERNEL
 
 #define	DETIMES(dep, acc, mod, cre) do {				\
 	if ((dep)->de_flag & DE_UPDATE) {				\
@@ -266,6 +281,9 @@ int msdosfs_lookup(struct vop_cachedlookup_args *);
 int msdosfs_inactive(struct vop_inactive_args *);
 int msdosfs_reclaim(struct vop_reclaim_args *);
 
+#endif
+
+#if defined(_KERNEL) || defined(MAKEFS)
 /*
  * Internal service routine prototypes.
  */

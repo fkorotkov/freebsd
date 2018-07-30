@@ -82,7 +82,7 @@
 
 #define	MSDOSFSEOF(pmp, cn)	((((cn) | ~(pmp)->pm_fatmask) & CLUST_EOFS) == CLUST_EOFS)
 
-#ifdef _KERNEL
+#if defined(_KERNEL) || defined(MAKEFS)
 /*
  * These are the values for the function argument to the function
  * fatentry().
