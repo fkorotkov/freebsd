@@ -244,7 +244,7 @@ cnt(const char *file)
 	 * If all we need is the number of characters and it's a regular file,
 	 * just stat it.
 	 */
-	if (doline == 0) {
+	if (doline == 0 && dolongline == 0) {
 		if (fstat(fd, &sb)) {
 			xo_warn("%s: fstat", file);
 			(void)close(fd);
@@ -274,7 +274,7 @@ cnt(const char *file)
 		if (siginfo)
 			show_cnt(file, linect, wordct, charct, llct);
 		charct += len;
-		if (doline) {
+		if (doline || dolongline) {
 			for (p = buf; len--; ++p)
 				if (*p == '\n') {
 					if (tmpll > llct)
@@ -290,10 +290,8 @@ cnt(const char *file)
 		tlinect += linect;
 	if (dochar)
 		tcharct += charct;
-	if (dolongline) {
-		if (llct > tlongline)
-			tlongline = llct;
-	}
+	if (dolongline && llct > tlongline)
+		tlongline = llct;
 	show_cnt(file, linect, wordct, charct, llct);
 	(void)close(fd);
 	return (0);
@@ -359,10 +357,8 @@ word:	gotsp = 1;
 		twordct += wordct;
 	if (dochar || domulti)
 		tcharct += charct;
-	if (dolongline) {
-		if (llct > tlongline)
-			tlongline = llct;
-	}
+	if (dolongline && llct > tlongline)
+		tlongline = llct;
 	show_cnt(file, linect, wordct, charct, llct);
 	(void)close(fd);
 	return (0);
