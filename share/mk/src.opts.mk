@@ -99,6 +99,7 @@ __DEFAULT_YES_OPTIONS = \
     FINGER \
     FLOPPY \
     FMTREE \
+    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \
@@ -186,7 +187,6 @@ __DEFAULT_YES_OPTIONS = \
 __DEFAULT_NO_OPTIONS = \
     BSD_GREP \
     DTRACE_TESTS \
-    FORTH \
     GNU_DIFF \
     GNU_GREP \
     GNU_GREP_COMPAT \
