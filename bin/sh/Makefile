@@ -63,7 +63,7 @@ token.h: mktokens
 HAS_TESTS=
 SUBDIR.${MK_TESTS}+= tests
 
-beforeinstall:
+beforeinstallconfig:
 	rm -f ${DESTDIR}/.profile
 
 afterinstallconfig:
