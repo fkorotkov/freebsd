@@ -1528,7 +1528,7 @@ vm_map_find_aslr_adjust(vm_map_t map, vm_offset_t *addr, vm_size_t length,
 	vm_map_lookup_entry(map, *addr, &prev_entry);
 	pidx = MAXPAGESIZES > 1 && pagesizes[1] != 0 && (find_space ==
 	    VMFS_SUPER_SPACE || find_space == VMFS_OPTIMAL_SPACE) ? 1 : 0;
-	re = prev_entry->next == &map->header ? map->max_offset :
+	re = prev_entry->next == &map->header ? vm_map_max(map) :
 	    prev_entry->next->start;
 	rand_max = max_addr != 0 && re > max_addr ? max_addr : re;
 	rand_max -= *addr + length;
