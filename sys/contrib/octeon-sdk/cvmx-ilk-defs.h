@@ -155,7 +155,7 @@ static inline uint64_t CVMX_ILK_RXF_MEM_PMAP_FUNC(void)
 static inline uint64_t CVMX_ILK_RXX_CFG0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_CFG0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020000ull) + ((offset) & 1) * 16384;
 }
@@ -166,7 +166,7 @@ static inline uint64_t CVMX_ILK_RXX_CFG0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_CFG1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_CFG1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020008ull) + ((offset) & 1) * 16384;
 }
@@ -177,7 +177,7 @@ static inline uint64_t CVMX_ILK_RXX_CFG1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_FLOW_CTL0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_FLOW_CTL0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020090ull) + ((offset) & 1) * 16384;
 }
@@ -188,7 +188,7 @@ static inline uint64_t CVMX_ILK_RXX_FLOW_CTL0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_FLOW_CTL1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_FLOW_CTL1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020098ull) + ((offset) & 1) * 16384;
 }
@@ -199,7 +199,7 @@ static inline uint64_t CVMX_ILK_RXX_FLOW_CTL1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_IDX_CAL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_IDX_CAL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800140200A0ull) + ((offset) & 1) * 16384;
 }
@@ -210,7 +210,7 @@ static inline uint64_t CVMX_ILK_RXX_IDX_CAL(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_IDX_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_IDX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020070ull) + ((offset) & 1) * 16384;
 }
@@ -221,7 +221,7 @@ static inline uint64_t CVMX_ILK_RXX_IDX_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_IDX_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_IDX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020078ull) + ((offset) & 1) * 16384;
 }
@@ -232,7 +232,7 @@ static inline uint64_t CVMX_ILK_RXX_IDX_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020010ull) + ((offset) & 1) * 16384;
 }
@@ -243,7 +243,7 @@ static inline uint64_t CVMX_ILK_RXX_INT(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_INT_EN(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_INT_EN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020018ull) + ((offset) & 1) * 16384;
 }
@@ -254,7 +254,7 @@ static inline uint64_t CVMX_ILK_RXX_INT_EN(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_JABBER(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_JABBER(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800140200B8ull) + ((offset) & 1) * 16384;
 }
@@ -265,7 +265,7 @@ static inline uint64_t CVMX_ILK_RXX_JABBER(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_MEM_CAL0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_MEM_CAL0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800140200A8ull) + ((offset) & 1) * 16384;
 }
@@ -276,7 +276,7 @@ static inline uint64_t CVMX_ILK_RXX_MEM_CAL0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_MEM_CAL1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_MEM_CAL1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800140200B0ull) + ((offset) & 1) * 16384;
 }
@@ -287,7 +287,7 @@ static inline uint64_t CVMX_ILK_RXX_MEM_CAL1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_MEM_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_MEM_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020080ull) + ((offset) & 1) * 16384;
 }
@@ -298,7 +298,7 @@ static inline uint64_t CVMX_ILK_RXX_MEM_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_MEM_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_MEM_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020088ull) + ((offset) & 1) * 16384;
 }
@@ -309,7 +309,7 @@ static inline uint64_t CVMX_ILK_RXX_MEM_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_RID(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_RID(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800140200C0ull) + ((offset) & 1) * 16384;
 }
@@ -320,7 +320,7 @@ static inline uint64_t CVMX_ILK_RXX_RID(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020020ull) + ((offset) & 1) * 16384;
 }
@@ -331,7 +331,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020028ull) + ((offset) & 1) * 16384;
 }
@@ -342,7 +342,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT2(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020030ull) + ((offset) & 1) * 16384;
 }
@@ -353,7 +353,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT2(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT3(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020038ull) + ((offset) & 1) * 16384;
 }
@@ -364,7 +364,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT3(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT4(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020040ull) + ((offset) & 1) * 16384;
 }
@@ -375,7 +375,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT4(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT5(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT5(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020048ull) + ((offset) & 1) * 16384;
 }
@@ -386,7 +386,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT5(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT6(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT6(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020050ull) + ((offset) & 1) * 16384;
 }
@@ -397,7 +397,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT6(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT7(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT7(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020058ull) + ((offset) & 1) * 16384;
 }
@@ -408,7 +408,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT7(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT8(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT8(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020060ull) + ((offset) & 1) * 16384;
 }
@@ -419,7 +419,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT8(unsigned long offset)
 static inline uint64_t CVMX_ILK_RXX_STAT9(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_RXX_STAT9(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014020068ull) + ((offset) & 1) * 16384;
 }
@@ -430,7 +430,7 @@ static inline uint64_t CVMX_ILK_RXX_STAT9(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_CFG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_CFG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038000ull) + ((offset) & 7) * 1024;
 }
@@ -441,7 +441,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_CFG(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038008ull) + ((offset) & 7) * 1024;
 }
@@ -452,7 +452,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_INT(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_INT_EN(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_INT_EN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038010ull) + ((offset) & 7) * 1024;
 }
@@ -463,7 +463,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_INT_EN(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038018ull) + ((offset) & 7) * 1024;
 }
@@ -474,7 +474,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038020ull) + ((offset) & 7) * 1024;
 }
@@ -485,7 +485,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT2(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038028ull) + ((offset) & 7) * 1024;
 }
@@ -496,7 +496,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT2(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT3(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038030ull) + ((offset) & 7) * 1024;
 }
@@ -507,7 +507,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT3(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT4(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038038ull) + ((offset) & 7) * 1024;
 }
@@ -518,7 +518,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT4(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT5(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT5(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038040ull) + ((offset) & 7) * 1024;
 }
@@ -529,7 +529,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT5(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT6(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT6(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038048ull) + ((offset) & 7) * 1024;
 }
@@ -540,7 +540,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT6(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT7(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT7(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038050ull) + ((offset) & 7) * 1024;
 }
@@ -551,7 +551,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT7(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT8(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT8(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038058ull) + ((offset) & 7) * 1024;
 }
@@ -562,7 +562,7 @@ static inline uint64_t CVMX_ILK_RX_LNEX_STAT8(unsigned long offset)
 static inline uint64_t CVMX_ILK_RX_LNEX_STAT9(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_ILK_RX_LNEX_STAT9(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014038060ull) + ((offset) & 7) * 1024;
 }
@@ -584,7 +584,7 @@ static inline uint64_t CVMX_ILK_SER_CFG_FUNC(void)
 static inline uint64_t CVMX_ILK_TXX_CFG0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_CFG0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010000ull) + ((offset) & 1) * 16384;
 }
@@ -595,7 +595,7 @@ static inline uint64_t CVMX_ILK_TXX_CFG0(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_CFG1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_CFG1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010008ull) + ((offset) & 1) * 16384;
 }
@@ -606,7 +606,7 @@ static inline uint64_t CVMX_ILK_TXX_CFG1(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_DBG(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_DBG(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010070ull) + ((offset) & 1) * 16384;
 }
@@ -617,7 +617,7 @@ static inline uint64_t CVMX_ILK_TXX_DBG(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_FLOW_CTL0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_FLOW_CTL0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010048ull) + ((offset) & 1) * 16384;
 }
@@ -628,7 +628,7 @@ static inline uint64_t CVMX_ILK_TXX_FLOW_CTL0(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_FLOW_CTL1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_FLOW_CTL1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010050ull) + ((offset) & 1) * 16384;
 }
@@ -639,7 +639,7 @@ static inline uint64_t CVMX_ILK_TXX_FLOW_CTL1(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_IDX_CAL(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_IDX_CAL(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010058ull) + ((offset) & 1) * 16384;
 }
@@ -650,7 +650,7 @@ static inline uint64_t CVMX_ILK_TXX_IDX_CAL(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_IDX_PMAP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_IDX_PMAP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010010ull) + ((offset) & 1) * 16384;
 }
@@ -661,7 +661,7 @@ static inline uint64_t CVMX_ILK_TXX_IDX_PMAP(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_IDX_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_IDX_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010020ull) + ((offset) & 1) * 16384;
 }
@@ -672,7 +672,7 @@ static inline uint64_t CVMX_ILK_TXX_IDX_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_IDX_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_IDX_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010028ull) + ((offset) & 1) * 16384;
 }
@@ -683,7 +683,7 @@ static inline uint64_t CVMX_ILK_TXX_IDX_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010078ull) + ((offset) & 1) * 16384;
 }
@@ -694,7 +694,7 @@ static inline uint64_t CVMX_ILK_TXX_INT(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_INT_EN(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_INT_EN(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010080ull) + ((offset) & 1) * 16384;
 }
@@ -705,7 +705,7 @@ static inline uint64_t CVMX_ILK_TXX_INT_EN(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_MEM_CAL0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_MEM_CAL0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010060ull) + ((offset) & 1) * 16384;
 }
@@ -716,7 +716,7 @@ static inline uint64_t CVMX_ILK_TXX_MEM_CAL0(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_MEM_CAL1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_MEM_CAL1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010068ull) + ((offset) & 1) * 16384;
 }
@@ -727,7 +727,7 @@ static inline uint64_t CVMX_ILK_TXX_MEM_CAL1(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_MEM_PMAP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_MEM_PMAP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010018ull) + ((offset) & 1) * 16384;
 }
@@ -738,7 +738,7 @@ static inline uint64_t CVMX_ILK_TXX_MEM_PMAP(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_MEM_STAT0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_MEM_STAT0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010030ull) + ((offset) & 1) * 16384;
 }
@@ -749,7 +749,7 @@ static inline uint64_t CVMX_ILK_TXX_MEM_STAT0(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_MEM_STAT1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_MEM_STAT1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010038ull) + ((offset) & 1) * 16384;
 }
@@ -760,7 +760,7 @@ static inline uint64_t CVMX_ILK_TXX_MEM_STAT1(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_PIPE(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_PIPE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010088ull) + ((offset) & 1) * 16384;
 }
@@ -771,7 +771,7 @@ static inline uint64_t CVMX_ILK_TXX_PIPE(unsigned long offset)
 static inline uint64_t CVMX_ILK_TXX_RMATCH(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ILK_TXX_RMATCH(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180014010040ull) + ((offset) & 1) * 16384;
 }

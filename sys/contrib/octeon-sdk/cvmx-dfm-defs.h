@@ -309,8 +309,8 @@ static inline uint64_t CVMX_DFM_RLEVEL_DBG_FUNC(void)
 static inline uint64_t CVMX_DFM_RLEVEL_RANKX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (offset <= 1)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DFM_RLEVEL_RANKX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800D4000280ull) + ((offset) & 1) * 8;
 }
@@ -398,8 +398,8 @@ static inline uint64_t CVMX_DFM_WLEVEL_DBG_FUNC(void)
 static inline uint64_t CVMX_DFM_WLEVEL_RANKX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (offset <= 1)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_DFM_WLEVEL_RANKX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800D40002B0ull) + ((offset) & 1) * 8;
 }

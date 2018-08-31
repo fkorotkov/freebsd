@@ -56,16 +56,16 @@
 static inline uint64_t CVMX_TRAX_BIST_STATUS(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_BIST_STATUS(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000010ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -76,16 +76,16 @@ static inline uint64_t CVMX_TRAX_BIST_STATUS(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000000ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -96,16 +96,16 @@ static inline uint64_t CVMX_TRAX_CTL(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_CYCLES_SINCE(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_CYCLES_SINCE(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000018ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -116,14 +116,14 @@ static inline uint64_t CVMX_TRAX_CYCLES_SINCE(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_CYCLES_SINCE1(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_CYCLES_SINCE1(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000028ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -134,16 +134,16 @@ static inline uint64_t CVMX_TRAX_CYCLES_SINCE1(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_FILT_ADR_ADR(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_FILT_ADR_ADR(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000058ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -154,16 +154,16 @@ static inline uint64_t CVMX_TRAX_FILT_ADR_ADR(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_FILT_ADR_MSK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_FILT_ADR_MSK(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000060ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -174,16 +174,16 @@ static inline uint64_t CVMX_TRAX_FILT_ADR_MSK(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_FILT_CMD(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_FILT_CMD(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000040ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -194,16 +194,16 @@ static inline uint64_t CVMX_TRAX_FILT_CMD(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_FILT_DID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_FILT_DID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000050ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -214,16 +214,16 @@ static inline uint64_t CVMX_TRAX_FILT_DID(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_FILT_SID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_FILT_SID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000048ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -234,16 +234,16 @@ static inline uint64_t CVMX_TRAX_FILT_SID(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_INT_STATUS(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_INT_STATUS(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000008ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -254,16 +254,16 @@ static inline uint64_t CVMX_TRAX_INT_STATUS(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_READ_DAT(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_READ_DAT(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000020ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -274,11 +274,11 @@ static inline uint64_t CVMX_TRAX_READ_DAT(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_READ_DAT_HI(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_READ_DAT_HI(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000030ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -289,16 +289,16 @@ static inline uint64_t CVMX_TRAX_READ_DAT_HI(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG0_ADR_ADR(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG0_ADR_ADR(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000098ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -309,16 +309,16 @@ static inline uint64_t CVMX_TRAX_TRIG0_ADR_ADR(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG0_ADR_MSK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG0_ADR_MSK(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000A0ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -329,16 +329,16 @@ static inline uint64_t CVMX_TRAX_TRIG0_ADR_MSK(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG0_CMD(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG0_CMD(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000080ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -349,16 +349,16 @@ static inline uint64_t CVMX_TRAX_TRIG0_CMD(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG0_DID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG0_DID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000090ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -369,16 +369,16 @@ static inline uint64_t CVMX_TRAX_TRIG0_DID(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG0_SID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG0_SID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A8000088ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -389,16 +389,16 @@ static inline uint64_t CVMX_TRAX_TRIG0_SID(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG1_ADR_ADR(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG1_ADR_ADR(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000D8ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -409,16 +409,16 @@ static inline uint64_t CVMX_TRAX_TRIG1_ADR_ADR(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG1_ADR_MSK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG1_ADR_MSK(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000E0ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -429,16 +429,16 @@ static inline uint64_t CVMX_TRAX_TRIG1_ADR_MSK(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG1_CMD(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG1_CMD(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000C0ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -449,16 +449,16 @@ static inline uint64_t CVMX_TRAX_TRIG1_CMD(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG1_DID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG1_DID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000D0ull) + ((block_id) & 3) * 0x100000ull;
 }
@@ -469,16 +469,16 @@ static inline uint64_t CVMX_TRAX_TRIG1_DID(unsigned long block_id)
 static inline uint64_t CVMX_TRAX_TRIG1_SID(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id <= 3))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_TRAX_TRIG1_SID(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x00011800A80000C8ull) + ((block_id) & 3) * 0x100000ull;
 }

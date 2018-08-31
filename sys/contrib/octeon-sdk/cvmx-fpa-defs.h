@@ -169,10 +169,10 @@ static inline uint64_t CVMX_FPA_PACKET_THRESHOLD_FUNC(void)
 static inline uint64_t CVMX_FPA_POOLX_END_ADDR(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_FPA_POOLX_END_ADDR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180028000358ull) + ((offset) & 15) * 8;
 }
@@ -183,10 +183,10 @@ static inline uint64_t CVMX_FPA_POOLX_END_ADDR(unsigned long offset)
 static inline uint64_t CVMX_FPA_POOLX_START_ADDR(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_FPA_POOLX_START_ADDR(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180028000258ull) + ((offset) & 15) * 8;
 }
@@ -197,11 +197,11 @@ static inline uint64_t CVMX_FPA_POOLX_START_ADDR(unsigned long offset)
 static inline uint64_t CVMX_FPA_POOLX_THRESHOLD(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_FPA_POOLX_THRESHOLD(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180028000140ull) + ((offset) & 15) * 8;
 }
@@ -231,18 +231,18 @@ static inline uint64_t CVMX_FPA_QUE8_PAGE_INDEX_FUNC(void)
 static inline uint64_t CVMX_FPA_QUEX_AVAILABLE(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_FPA_QUEX_AVAILABLE(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180028000098ull) + ((offset) & 15) * 8;
 }
@@ -253,18 +253,18 @@ static inline uint64_t CVMX_FPA_QUEX_AVAILABLE(unsigned long offset)
 static inline uint64_t CVMX_FPA_QUEX_PAGE_INDEX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_FPA_QUEX_PAGE_INDEX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00011800280000F0ull) + ((offset) & 7) * 8;
 }

@@ -164,8 +164,8 @@ static inline uint64_t CVMX_STXX_MIN_BST(unsigned long block_id)
 static inline uint64_t CVMX_STXX_SPI4_CALX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((offset <= 31) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((offset <= 31) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (((offset <= 31)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (((offset <= 31)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_STXX_SPI4_CALX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x0001180090000400ull) + (((offset) & 31) + ((block_id) & 1) * 0x1000000ull) * 8;
 }

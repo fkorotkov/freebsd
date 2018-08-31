@@ -100,7 +100,7 @@ static inline uint64_t CVMX_ZIP_CONSTANTS_FUNC(void)
 static inline uint64_t CVMX_ZIP_COREX_BIST_STATUS(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_COREX_BIST_STATUS(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000520ull) + ((offset) & 1) * 8;
 }
@@ -133,7 +133,7 @@ static inline uint64_t CVMX_ZIP_CTL_CFG_FUNC(void)
 static inline uint64_t CVMX_ZIP_DBG_COREX_INST(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_DBG_COREX_INST(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000640ull) + ((offset) & 1) * 8;
 }
@@ -144,7 +144,7 @@ static inline uint64_t CVMX_ZIP_DBG_COREX_INST(unsigned long offset)
 static inline uint64_t CVMX_ZIP_DBG_COREX_STA(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_DBG_COREX_STA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000680ull) + ((offset) & 1) * 8;
 }
@@ -155,7 +155,7 @@ static inline uint64_t CVMX_ZIP_DBG_COREX_STA(unsigned long offset)
 static inline uint64_t CVMX_ZIP_DBG_QUEX_STA(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_DBG_QUEX_STA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000600ull) + ((offset) & 1) * 8;
 }
@@ -232,7 +232,7 @@ static inline uint64_t CVMX_ZIP_INT_REG_FUNC(void)
 static inline uint64_t CVMX_ZIP_QUEX_BUF(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_QUEX_BUF(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000100ull) + ((offset) & 1) * 8;
 }
@@ -243,7 +243,7 @@ static inline uint64_t CVMX_ZIP_QUEX_BUF(unsigned long offset)
 static inline uint64_t CVMX_ZIP_QUEX_ECC_ERR_STA(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_QUEX_ECC_ERR_STA(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000590ull) + ((offset) & 1) * 8;
 }
@@ -254,7 +254,7 @@ static inline uint64_t CVMX_ZIP_QUEX_ECC_ERR_STA(unsigned long offset)
 static inline uint64_t CVMX_ZIP_QUEX_MAP(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_ZIP_QUEX_MAP(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180038000300ull) + ((offset) & 1) * 8;
 }

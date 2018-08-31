@@ -56,22 +56,22 @@ static inline uint64_t CVMX_PCSX_ANX_ADV_REG(unsigned long offset, unsigned long
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001010ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001010ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001010ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001010ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -82,22 +82,22 @@ static inline uint64_t CVMX_PCSX_ANX_EXT_ST_REG(unsigned long offset, unsigned l
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001028ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001028ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001028ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001028ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -108,22 +108,22 @@ static inline uint64_t CVMX_PCSX_ANX_LP_ABIL_REG(unsigned long offset, unsigned 
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001018ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001018ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001018ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001018ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -134,22 +134,22 @@ static inline uint64_t CVMX_PCSX_ANX_RESULTS_REG(unsigned long offset, unsigned 
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001020ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001020ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001020ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001020ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -160,22 +160,22 @@ static inline uint64_t CVMX_PCSX_INTX_EN_REG(unsigned long offset, unsigned long
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001088ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001088ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001088ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001088ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -186,22 +186,22 @@ static inline uint64_t CVMX_PCSX_INTX_REG(unsigned long offset, unsigned long bl
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001080ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001080ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001080ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001080ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -212,22 +212,22 @@ static inline uint64_t CVMX_PCSX_LINKX_TIMER_COUNT_REG(unsigned long offset, uns
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001040ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001040ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001040ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001040ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -238,22 +238,22 @@ static inline uint64_t CVMX_PCSX_LOG_ANLX_REG(unsigned long offset, unsigned lon
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001090ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001090ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001090ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001090ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -264,22 +264,22 @@ static inline uint64_t CVMX_PCSX_MISCX_CTL_REG(unsigned long offset, unsigned lo
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001078ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001078ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001078ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001078ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -290,22 +290,22 @@ static inline uint64_t CVMX_PCSX_MRX_CONTROL_REG(unsigned long offset, unsigned 
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001000ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001000ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001000ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001000ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -316,22 +316,22 @@ static inline uint64_t CVMX_PCSX_MRX_STATUS_REG(unsigned long offset, unsigned l
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001008ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001008ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001008ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001008ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -342,22 +342,22 @@ static inline uint64_t CVMX_PCSX_RXX_STATES_REG(unsigned long offset, unsigned l
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001058ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001058ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001058ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001058ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -368,22 +368,22 @@ static inline uint64_t CVMX_PCSX_RXX_SYNC_REG(unsigned long offset, unsigned lon
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001050ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001050ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001050ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001050ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -394,22 +394,22 @@ static inline uint64_t CVMX_PCSX_SGMX_AN_ADV_REG(unsigned long offset, unsigned 
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001068ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001068ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001068ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001068ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -420,22 +420,22 @@ static inline uint64_t CVMX_PCSX_SGMX_LP_ADV_REG(unsigned long offset, unsigned 
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001070ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001070ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001070ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001070ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -446,22 +446,22 @@ static inline uint64_t CVMX_PCSX_TXX_STATES_REG(unsigned long offset, unsigned l
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001060ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001060ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001060ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001060ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}
@@ -472,22 +472,22 @@ static inline uint64_t CVMX_PCSX_TX_RXX_POLARITY_REG(unsigned long offset, unsig
 {
 	switch(cvmx_get_octeon_family()) {
 		case OCTEON_CNF71XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 1) && (block_id == 0))
+			if (((offset <= 1)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001048ull) + (((offset) & 1) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN63XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN52XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && (block_id == 0))
+			if (((offset <= 3)) && ((block_id == 0)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001048ull) + (((offset) & 3) + ((block_id) & 0) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN56XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN66XX & OCTEON_FAMILY_MASK:
 		case OCTEON_CN61XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 1)))
+			if (((offset <= 3)) && ((block_id <= 1)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001048ull) + (((offset) & 3) + ((block_id) & 1) * 0x20000ull) * 1024;
 			break;
 		case OCTEON_CN68XX & OCTEON_FAMILY_MASK:
-			if ((offset <= 3) && ((block_id <= 4)))
+			if (((offset <= 3)) && ((block_id <= 4)))
 				return CVMX_ADD_IO_SEG(0x00011800B0001048ull) + (((offset) & 3) + ((block_id) & 7) * 0x4000ull) * 1024;
 			break;
 	}

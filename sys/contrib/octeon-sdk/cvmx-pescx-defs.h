@@ -212,8 +212,8 @@ static inline uint64_t CVMX_PESCX_P2N_BAR2_START(unsigned long block_id)
 static inline uint64_t CVMX_PESCX_P2P_BARX_END(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((offset <= 3) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((offset <= 3) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (((offset <= 3)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PESCX_P2P_BARX_END(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800C8000048ull) + (((offset) & 3) + ((block_id) & 1) * 0x800000ull) * 16;
 }
@@ -224,8 +224,8 @@ static inline uint64_t CVMX_PESCX_P2P_BARX_END(unsigned long offset, unsigned lo
 static inline uint64_t CVMX_PESCX_P2P_BARX_START(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((offset <= 3) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((offset <= 3) && ((block_id <= 1))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (((offset <= 3)) && ((block_id <= 1))))))
 		cvmx_warn("CVMX_PESCX_P2P_BARX_START(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x00011800C8000040ull) + (((offset) & 3) + ((block_id) & 1) * 0x800000ull) * 16;
 }

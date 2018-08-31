@@ -1365,7 +1365,7 @@ static inline uint64_t CVMX_CIU2_MSIRED_PPX_IP4(unsigned long block_id)
 static inline uint64_t CVMX_CIU2_MSI_RCVX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 255))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 255)))))
 		cvmx_warn("CVMX_CIU2_MSI_RCVX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00010701000C2000ull) + ((offset) & 255) * 8;
 }
@@ -1376,7 +1376,7 @@ static inline uint64_t CVMX_CIU2_MSI_RCVX(unsigned long offset)
 static inline uint64_t CVMX_CIU2_MSI_SELX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 255))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 255)))))
 		cvmx_warn("CVMX_CIU2_MSI_SELX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x00010701000C3000ull) + ((offset) & 255) * 8;
 }
@@ -2135,7 +2135,7 @@ static inline uint64_t CVMX_CIU2_SRC_PPX_IP4_WRKQ(unsigned long block_id)
 static inline uint64_t CVMX_CIU2_SUM_IOX_INT(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_CIU2_SUM_IOX_INT(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070100000800ull) + ((offset) & 1) * 8;
 }
@@ -2146,7 +2146,7 @@ static inline uint64_t CVMX_CIU2_SUM_IOX_INT(unsigned long offset)
 static inline uint64_t CVMX_CIU2_SUM_PPX_IP2(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 31))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_CIU2_SUM_PPX_IP2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070100000000ull) + ((offset) & 31) * 8;
 }
@@ -2157,7 +2157,7 @@ static inline uint64_t CVMX_CIU2_SUM_PPX_IP2(unsigned long offset)
 static inline uint64_t CVMX_CIU2_SUM_PPX_IP3(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 31))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_CIU2_SUM_PPX_IP3(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070100000200ull) + ((offset) & 31) * 8;
 }
@@ -2168,7 +2168,7 @@ static inline uint64_t CVMX_CIU2_SUM_PPX_IP3(unsigned long offset)
 static inline uint64_t CVMX_CIU2_SUM_PPX_IP4(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 31))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_CIU2_SUM_PPX_IP4(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070100000400ull) + ((offset) & 31) * 8;
 }

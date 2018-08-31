@@ -56,11 +56,11 @@
 static inline uint64_t CVMX_UCTLX_BIST_STATUS(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_BIST_STATUS(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F0000A0ull);
 }
@@ -71,11 +71,11 @@ static inline uint64_t CVMX_UCTLX_BIST_STATUS(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_CLK_RST_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_CLK_RST_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000000ull);
 }
@@ -86,11 +86,11 @@ static inline uint64_t CVMX_UCTLX_CLK_RST_CTL(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_EHCI_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_EHCI_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000080ull);
 }
@@ -101,11 +101,11 @@ static inline uint64_t CVMX_UCTLX_EHCI_CTL(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_EHCI_FLA(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_EHCI_FLA(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F0000A8ull);
 }
@@ -116,11 +116,11 @@ static inline uint64_t CVMX_UCTLX_EHCI_FLA(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_ERTO_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_ERTO_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000090ull);
 }
@@ -131,11 +131,11 @@ static inline uint64_t CVMX_UCTLX_ERTO_CTL(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_IF_ENA(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_IF_ENA(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000030ull);
 }
@@ -146,11 +146,11 @@ static inline uint64_t CVMX_UCTLX_IF_ENA(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_INT_ENA(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_INT_ENA(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000028ull);
 }
@@ -161,11 +161,11 @@ static inline uint64_t CVMX_UCTLX_INT_ENA(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_INT_REG(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_INT_REG(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000020ull);
 }
@@ -176,11 +176,11 @@ static inline uint64_t CVMX_UCTLX_INT_REG(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_OHCI_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_OHCI_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000088ull);
 }
@@ -191,11 +191,11 @@ static inline uint64_t CVMX_UCTLX_OHCI_CTL(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_ORTO_CTL(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_ORTO_CTL(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000098ull);
 }
@@ -206,10 +206,10 @@ static inline uint64_t CVMX_UCTLX_ORTO_CTL(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_PPAF_WM(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_PPAF_WM(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000038ull);
 }
@@ -220,11 +220,11 @@ static inline uint64_t CVMX_UCTLX_PPAF_WM(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_UPHY_CTL_STATUS(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (block_id == 0))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((block_id == 0)))))
 		cvmx_warn("CVMX_UCTLX_UPHY_CTL_STATUS(%lu) is invalid on this chip\n", block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000008ull);
 }
@@ -235,11 +235,11 @@ static inline uint64_t CVMX_UCTLX_UPHY_CTL_STATUS(unsigned long block_id)
 static inline uint64_t CVMX_UCTLX_UPHY_PORTX_CTL_STATUS(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 1) && (block_id == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 1) && (block_id == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 1) && (block_id == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1) && (block_id == 0))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 1) && (block_id == 0)))))
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (((offset <= 1)) && ((block_id == 0)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (((offset <= 1)) && ((block_id == 0))))))
 		cvmx_warn("CVMX_UCTLX_UPHY_PORTX_CTL_STATUS(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return CVMX_ADD_IO_SEG(0x000118006F000010ull) + (((offset) & 1) + ((block_id) & 0) * 0x0ull) * 8;
 }

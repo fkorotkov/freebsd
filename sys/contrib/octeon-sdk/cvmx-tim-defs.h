@@ -299,7 +299,7 @@ static inline uint64_t CVMX_TIM_REG_READ_IDX_FUNC(void)
 static inline uint64_t CVMX_TIM_RINGX_CTL0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_TIM_RINGX_CTL0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180058002000ull) + ((offset) & 63) * 8;
 }
@@ -310,7 +310,7 @@ static inline uint64_t CVMX_TIM_RINGX_CTL0(unsigned long offset)
 static inline uint64_t CVMX_TIM_RINGX_CTL1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_TIM_RINGX_CTL1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180058002400ull) + ((offset) & 63) * 8;
 }
@@ -321,7 +321,7 @@ static inline uint64_t CVMX_TIM_RINGX_CTL1(unsigned long offset)
 static inline uint64_t CVMX_TIM_RINGX_CTL2(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_TIM_RINGX_CTL2(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180058002800ull) + ((offset) & 63) * 8;
 }
@@ -332,7 +332,7 @@ static inline uint64_t CVMX_TIM_RINGX_CTL2(unsigned long offset)
 static inline uint64_t CVMX_TIM_RINGX_DBG0(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_TIM_RINGX_DBG0(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180058003000ull) + ((offset) & 63) * 8;
 }
@@ -343,7 +343,7 @@ static inline uint64_t CVMX_TIM_RINGX_DBG0(unsigned long offset)
 static inline uint64_t CVMX_TIM_RINGX_DBG1(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_TIM_RINGX_DBG1(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180058001200ull) + ((offset) & 63) * 8;
 }

@@ -217,8 +217,8 @@ static inline uint64_t CVMX_PKO_MEM_THROTTLE_PIPE_FUNC(void)
 static inline uint64_t CVMX_PKO_REG_CRC_CTLX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (offset <= 1)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKO_REG_CRC_CTLX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180050000028ull) + ((offset) & 1) * 8;
 }
@@ -240,8 +240,8 @@ static inline uint64_t CVMX_PKO_REG_CRC_ENABLE_FUNC(void)
 static inline uint64_t CVMX_PKO_REG_CRC_IVX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && (offset <= 1)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN38XX) && ((offset <= 1))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN58XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKO_REG_CRC_IVX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180050000038ull) + ((offset) & 1) * 8;
 }
@@ -319,7 +319,7 @@ static inline uint64_t CVMX_PKO_REG_ENGINE_INFLIGHT1_FUNC(void)
 static inline uint64_t CVMX_PKO_REG_ENGINE_STORAGEX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 1))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 1)))))
 		cvmx_warn("CVMX_PKO_REG_ENGINE_STORAGEX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001180050000300ull) + ((offset) & 1) * 8;
 }

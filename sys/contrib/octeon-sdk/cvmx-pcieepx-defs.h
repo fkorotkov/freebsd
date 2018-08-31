@@ -56,8 +56,8 @@
 static inline uint64_t CVMX_PCIEEPX_CFG000(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -73,8 +73,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG000(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG001(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -90,8 +90,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG001(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG002(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -107,8 +107,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG002(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG003(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -124,8 +124,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG003(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG004(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -141,8 +141,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG004(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG004_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -158,8 +158,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG004_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG005(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -175,8 +175,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG005(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG005_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -192,8 +192,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG005_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG006(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -209,8 +209,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG006(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG006_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -226,8 +226,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG006_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG007(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -243,8 +243,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG007(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG007_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -260,8 +260,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG007_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG008(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -277,8 +277,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG008(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG008_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -294,8 +294,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG008_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG009(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -311,8 +311,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG009(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG009_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -328,8 +328,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG009_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG010(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -345,8 +345,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG010(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG011(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -362,8 +362,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG011(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG012(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -379,8 +379,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG012(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG012_MASK(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -396,8 +396,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG012_MASK(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG013(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -413,8 +413,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG013(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG015(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -430,8 +430,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG015(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG016(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -447,8 +447,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG016(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG017(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -464,8 +464,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG017(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG020(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -481,8 +481,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG020(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG021(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -498,8 +498,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG021(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG022(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -515,8 +515,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG022(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG023(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -532,8 +532,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG023(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG028(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -549,8 +549,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG028(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG029(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -566,8 +566,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG029(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG030(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -583,8 +583,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG030(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG031(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -600,8 +600,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG031(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG032(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -617,8 +617,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG032(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG033(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1)))))
 		cvmx_warn("CVMX_PCIEEPX_CFG033(%lu) is invalid on this chip\n", block_id);
 	return 0x0000000000000084ull;
@@ -630,8 +630,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG033(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG034(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1)))))
 		cvmx_warn("CVMX_PCIEEPX_CFG034(%lu) is invalid on this chip\n", block_id);
 	return 0x0000000000000088ull;
@@ -643,8 +643,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG034(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG037(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -660,8 +660,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG037(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG038(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -677,8 +677,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG038(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG039(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -694,8 +694,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG039(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG040(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -711,8 +711,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG040(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG041(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1)))))
 		cvmx_warn("CVMX_PCIEEPX_CFG041(%lu) is invalid on this chip\n", block_id);
 	return 0x00000000000000A4ull;
@@ -724,8 +724,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG041(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG042(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1)))))
 		cvmx_warn("CVMX_PCIEEPX_CFG042(%lu) is invalid on this chip\n", block_id);
 	return 0x00000000000000A8ull;
@@ -737,8 +737,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG042(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG064(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -754,8 +754,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG064(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG065(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -771,8 +771,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG065(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG066(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -788,8 +788,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG066(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG067(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -805,8 +805,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG067(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG068(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -822,8 +822,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG068(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG069(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -839,8 +839,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG069(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG070(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -856,8 +856,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG070(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG071(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -873,8 +873,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG071(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG072(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -890,8 +890,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG072(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG073(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -907,8 +907,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG073(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG074(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -924,8 +924,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG074(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG448(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -941,8 +941,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG448(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG449(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -958,8 +958,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG449(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG450(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -975,8 +975,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG450(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG451(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -992,8 +992,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG451(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG452(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1009,8 +1009,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG452(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG453(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1026,8 +1026,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG453(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG454(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1043,8 +1043,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG454(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG455(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1060,8 +1060,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG455(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG456(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1077,8 +1077,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG456(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG458(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1094,8 +1094,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG458(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG459(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1111,8 +1111,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG459(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG460(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1128,8 +1128,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG460(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG461(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1145,8 +1145,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG461(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG462(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1162,8 +1162,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG462(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG463(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1179,8 +1179,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG463(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG464(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1196,8 +1196,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG464(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG465(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1213,8 +1213,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG465(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG466(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1230,8 +1230,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG466(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG467(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1247,8 +1247,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG467(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG468(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1264,8 +1264,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG468(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG490(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1281,8 +1281,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG490(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG491(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1298,8 +1298,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG491(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG492(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1330,8 +1330,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG515(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG516(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||
@@ -1347,8 +1347,8 @@ static inline uint64_t CVMX_PCIEEPX_CFG516(unsigned long block_id)
 static inline uint64_t CVMX_PCIEEPX_CFG517(unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && (block_id == 0)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && (block_id == 0)) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN52XX) && ((block_id == 0))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN56XX) && ((block_id == 0))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((block_id <= 1))) ||
 	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((block_id <= 1))) ||

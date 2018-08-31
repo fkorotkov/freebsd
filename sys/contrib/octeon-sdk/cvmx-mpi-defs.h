@@ -67,12 +67,12 @@ static inline uint64_t CVMX_MPI_CFG_FUNC(void)
 static inline uint64_t CVMX_MPI_DATX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (offset <= 8)) ||
-	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && (offset <= 8))))
+	      (OCTEON_IS_MODEL(OCTEON_CN30XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN31XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN50XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN61XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 8))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CNF71XX) && ((offset <= 8)))))
 		cvmx_warn("CVMX_MPI_DATX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001070000001080ull) + ((offset) & 15) * 8;
 }

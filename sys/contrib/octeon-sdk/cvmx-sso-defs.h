@@ -188,7 +188,7 @@ static inline uint64_t CVMX_SSO_IDX_ECC_ST_FUNC(void)
 static inline uint64_t CVMX_SSO_IQ_CNTX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_IQ_CNTX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000009000ull) + ((offset) & 7) * 8;
 }
@@ -232,7 +232,7 @@ static inline uint64_t CVMX_SSO_IQ_INT_EN_FUNC(void)
 static inline uint64_t CVMX_SSO_IQ_THRX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_IQ_THRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000167000000A000ull) + ((offset) & 7) * 8;
 }
@@ -309,7 +309,7 @@ static inline uint64_t CVMX_SSO_PND_ECC_ST_FUNC(void)
 static inline uint64_t CVMX_SSO_PPX_GRP_MSK(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 31))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_SSO_PPX_GRP_MSK(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000006000ull) + ((offset) & 31) * 8;
 }
@@ -320,7 +320,7 @@ static inline uint64_t CVMX_SSO_PPX_GRP_MSK(unsigned long offset)
 static inline uint64_t CVMX_SSO_PPX_QOS_PRI(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 31))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 31)))))
 		cvmx_warn("CVMX_SSO_PPX_QOS_PRI(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000003000ull) + ((offset) & 31) * 8;
 }
@@ -342,7 +342,7 @@ static inline uint64_t CVMX_SSO_PP_STRICT_FUNC(void)
 static inline uint64_t CVMX_SSO_QOSX_RND(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_QOSX_RND(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000002000ull) + ((offset) & 7) * 8;
 }
@@ -353,7 +353,7 @@ static inline uint64_t CVMX_SSO_QOSX_RND(unsigned long offset)
 static inline uint64_t CVMX_SSO_QOS_THRX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_QOS_THRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000167000000B000ull) + ((offset) & 7) * 8;
 }
@@ -386,7 +386,7 @@ static inline uint64_t CVMX_SSO_RESET_FUNC(void)
 static inline uint64_t CVMX_SSO_RWQ_HEAD_PTRX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_RWQ_HEAD_PTRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000167000000C000ull) + ((offset) & 7) * 8;
 }
@@ -419,7 +419,7 @@ static inline uint64_t CVMX_SSO_RWQ_PSH_FPTR_FUNC(void)
 static inline uint64_t CVMX_SSO_RWQ_TAIL_PTRX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_RWQ_TAIL_PTRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x000167000000C200ull) + ((offset) & 7) * 8;
 }
@@ -452,7 +452,7 @@ static inline uint64_t CVMX_SSO_WA_COM_PC_FUNC(void)
 static inline uint64_t CVMX_SSO_WA_PCX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 7))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 7)))))
 		cvmx_warn("CVMX_SSO_WA_PCX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000005000ull) + ((offset) & 7) * 8;
 }
@@ -474,7 +474,7 @@ static inline uint64_t CVMX_SSO_WQ_INT_FUNC(void)
 static inline uint64_t CVMX_SSO_WQ_INT_CNTX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_SSO_WQ_INT_CNTX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000008000ull) + ((offset) & 63) * 8;
 }
@@ -496,7 +496,7 @@ static inline uint64_t CVMX_SSO_WQ_INT_PC_FUNC(void)
 static inline uint64_t CVMX_SSO_WQ_INT_THRX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_SSO_WQ_INT_THRX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000007000ull) + ((offset) & 63) * 8;
 }
@@ -518,7 +518,7 @@ static inline uint64_t CVMX_SSO_WQ_IQ_DIS_FUNC(void)
 static inline uint64_t CVMX_SSO_WS_PCX(unsigned long offset)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && (offset <= 63))))
+	      (OCTEON_IS_MODEL(OCTEON_CN68XX) && ((offset <= 63)))))
 		cvmx_warn("CVMX_SSO_WS_PCX(%lu) is invalid on this chip\n", offset);
 	return CVMX_ADD_IO_SEG(0x0001670000004000ull) + ((offset) & 63) * 8;
 }

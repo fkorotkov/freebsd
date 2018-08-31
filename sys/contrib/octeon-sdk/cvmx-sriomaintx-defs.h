@@ -80,8 +80,8 @@ static inline uint64_t CVMX_SRIOMAINTX_ASMBLY_INFO(unsigned long block_id)
 static inline uint64_t CVMX_SRIOMAINTX_BAR1_IDXX(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 15) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 15) && ((block_id == 0) || (block_id == 2) || (block_id == 3))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (((offset <= 15)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (((offset <= 15)) && ((block_id == 0) || (block_id == 2) || (block_id == 3))))))
 		cvmx_warn("CVMX_SRIOMAINTX_BAR1_IDXX(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return 0x0000000000200010ull + (((offset) & 15) + ((block_id) & 3) * 0x0ull) * 4;
 }
@@ -524,8 +524,8 @@ static inline uint64_t CVMX_SRIOMAINTX_IR_SP_TX_STAT(unsigned long block_id)
 static inline uint64_t CVMX_SRIOMAINTX_LANE_X_STATUS_0(unsigned long offset, unsigned long block_id)
 {
 	if (!(
-	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && ((offset <= 3) && ((block_id <= 1)))) ||
-	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && ((offset <= 3) && ((block_id == 0) || (block_id == 2) || (block_id == 3))))))
+	      (OCTEON_IS_MODEL(OCTEON_CN63XX) && (((offset <= 3)) && ((block_id <= 1)))) ||
+	      (OCTEON_IS_MODEL(OCTEON_CN66XX) && (((offset <= 3)) && ((block_id == 0) || (block_id == 2) || (block_id == 3))))))
 		cvmx_warn("CVMX_SRIOMAINTX_LANE_X_STATUS_0(%lu,%lu) is invalid on this chip\n", offset, block_id);
 	return 0x0000000000001010ull + (((offset) & 3) + ((block_id) & 3) * 0x0ull) * 32;
 }
