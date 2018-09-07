@@ -7858,7 +7858,6 @@ OLD_FILES+=usr/bin/nm
 OLD_FILES+=usr/bin/objcopy
 OLD_FILES+=usr/bin/readelf
 OLD_FILES+=usr/bin/size
-OLD_FILES+=usr/bin/strings
 OLD_FILES+=usr/bin/strip
 OLD_FILES+=usr/bin/yacc
 OLD_FILES+=usr/share/man/man1/addr2line.1.gz
@@ -7866,7 +7865,6 @@ OLD_FILES+=usr/share/man/man1/c++filt.1.gz
 OLD_FILES+=usr/share/man/man1/nm.1.gz
 OLD_FILES+=usr/share/man/man1/readelf.1.gz
 OLD_FILES+=usr/share/man/man1/size.1.gz
-OLD_FILES+=usr/share/man/man1/strings.1.gz
 OLD_FILES+=usr/share/man/man1/strip.1.gz
 OLD_FILES+=usr/share/man/man1/objcopy.1.gz
 # lib/libelf
