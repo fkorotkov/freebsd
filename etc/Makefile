@@ -12,10 +12,9 @@ UPDATE_DEPENDFILE=	no
 SUBDIR+=sendmail
 .endif
 
-BIN1=	crontab \
+BIN1=	\
 	dhclient.conf \
 	disktab \
-	gettytab \
 	group \
 	hosts \
 	hosts.allow \
