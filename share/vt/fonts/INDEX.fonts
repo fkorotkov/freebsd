@@ -21,7 +21,7 @@
 ################################
 # Language support: MENU, FONT
 #
-MENU:en:Choose your keyboard font
+MENU:en:Choose your terminal font
 MENU:de:Wählen Sie Ihre Schrift
 MENU:fr:Choisissez votre fonte écran
 
