@@ -112,9 +112,6 @@ public:
   std::string getSrcMsg(const Symbol &Sym, InputSectionBase &Sec,
                         uint64_t Offset);
 
-  // Index of MIPS GOT built for this file.
-  llvm::Optional<size_t> MipsGotIndex;
-
 protected:
   InputFile(Kind K, MemoryBufferRef M);
   std::vector<InputSectionBase *> Sections;

@@ -435,7 +435,3 @@ def EB : F<"EB">;
 def EL : F<"EL">;
 def G: JoinedOrSeparate<["-"], "G">;
 def Qy : F<"Qy">;
-
-// Hidden option used for testing MIPS multi-GOT implementation.
-def mips_got_size: S<"mips-got-size">, Flags<[HelpHidden]>,
-  HelpText<"Max size of a single MIPS GOT. 0x10000 by default.">;

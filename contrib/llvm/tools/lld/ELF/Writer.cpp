@@ -1436,9 +1436,6 @@ template <class ELFT> void Writer<ELFT>::finalizeSections() {
   if (errorCount())
     return;
 
-  if (InX::MipsGot)
-    InX::MipsGot->build<ELFT>();
-
   removeUnusedSyntheticSections();
 
   sortSections();

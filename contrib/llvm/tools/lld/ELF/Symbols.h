@@ -134,8 +134,9 @@ protected:
   Symbol(Kind K, InputFile *File, StringRefZ Name, uint8_t Binding,
          uint8_t StOther, uint8_t Type)
       : Binding(Binding), File(File), SymbolKind(K), NeedsPltAddr(false),
-        IsInIplt(false), IsInIgot(false), IsPreemptible(false),
-        Used(!Config->GcSections), Type(Type), StOther(StOther), Name(Name) {}
+        IsInGlobalMipsGot(false), Is32BitMipsGot(false), IsInIplt(false),
+        IsInIgot(false), IsPreemptible(false), Used(!Config->GcSections),
+        Type(Type), StOther(StOther), Name(Name) {}
 
   const unsigned SymbolKind : 8;
 
@@ -143,6 +144,11 @@ public:
   // True the symbol should point to its PLT entry.
   // For SharedSymbol only.
   unsigned NeedsPltAddr : 1;
+  // True if this symbol has an entry in the global part of MIPS GOT.
+  unsigned IsInGlobalMipsGot : 1;
+
+  // True if this symbol is referenced by 32-bit GOT relocations.
+  unsigned Is32BitMipsGot : 1;
 
   // True if this symbol is in the Iplt sub-section of the Plt.
   unsigned IsInIplt : 1;
