@@ -186,7 +186,6 @@ SUBDIR.${MK_TESTS}+= tests
 .if (${LIBC_ARCH} == amd64 || ${LIBC_ARCH} == i386) && \
     ${.TARGETS:Mall} == all && \
     defined(LINKER_FEATURES) && ${LINKER_FEATURES:Mifunc} == ""
-.warning ${.TARGETS}
 .error ${LIBC_ARCH} libc requires linker ifunc support
 .endif
 
