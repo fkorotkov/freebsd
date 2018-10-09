@@ -508,6 +508,12 @@
 /* Define if libcrypto has EVP_PKEY_get0_RSA */
 #define HAVE_EVP_PKEY_GET0_RSA 1
 
+/* Define if libcrypto has EVP_MD_CTX_new */
+/* #undef HAVE_EVP_MD_CTX_NEW */
+
+/* Define if libcrypto has EVP_PKEY_get0_RSA */
+/* #undef HAVE_EVP_PKEY_GET0_RSA */
+
 /* Define to 1 if you have the `EVP_ripemd160' function. */
 #define HAVE_EVP_RIPEMD160 1
 
