@@ -38,10 +38,7 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
-# 201809xx: libevent renamed libevent1
-OLD_FILES+=usr/include/private/event/event.h
-OLD_DIRS+=usr/include/private/event
-# 2018xxxx: OpenSSL 1.1.1
+# 20181009: OpenSSL 1.1.1
 OLD_FILES+=usr/include/openssl/des_old.h
 OLD_FILES+=usr/include/openssl/dso.h
 OLD_FILES+=usr/include/openssl/krb5_asn.h
@@ -264,6 +261,9 @@ OLD_LIBS+=usr/lib32/libnuron.so
 OLD_LIBS+=usr/lib32/libsureware.so
 OLD_LIBS+=usr/lib32/libubsec.so
 OLD_LIBS+=usr/lib32/libssl.so.8
+# 201809xx: libevent renamed libevent1
+OLD_FILES+=usr/include/private/event/event.h
+OLD_DIRS+=usr/include/private/event
 # 20180824: libbe(3) SHLIBDIR fixed to reflect correct location
 OLD_LIBS+=usr/lib/libbe.so.1
 # 20180819: Remove deprecated arc4random(3) stir/addrandom interfaces
