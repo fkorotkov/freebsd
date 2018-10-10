@@ -482,9 +482,9 @@ worlds: .PHONY
 #
 .if make(universe) || make(universe_kernels) || make(tinderbox) || \
     make(targets) || make(universe-toolchain)
-TARGETS?=amd64 arm arm64 i386 mips powerpc riscv sparc64
+TARGETS?=amd64 arm arm64 i386 mips powerpc riscv
 _UNIVERSE_TARGETS=	${TARGETS}
-TARGET_ARCHES_arm?=	arm armv6 armv7
+TARGET_ARCHES_arm?=	armv6 armv7
 TARGET_ARCHES_arm64?=	aarch64
 TARGET_ARCHES_mips?=	mipsel mips mips64el mips64 mipsn32 mipselhf mipshf mips64elhf mips64hf
 TARGET_ARCHES_powerpc?=	powerpc powerpc64 powerpcspe
@@ -501,8 +501,7 @@ MAKE_PARAMS_riscv?=	CROSS_TOOLCHAIN=riscv64-gcc
 TOOLCHAINS_mips=		mips mips64
 TOOLCHAINS_powerpc=	powerpc powerpc64
 TOOLCHAINS_riscv=	riscv64
-TOOLCHAINS_sparc64=	sparc64
-.for target in riscv sparc64
+.for target in riscv
 .if ${_UNIVERSE_TARGETS:M${target}}
 .for toolchain in ${TOOLCHAINS_${target}}
 .if !exists(/usr/local/share/toolchains/${toolchain}-gcc.mk)
