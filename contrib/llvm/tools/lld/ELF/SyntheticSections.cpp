@@ -1377,10 +1377,8 @@ void RelocationBaseSection::finalizeContents() {
     InX::DynSymTab->getParent()->SectionIndex :
     InX::SymTab->getParent()->SectionIndex;
 
-  if (InX::RelaIplt == this)
-    getParent()->Info = InX::Iplt->getParent()->SectionIndex;
-  else if (InX::RelaPlt == this)
-    getParent()->Info = InX::Plt->getParent()->SectionIndex;
+  if (InX::RelaIplt == this || InX::RelaPlt == this)
+    getParent()->Info = InX::GotPlt->getParent()->SectionIndex;
 }
 
 template <class ELFT>
