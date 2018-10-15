@@ -137,12 +137,7 @@ SYSCTL_INT(_kern_elf32, OID_AUTO, read_exec, CTLFLAG_RW, &i386_read_exec, 0,
 #endif
 #endif
 
-#ifdef __i386__
-// panic: res 0x6d963000 > maxv 0xde0b800, minv 0x20017000 base 0x20017000 rbase 0x4d94cde8
-static int __elfN(aslr_enabled) = 0;
-#else
 static int __elfN(aslr_enabled) = 1;
-#endif
 SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
     aslr_enabled, CTLFLAG_RWTUN, &__elfN(aslr_enabled), 0,
     __XSTRING(__CONCAT(ELF, __ELF_WORD_SIZE))
@@ -796,21 +791,23 @@ fail:
 }
 
 static u_long
-__CONCAT(rnd_, __elfN(base))(u_long base, u_long minv, u_long maxv,
+__CONCAT(rnd_, __elfN(base))(vm_map_t map __unused, u_long minv, u_long maxv,
     u_int align)
 {
 	u_long rbase, res;
 
+	MPASS(vm_map_min(map) <= minv);
+	MPASS(maxv <= vm_map_max(map));
+	MPASS(minv < maxv);
 	arc4rand(&rbase, sizeof(rbase), 0);
-	KASSERT(maxv > minv, ("maxv %#lx < minv %#lx", maxv, minv));
-	res = base + rbase % (maxv - minv);
+	res = roundup(minv, (u_long)align) + rbase % (maxv - minv);
 	res &= ~((u_long)align - 1);
-	KASSERT(res >= base,
-	    ("res %#lx < base %#lx, minv %#lx maxv %#lx rbase %#lx",
-	    res, base, minv, maxv, rbase));
+	KASSERT(res >= minv,
+	    ("res %#lx < minv %#lx, maxv %#lx rbase %#lx",
+	    res, minv, maxv, rbase));
 	KASSERT(res < maxv,
-	    ("res %#lx > maxv %#lx, minv %#lx base %#lx rbase %#lx",
-	    res, maxv, minv, base, rbase));
+	    ("res %#lx > maxv %#lx, minv %#lx rbase %#lx",
+	    res, maxv, minv, rbase));
 	return (res);
 }
 
@@ -836,7 +833,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	vm_prot_t prot;
 	u_long text_size, data_size, total_size, text_addr, data_addr;
 	u_long seg_size, seg_addr, addr, baddr, et_dyn_addr, entry, proghdr;
-	u_long maxalign, mapsz, maxv;
+	u_long maxalign, mapsz, maxv, maxv1;
 	int32_t osrel;
 	int error, i, n, interp_name_len;
 	bool have_interp;
@@ -1030,7 +1027,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	if (et_dyn_addr == ET_DYN_ADDR_RAND) {
 		KASSERT((map->flags & MAP_ASLR) != 0,
 		    ("ET_DYN_ADDR_RAND but !MAP_ASLR"));
-		et_dyn_addr = __CONCAT(rnd_, __elfN(base))(vm_map_min(map),
+		et_dyn_addr = __CONCAT(rnd_, __elfN(base))(map,
 		    vm_map_min(map) + mapsz + lim_max(td, RLIMIT_DATA),
 		    /* reserve half of the address space to interpreter */
 		    maxv / 2, 1UL << flsl(maxalign));
@@ -1148,9 +1145,12 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		have_interp = false;
 		VOP_UNLOCK(imgp->vp, 0);
 		if ((map->flags & MAP_ASLR) != 0) {
-			addr = __CONCAT(rnd_, __elfN(base))(addr, addr,
-			    /* Assume that interpeter fits into 1/4 of AS */
-			    (maxv + addr) / 2, PAGE_SIZE);
+			/* Assume that interpeter fits into 1/4 of AS */
+			maxv1 = (maxv + addr) / 2;
+			if (maxv1 <= addr)	/* Fix overflow */
+				maxv1 = maxv;
+			addr = __CONCAT(rnd_, __elfN(base))(map, addr,
+			    maxv1, PAGE_SIZE);
 		}
 		if (brand_info->emul_path != NULL &&
 		    brand_info->emul_path[0] != '\0') {
