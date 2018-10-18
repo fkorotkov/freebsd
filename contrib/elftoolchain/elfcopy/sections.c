@@ -697,7 +697,15 @@ filter_reloc(struct elfcopy *ecp, struct section *s)
 		    elf_errmsg(-1));
 
 	/* We don't want to touch relocation info for dynamic symbols. */
-	if ((ecp->flags & SYMTAB_EXIST) != 0) {
+	if ((ecp->flags & SYMTAB_EXIST) == 0) {
+		/*
+		 * No symbol table in output.  If sh_link points to a section
+		 * that exists in the output object, this relocation section
+		 * is for dynamic symbols.  Don't touch it.
+		 */
+		if (ish.sh_link != 0 && ecp->secndx[ish.sh_link] != 0)
+			return;
+	} else {
 		/* Symbol table exist, check if index equals. */
 		if (ish.sh_link != elf_ndxscn(ecp->symtab->is))
 			return;
