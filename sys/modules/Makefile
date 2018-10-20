@@ -285,6 +285,7 @@ SUBDIR=	\
 	nullfs \
 	${_ntb} \
 	${_nvd} \
+	${_nvdimm} \
 	${_nvme} \
 	${_nvram} \
 	oce \
@@ -727,6 +728,7 @@ _iavf=		iavf
 _ioat=		ioat
 _ixl=		ixl
 _ntb=		ntb
+_nvdimm=	nvdimm
 _pms=		pms
 _qlxge=		qlxge
 _qlxgb=		qlxgb
