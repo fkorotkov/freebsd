@@ -1557,6 +1557,13 @@ ENTRY(flush_l1d_sw)
 #undef	L1D_FLUSH_SIZE
 END(flush_l1d_sw)
 
+ENTRY(flush_l1d_sw_abi)
+	pushq	%rbx
+	call	flush_l1d_sw
+	popq	%rbx
+	ret
+END(flush_l1d_sw_abi)
+
 /* External Retpoline thunk */
 ENTRY(__x86_indirect_thunk_r11)
 	callq	2f
