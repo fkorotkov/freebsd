@@ -122,6 +122,13 @@ for any of the errors specified for the routines
 .Xr read 2 ,
 or
 .Xr malloc 3 .
+.Pp
+The function
+.Fn gets_s
+may also fail and set
+.Va errno
+for any of the errors specified for the routine
+.Xr getchar 3 .
 .Sh SEE ALSO
 .Xr feof 3 ,
 .Xr ferror 3 ,
@@ -139,5 +146,3 @@ K.3.7.4.1.
 .Fn gets
 has been removed from
 .St -isoC-2011 .
-
-

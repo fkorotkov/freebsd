@@ -26,9 +26,7 @@ SUBDIR=	\
 	${_aesni} \
 	age \
 	${_agp} \
-	aha \
 	ahci \
-	${_aic} \
 	aic7xxx \
 	alc \
 	ale \
@@ -112,7 +110,6 @@ SUBDIR=	\
 	dcons_crom \
 	de \
 	${_dpms} \
-	${_dpt} \
 	${_drm} \
 	${_drm2} \
 	dummynet \
@@ -208,7 +205,6 @@ SUBDIR=	\
 	${_ixv} \
 	${_ixl} \
 	jme \
-	joy \
 	kbdmux \
 	kgssapi \
 	kgssapi_krb5 \
@@ -258,7 +254,6 @@ SUBDIR=	\
 	mrsas \
 	msdosfs \
 	msdosfs_iconv \
-	${_mse} \
 	msk \
 	${_mthca} \
 	mvs \
@@ -268,9 +263,7 @@ SUBDIR=	\
 	my \
 	${_nandfs} \
 	${_nandsim} \
-	${_ncr} \
 	${_nctgpio} \
-	${_ncv} \
 	${_ndis} \
 	${_netgraph} \
 	${_nfe} \
@@ -282,7 +275,6 @@ SUBDIR=	\
 	nfssvc \
 	nge \
 	nmdm \
-	${_nsp} \
 	nullfs \
 	${_ntb} \
 	${_nvd} \
@@ -336,7 +328,6 @@ SUBDIR=	\
 	${_safe} \
 	${_sbni} \
 	scc \
-	${_scsi_low} \
 	sdhci \
 	${_sdhci_acpi} \
 	sdhci_pci \
@@ -361,7 +352,6 @@ SUBDIR=	\
 	${_splash} \
 	${_sppp} \
 	ste \
-	${_stg} \
 	stge \
 	${_sym} \
 	${_syscons} \
@@ -627,7 +617,6 @@ _pccard=	pccard
 _rdma=		rdma
 .endif
 _safe=		safe
-_scsi_low=	scsi_low
 _speaker=	speaker
 _splash=	splash
 _sppp=		sppp
@@ -753,7 +742,6 @@ _vmm=		vmm
 # XXX some of these can move now, but are untested on other architectures.
 _3dfx=		3dfx
 _3dfx_linux=	3dfx_linux
-_aic=		aic
 _apm=		apm
 .if ${MK_SOURCELESS_UCODE} != "no"
 _ce=		ce
@@ -765,18 +753,12 @@ _cp=		cp
 _glxiic=	glxiic
 _glxsb=		glxsb
 #_ibcs2=		ibcs2
-_mse=		mse
-_ncr=		ncr
-_ncv=		ncv
-_nsp=		nsp
 _pcfclock=	pcfclock
 _pst=		pst
 _sbni=		sbni
-_stg=		stg
 .if ${MK_SOURCELESS_UCODE} != "no"
 _ctau=		ctau
 .endif
-_dpt=		dpt
 _ex=		ex
 .endif
 
