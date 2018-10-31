@@ -39,8 +39,6 @@
 #define _URC_OK       0
 #define _URC_FAILURE  9
 
-typedef uint32_t _Unwind_State;
-
 #if !defined(_US_UNWIND_FRAME_STARTING)
 #define _US_UNWIND_FRAME_STARTING ((_Unwind_State)1)
 #endif

@@ -126,6 +126,12 @@ GCC_3.4.4 {
 	__subvti3;
 } GCC_3.4.2;
 
+GCC_3.5 {
+	__aeabi_unwind_cpp_pr0;
+	__aeabi_unwind_cpp_pr1;
+	__aeabi_unwind_cpp_pr2;
+};
+
 GCC_4.0.0 {
 	__divdc3;
 	__divsc3;
