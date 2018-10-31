@@ -71,6 +71,7 @@ __DEFAULT_YES_OPTIONS = \
     BOOTPARAMD \
     BOOTPD \
     BSD_CPIO \
+    BSD_CRTBEGIN \
     BSD_GREP \
     BSDINSTALL \
     BSNMP \
@@ -379,13 +380,6 @@ BROKEN_OPTIONS+=HYPERV
 # NVME is only x86 and powerpc64
 .if ${__T} != "amd64" && ${__T} != "i386" && ${__T} != "powerpc64"
 BROKEN_OPTIONS+=NVME
-.endif
-
-.if ${__T} == "aarch64" || ${__T} == "amd64" || ${__T} == "i386" || \
-    ${__T} == "powerpc64"
-__DEFAULT_YES_OPTIONS+=BSD_CRTBEGIN
-.else
-BROKEN_OPTIONS+=BSD_CRTBEGIN
 .endif
 
 .include <bsd.mkopt.mk>
