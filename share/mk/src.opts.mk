@@ -294,17 +294,17 @@ __DEFAULT_NO_OPTIONS+=LLVM_TARGET_BPF
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_IS_CC LLD
 __DEFAULT_YES_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
-__DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
+__DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GPL_DTC
 .elif ${COMPILER_FEATURES:Mc++11} && ${__T:Mriscv*} == "" && ${__T} != "sparc64"
 # If an external compiler that supports C++11 is used as ${CC} and Clang
 # supports the target, then Clang is enabled but GCC is installed as the
 # default /usr/bin/cc.
-__DEFAULT_YES_OPTIONS+=CLANG GCC GCC_BOOTSTRAP GNUCXX GPL_DTC LLD
+__DEFAULT_YES_OPTIONS+=CLANG GCC GCC_BOOTSTRAP GPL_DTC LLD
 __DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .else
 # Everything else disables Clang, and uses GCC instead.
-__DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX GPL_DTC
+__DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GPL_DTC
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_IS_CC LLD
 __DEFAULT_NO_OPTIONS+=LLD_BOOTSTRAP LLD_IS_LD
 .endif
@@ -445,7 +445,6 @@ MK_KERBEROS:=	no
 
 .if ${MK_CXX} == "no"
 MK_CLANG:=	no
-MK_GNUCXX:=	no
 MK_TESTS:=	no
 .endif
 
@@ -549,7 +548,6 @@ MK_LLDB:=	no
 #      to prevent Makefile.inc1 from bootstrapping unneeded dependencies
 #      and to support 'make delete-old' when supplying an external toolchain.
 .if ${COMPILER_TYPE} == "gcc" && ${COMPILER_VERSION} >= 40800
-MK_GNUCXX:=no
 MK_GCC:=no
 .endif
 

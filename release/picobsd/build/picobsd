@@ -981,7 +981,6 @@ set_build_parameters() {
 	export WITHOUT_CLANG_BOOTSTRAP=yes
 	export WITH_GCC=yes
 	export WITH_GCC_BOOTSTRAP=yes
-	export WITH_GNUCXX=yes
 	export WITHOUT_CLANG=yes
 	export WITHOUT_ICONV=yes
 	export WITHOUT_TESTS=yes

@@ -2752,12 +2752,6 @@ _prebuild_libs=	${_kerberos5_lib_libasn1} \
 		${_secure_lib_libcrypto} ${_secure_lib_libssl} \
 		${_lib_libldns} ${_secure_lib_libssh}
 
-.if ${MK_GNUCXX} != "no"
-_prebuild_libs+= gnu/lib/libstdc++ gnu/lib/libsupc++
-gnu/lib/libstdc++__L: lib/msun__L
-gnu/lib/libsupc++__L: gnu/lib/libstdc++__L
-.endif
-
 .if ${MK_DIALOG} != "no"
 _prebuild_libs+= gnu/lib/libdialog
 gnu/lib/libdialog__L: lib/msun__L lib/ncurses/ncursesw__L
@@ -2920,8 +2914,6 @@ lib/libproc__L: \
 .if ${MK_CXX} != "no"
 .if ${MK_LIBCPLUSPLUS} != "no"
 lib/libproc__L: lib/libcxxrt__L
-.else # This implies MK_GNUCXX != "no"; see lib/libproc
-lib/libproc__L: gnu/lib/libsupc++__L
 .endif
 .endif
 

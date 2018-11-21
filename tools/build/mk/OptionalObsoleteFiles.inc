@@ -1663,7 +1663,6 @@ OLD_FILES+=usr/share/man/man5/ftpchroot.5.gz
 OLD_FILES+=usr/share/man/man8/ftpd.8.gz
 .endif
 
-.if ${MK_GNUCXX} == no
 OLD_FILES+=usr/bin/g++
 OLD_FILES+=usr/include/c++/4.2/algorithm
 OLD_FILES+=usr/include/c++/4.2/backward/algo.h
@@ -2238,7 +2237,6 @@ OLD_LIBS+=usr/lib32/libsupc++.so.1
 OLD_FILES+=usr/lib32/libsupc++_p.a
 .endif
 OLD_FILES+=usr/libexec/cc1plus
-.endif
 
 .if ${MK_DICT} == no
 OLD_FILES+=usr/share/dict/README
