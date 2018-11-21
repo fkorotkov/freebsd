@@ -63,7 +63,6 @@ __DEFAULT_YES_OPTIONS = \
     NLS \
     OPENSSH \
     PROFILE \
-    SSP \
     SYMVER \
     TESTS \
     TOOLCHAIN \
@@ -74,6 +73,7 @@ __DEFAULT_NO_OPTIONS = \
     CTF \
     INSTALL_AS_USER \
     RETPOLINE \
+    SSP \
     STALE_STAGED
 
 __DEFAULT_DEPENDENT_OPTIONS = \
