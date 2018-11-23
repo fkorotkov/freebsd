@@ -31,6 +31,15 @@ NOTE TO PEOPLE WHO THINK THAT FreeBSD 13.x IS SLOW:
 	disable the most expensive debugging functionality run
 	"ln -s 'abort:false,junk:false' /etc/malloc.conf".)
 
+20181123:
+	LLVM's objdump is installed as /usr/bin/objdump on those architecures
+	which use Clang as the system compiler, as one step in the retirement
+	of the obsolete binutils 2.17.50.  It supports many, but not all, of
+	GNU objdump's command line options.  Users requiring the full
+	functionality of GNU objdump should install the binutils port.  Please
+	also add a comment to PR 229046 listing the option or functionality
+	that is missing.
+
 20181115:
 	The set of CTM commands (ctm, ctm_smail, ctm_rmail, ctm_dequeue)
 	has been converted to a port (misc/ctm) and will be removed from

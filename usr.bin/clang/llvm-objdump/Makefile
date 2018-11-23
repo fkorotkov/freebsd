@@ -1,6 +1,7 @@
 # $FreeBSD$
 
 PROG_CXX=	objdump
+LINKS=		${BINDIR}/llvm-objdump	${BINDIR}/objdump
 MAN=
 
 SRCDIR=		tools/llvm-objdump
