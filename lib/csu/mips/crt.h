@@ -36,7 +36,7 @@
     "1:				\n"					\
     ".cpload $ra		\n"					\
     ".set reorder		\n"					\
-    ".local " __STRING(func) "	\n"					\
+    ".local	" __STRING(func) "\n"					\
     "jal	" __STRING(func)
 #else
 #define	INIT_CALL_SEQ(func)						\
@@ -46,7 +46,7 @@
     "1:				\n"					\
     ".set reorder		\n"					\
     ".cpsetup $ra, $v0, 1b	\n"					\
-    ".local " __STRING(func) "	\n"					\
+    ".local	" __STRING(func) "\n"					\
     "jal	" __STRING(func)
 #endif
 
