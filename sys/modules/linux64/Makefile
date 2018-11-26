@@ -12,7 +12,7 @@ SRCS=	linux_fork.c linux_dummy.c linux_file.c linux_event.c \
 	linux_sysvec.c linux_time.c linux_vdso.c linux_timer.c \
 	opt_compat.h opt_inet6.h opt_posix.h opt_usb.h \
 	vnode_if.h device_if.h bus_if.h \
-	linux_support.s
+	linux_support.S
 DPSRCS=	assym.inc linux_genassym.c
 
 # XXX: for assym.inc
@@ -28,7 +28,7 @@ OBJS=	${VDSO}.so
 linux_assym.h: linux_genassym.o
 	sh ${SYSDIR}/kern/genassym.sh linux_genassym.o > ${.TARGET}
 
-linux_locore.o: linux_locore.s linux_assym.h
+linux_locore.o: linux_locore.S linux_assym.h
 	${CC} -x assembler-with-cpp -DLOCORE -shared -mcmodel=small	\
 	-pipe -I. -I${SYSDIR} -Werror -Wall -fno-common -fPIC -nostdinc	\
 	-Wl,-T${SRCTOP}/sys/${MACHINE}/linux/${VDSO}.lds.s	\

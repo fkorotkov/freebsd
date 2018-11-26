@@ -19,7 +19,7 @@ SRCS=	linux_fork.c linux${SFX}_dummy.c linux_file.c linux_event.c \
 	opt_inet6.h opt_compat.h opt_posix.h opt_usb.h vnode_if.h \
 	device_if.h bus_if.h
 .if ${MACHINE_CPUARCH} == "amd64"
-SRCS+=	linux${SFX}_support.s
+SRCS+=	linux${SFX}_support.S
 .else
 SRCS+=	linux_copyout.c
 .endif
