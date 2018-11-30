@@ -44,6 +44,11 @@ CXXFLAGS+= -mretpoline
 .endif
 # Some ELF hardening options currently do not work with static linking
 .if !defined(NO_SHARED) || ${NO_SHARED} == "no" || ${NO_SHARED} == "NO"
+.if ${MK_PIE} != "no"
+CFLAGS+= -fPIE
+CXXFLAGS+= -fPIE
+LDFLAGS+= -pie
+.endif
 .if ${MK_RETPOLINE} != "no" # PR 233336
 LDFLAGS+= -Wl,-zretpolineplt
 .endif

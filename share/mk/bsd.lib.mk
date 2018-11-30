@@ -69,9 +69,21 @@ TAGS+=		package=${PACKAGE:Uruntime}
 TAG_ARGS=	-T ${TAGS:[*]:S/ /,/g}
 .endif
 
+.if !defined(PICFLAG)
+.if ${MACHINE_CPUARCH} == "sparc64"
+PICFLAG=-fPIC
+.else
+PICFLAG=-fpic
+.endif
+.endif
+
 # ELF hardening knobs
 .if ${MK_BIND_NOW} != "no"
 LDFLAGS+= -Wl,-znow
+.endif
+.if ${MK_PIE} != "no" && (defined (INTERNALLIB) || defined (PRIVATELIB))
+CFLAGS+= ${PICFLAG}
+CXXFLAGS+= ${PICFLAG}
 .endif
 .if ${MK_RETPOLINE} != "no"
 CFLAGS+= -mretpoline
@@ -92,14 +104,6 @@ CTFFLAGS+= -g
 # .pico used for PIC object files
 # .nossppico used for NOSSP PIC object files
 .SUFFIXES: .out .o .bc .ll .po .pico .nossppico .S .asm .s .c .cc .cpp .cxx .C .f .y .l .ln
-
-.if !defined(PICFLAG)
-.if ${MACHINE_CPUARCH} == "sparc64"
-PICFLAG=-fPIC
-.else
-PICFLAG=-fpic
-.endif
-.endif
 
 PO_FLAG=-pg
 
