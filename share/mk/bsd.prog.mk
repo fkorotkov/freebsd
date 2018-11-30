@@ -41,8 +41,10 @@ LDFLAGS+= -Wl,-znow
 .if ${MK_RETPOLINE} != "no"
 CFLAGS+= -mretpoline
 CXXFLAGS+= -mretpoline
-# retpolineplt is broken with static linking (PR 233336)
+.endif
+# Some ELF hardening options currently do not work with static linking
 .if !defined(NO_SHARED) || ${NO_SHARED} == "no" || ${NO_SHARED} == "NO"
+.if ${MK_RETPOLINE} != "no" # PR 233336
 LDFLAGS+= -Wl,-zretpolineplt
 .endif
 .endif
