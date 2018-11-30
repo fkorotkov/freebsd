@@ -38,6 +38,9 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 2018xxxx: objdump(1) disconnected
+OLD_FILES+=usr/bin/objdump
+OLD_FILES+=usr/share/man/man1/objdump.1.gz
 # 20181116: Rename test file.
 OLD_FILES+=usr/tests/sys/netinet/reuseport_lb
 # 20181112: Cleanup old libcap_dns.

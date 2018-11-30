@@ -1,8 +1,6 @@
 # $FreeBSD$
 
 PROG_CXX=	llvm-objdump
-LINKS=		${BINDIR}/llvm-objdump	${BINDIR}/objdump
-MLINKS=		llvm-objdump.1		objdump.1
 
 SRCDIR=		tools/llvm-objdump
 SRCS+=		COFFDump.cpp

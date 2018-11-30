@@ -208,9 +208,6 @@ OLD_FILES+=usr/bin/as
 OLD_FILES+=usr/bin/ld
 OLD_FILES+=usr/share/man/man1/ld.1.gz
 .endif
-.if ${MK_CLANG} == no
-OLD_FILES+=usr/bin/objdump
-.endif
 OLD_FILES+=usr/libdata/ldscripts/armelf_fbsd.x
 OLD_FILES+=usr/libdata/ldscripts/armelf_fbsd.xbn
 OLD_FILES+=usr/libdata/ldscripts/armelf_fbsd.xc
@@ -407,7 +404,6 @@ OLD_FILES+=usr/libdata/ldscripts/elf_x86_64_fbsd.xsw
 OLD_FILES+=usr/libdata/ldscripts/elf_x86_64_fbsd.xu
 OLD_FILES+=usr/libdata/ldscripts/elf_x86_64_fbsd.xw
 OLD_FILES+=usr/share/man/man1/as.1.gz
-OLD_FILES+=usr/share/man/man1/objdump.1.gz
 OLD_FILES+=usr/share/man/man7/as.7.gz
 OLD_FILES+=usr/share/man/man7/ld.7.gz
 OLD_FILES+=usr/share/man/man7/ldint.7.gz
