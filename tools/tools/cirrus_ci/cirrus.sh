@@ -9,4 +9,4 @@ WITHOUT_CLANG_BOOTSTRAP=yes
 WITHOUT_TOOLCHAIN=yes
 EOF
 
-make -j $(cpus) buildworld
+make -j $cpus buildworld
