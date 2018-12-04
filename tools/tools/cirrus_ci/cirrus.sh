@@ -8,6 +8,7 @@ cpus=$(sysctl -n hw.ncpu)
 cat >/etc/src.conf <<EOF
 WITHOUT_BINUTILS_BOOTSTRAP=yes
 WITHOUT_CLANG_BOOTSTRAP=yes
+WITHOUT_LLD_BOOTSTRAP=yes
 WITHOUT_TOOLCHAIN=yes
 EOF
 
